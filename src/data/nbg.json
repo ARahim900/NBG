@@ -1,0 +1,2506 @@
+{
+  "meta": {
+    "title": "Health Monitoring Dashboards for North Batinah Governorate (NBG)",
+    "full_title_en": "Indicators of the Tenth Five-Year Health Development Plan - Women & Child Health Department, North Batinah",
+    "governorate": "NBG - North Batinah (شمال الباطنة)",
+    "years": "2023, 2024 & 2025",
+    "created_by": "Dr. Wajud Al Shibli",
+    "source_authority": "Ministry of Health (MOH), Oman - Women & Child Health Department",
+    "source_url": "https://nbghc.netlify.app",
+    "extracted_on": "2026-05-30",
+    "wilayats": [
+      "Suhar (Sohar)",
+      "Saham",
+      "As Suwayq (Al Suwaiq)",
+      "Al Khabourah",
+      "Shinas",
+      "Liwa"
+    ],
+    "dashboards": [
+      {
+        "id": "asd",
+        "code": "ASD",
+        "name": "ASD Early Screening",
+        "route": "/dashboard/asd"
+      },
+      {
+        "id": "ds",
+        "code": "DS",
+        "name": "Down Syndrome",
+        "route": "/dashboard/down-syndrome"
+      },
+      {
+        "id": "md",
+        "code": "MD",
+        "name": "Maternal Deaths",
+        "route": "/dashboard/maternal-deaths"
+      },
+      {
+        "id": "mt",
+        "code": "CM",
+        "name": "Child Maltreatment",
+        "route": "/dashboard/maltreatment"
+      },
+      {
+        "id": "ca",
+        "code": "CA",
+        "name": "Congenital Anomalies",
+        "route": "/dashboard/congenital-anomalies"
+      },
+      {
+        "id": "sn",
+        "code": "SN",
+        "name": "Stillbirth & Neonatal",
+        "route": "/dashboard/stillbirth-neonatal"
+      },
+      {
+        "id": "mc",
+        "code": "MC",
+        "name": "Maternal Care",
+        "route": "/dashboard/maternal-care"
+      },
+      {
+        "id": "fp",
+        "code": "FP",
+        "name": "Family Planning / 5-Year Plan Indicators",
+        "route": "/dashboard/family-planning"
+      }
+    ],
+    "sources": [
+      [
+        "2023 & 2024 (granular: monthly, by wilayat, by health center)",
+        "nbghc.netlify.app web app"
+      ],
+      [
+        "2025 values + 2019-2025 trends",
+        "WCH KPI Nov .2025 (1).pptx (chart data)"
+      ],
+      [
+        "2025 headline KPIs (visits, newborn screening, stillbirth summary)",
+        "Women and Child Health KPI Presentation 2025.pptx"
+      ],
+      [
+        "2025 ASD (monthly 18m/24m + governorate summary)",
+        "ASD 2025.xlsx"
+      ],
+      [
+        "2025 KPI aggregates (Autism, Down Syndrome, Newborn, 3&4-yr visits)",
+        "KPIs - WCH MOH 2025 - North Batinah.xlsx"
+      ],
+      [
+        "2025 maternal & contraceptive by wilayat (monthly per health center)",
+        "Copy of MCH stat 2025.xlsx"
+      ]
+    ],
+    "notes": [
+      "2025 now covers ASD (monthly 18m/24m + governorate risk), Down Syndrome (governorate registry), Maternal Care (by wilayat), Family Planning / contraceptive (by wilayat), and Newborn Screening - extracted from the three 2025 source workbooks.",
+      "Cross-check (confirms accuracy): Birth Spacing 2025 = 2,953 matched the KPI deck exactly; anaemia 28.5% and ANC ~12,433-12,488 matched; Child Maltreatment 2023=92 / 2024=195 and Congenital Anomalies sector splits matched the web app exactly.",
+      "Governorate granularity differs by indicator: 2023-2024 had per-health-center detail for some dashboards; 2025 ASD/DS are governorate-aggregate (per-center 2025 not in the source files), while 2025 maternal/contraceptive are available by wilayat.",
+      "Maternal Deaths: still no 2025 count in any source file (review meetings referenced only).",
+      "Stillbirth detailed monthly & ICD-PM tables are labelled 2024 (final surveillance) in the Nov-2025 deck; the 2025 headline (116 cases, 14 review meetings) is shown separately.",
+      "Minor source differences kept in cells: ANC 2024 12,753 (web)/12,754 (deck); ANC 2025 12,433 (deck)/12,488 (sum of centers); anaemia 2024 34.0%/34.4%."
+    ]
+  },
+  "asd": {
+    "monthly_2024": [
+      [
+        "Jan",
+        1273,
+        935,
+        98.8,
+        96.3,
+        2,
+        0,
+        1,
+        0
+      ],
+      [
+        "Feb",
+        1179,
+        1054,
+        98.8,
+        97.1,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        "Mar",
+        1158,
+        718,
+        95.2,
+        89.0,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        "Apr",
+        1288,
+        843,
+        98.2,
+        90.6,
+        3,
+        1,
+        1,
+        0
+      ],
+      [
+        "May",
+        1255,
+        996,
+        97.1,
+        96.9,
+        2,
+        2,
+        3,
+        0
+      ],
+      [
+        "Jun",
+        1134,
+        1042,
+        98.7,
+        97.3,
+        1,
+        0,
+        0,
+        1
+      ],
+      [
+        "Jul",
+        1232,
+        1224,
+        98.6,
+        96.9,
+        2,
+        0,
+        0,
+        0
+      ],
+      [
+        "Aug",
+        1026,
+        1149,
+        98.9,
+        97.4,
+        0,
+        0,
+        1,
+        0
+      ],
+      [
+        "Sep",
+        885,
+        1152,
+        98.0,
+        97.3,
+        2,
+        0,
+        0,
+        0
+      ],
+      [
+        "Oct",
+        997,
+        1181,
+        99.2,
+        99.3,
+        3,
+        1,
+        0,
+        1
+      ],
+      [
+        "Nov",
+        900,
+        1079,
+        97.6,
+        97.7,
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        "Dec",
+        986,
+        1127,
+        94.6,
+        99.2,
+        2,
+        1,
+        1,
+        0
+      ]
+    ],
+    "by_wilayat_2024": [
+      [
+        "Shinas",
+        587,
+        521,
+        98.2,
+        95.8
+      ],
+      [
+        "Liwa",
+        368,
+        288,
+        97.6,
+        94.1
+      ],
+      [
+        "Sohar",
+        1219,
+        1006,
+        97.4,
+        96.3
+      ],
+      [
+        "Saham",
+        990,
+        875,
+        98.9,
+        97.2
+      ],
+      [
+        "Al Khabourah",
+        659,
+        591,
+        96.5,
+        94.4
+      ],
+      [
+        "Al Suwaiq",
+        975,
+        893,
+        98.1,
+        96.7
+      ]
+    ],
+    "by_health_center_2024": [
+      [
+        "Shinas PC",
+        514,
+        449,
+        "Shinas",
+        2,
+        0
+      ],
+      [
+        "Sohar PC",
+        642,
+        493,
+        "Sohar",
+        5,
+        2
+      ],
+      [
+        "Saham PC",
+        695,
+        572,
+        "Saham",
+        1,
+        0
+      ],
+      [
+        "Khaboura PC",
+        475,
+        373,
+        "Al Khabourah",
+        2,
+        1
+      ],
+      [
+        "Suwaiq PC",
+        394,
+        389,
+        "Al Suwaiq",
+        3,
+        2
+      ]
+    ],
+    "risk_distribution_2024": [
+      [
+        "Low Risk (0-2)",
+        25629
+      ],
+      [
+        "Medium Risk (3-7)",
+        30
+      ],
+      [
+        "High Risk (8-20)",
+        10
+      ]
+    ],
+    "coverage18_trend": [
+      [
+        "2019",
+        82.8
+      ],
+      [
+        "2020",
+        85.5
+      ],
+      [
+        "2021",
+        89.0
+      ],
+      [
+        "2022",
+        92.0
+      ],
+      [
+        "2023",
+        97.8
+      ],
+      [
+        "2024",
+        97.8
+      ],
+      [
+        "2025",
+        99.0
+      ]
+    ],
+    "coverage24_trend": [
+      [
+        "2024",
+        95.69
+      ],
+      [
+        "2025",
+        98.0
+      ]
+    ],
+    "positive_trend": [
+      [
+        "2019",
+        0
+      ],
+      [
+        "2020",
+        2
+      ],
+      [
+        "2021",
+        2
+      ],
+      [
+        "2022",
+        2
+      ],
+      [
+        "2023",
+        0
+      ],
+      [
+        "2024",
+        0
+      ]
+    ],
+    "risk18_trend": [
+      [
+        "2020",
+        3,
+        4
+      ],
+      [
+        "2021",
+        8,
+        9
+      ],
+      [
+        "2022",
+        8,
+        5
+      ],
+      [
+        "2023",
+        8,
+        6
+      ],
+      [
+        "2024",
+        18,
+        5
+      ],
+      [
+        "2025",
+        5,
+        10
+      ]
+    ],
+    "risk24_trend": [
+      [
+        "2024",
+        12,
+        5
+      ],
+      [
+        "2025",
+        31,
+        30
+      ]
+    ],
+    "monthly_2025": [
+      [
+        "Jan",
+        1081,
+        1069,
+        98.9,
+        1112,
+        1102,
+        99.1
+      ],
+      [
+        "Feb",
+        1133,
+        1108,
+        97.8,
+        1035,
+        1020,
+        98.6
+      ],
+      [
+        "Mar",
+        1020,
+        1015,
+        99.5,
+        836,
+        808,
+        96.7
+      ],
+      [
+        "Apr",
+        1170,
+        1160,
+        99.1,
+        1026,
+        1014,
+        98.8
+      ],
+      [
+        "May",
+        1101,
+        1088,
+        98.8,
+        953,
+        858,
+        90.0
+      ],
+      [
+        "Jun",
+        1055,
+        1050,
+        99.5,
+        956,
+        952,
+        99.6
+      ],
+      [
+        "Jul",
+        1102,
+        1100,
+        99.8,
+        1119,
+        1084,
+        96.9
+      ],
+      [
+        "Aug",
+        932,
+        924,
+        99.1,
+        1076,
+        1055,
+        98.0
+      ],
+      [
+        "Sep",
+        821,
+        820,
+        99.9,
+        1003,
+        997,
+        99.4
+      ],
+      [
+        "Oct",
+        924,
+        922,
+        99.8,
+        979,
+        971,
+        99.2
+      ],
+      [
+        "Nov",
+        872,
+        867,
+        99.4,
+        967,
+        966,
+        99.9
+      ],
+      [
+        "Dec",
+        947,
+        941,
+        99.4,
+        1038,
+        1031,
+        99.3
+      ]
+    ],
+    "summary_2025": [
+      [
+        "Children at visit",
+        12158,
+        12100
+      ],
+      [
+        "Screened (M-CHAT/R)",
+        12064,
+        11858
+      ],
+      [
+        "Coverage %",
+        99.2,
+        98.0
+      ],
+      [
+        "Low risk (0-2)",
+        12049,
+        11797
+      ],
+      [
+        "Moderate risk (3-7)",
+        5,
+        31
+      ],
+      [
+        "High risk (8-20)",
+        10,
+        30
+      ],
+      [
+        "M-CHAT positive (>=2)",
+        0,
+        3
+      ],
+      [
+        "Diagnosed with autism",
+        0,
+        0
+      ],
+      [
+        "Other developmental disorders",
+        3,
+        18
+      ],
+      [
+        "Referred to rehabilitation",
+        15,
+        15
+      ]
+    ],
+    "y2025_note": "2025: 30 medium/high-risk cases referred to Tertiary Care and Rehabilitation Centers."
+  },
+  "ds": {
+    "facilities": {
+      "headers": [
+        "Health Center",
+        "Total Cases",
+        "New Cases",
+        "Males",
+        "Females",
+        "Age 0-5",
+        "Age 6-12",
+        "Age 13-18"
+      ],
+      "2023": [
+        [
+          "Sohar EHC",
+          61,
+          5,
+          35,
+          26,
+          29,
+          30,
+          2
+        ],
+        [
+          "Suwaiq EHC",
+          22,
+          4,
+          16,
+          6,
+          17,
+          4,
+          1
+        ],
+        [
+          "Khaboura EHC",
+          15,
+          8,
+          8,
+          7,
+          12,
+          3,
+          0
+        ],
+        [
+          "Saham Poly Clinic",
+          9,
+          1,
+          7,
+          2,
+          3,
+          1,
+          5
+        ],
+        [
+          "Shinas EHC",
+          42,
+          6,
+          17,
+          25,
+          19,
+          23,
+          0
+        ],
+        [
+          "Liwa HC",
+          18,
+          1,
+          11,
+          7,
+          9,
+          9,
+          0
+        ]
+      ],
+      "2024": [
+        [
+          "Sohar EHC",
+          66,
+          3,
+          32,
+          34,
+          35,
+          27,
+          4
+        ],
+        [
+          "Suwaiq EHC",
+          29,
+          0,
+          13,
+          16,
+          20,
+          8,
+          1
+        ],
+        [
+          "Khaboura EHC",
+          26,
+          6,
+          13,
+          13,
+          18,
+          8,
+          0
+        ],
+        [
+          "Saham Poly Clinic",
+          61,
+          4,
+          29,
+          32,
+          27,
+          21,
+          9
+        ],
+        [
+          "Shinas EHC",
+          34,
+          6,
+          16,
+          18,
+          13,
+          17,
+          4
+        ],
+        [
+          "Liwa HC",
+          20,
+          2,
+          12,
+          8,
+          9,
+          11,
+          0
+        ]
+      ]
+    },
+    "morbidities": {
+      "2023": [
+        [
+          "Cardiac Issues",
+          73,
+          43.7
+        ],
+        [
+          "Ophthalmic",
+          22,
+          13.2
+        ],
+        [
+          "Ears & Hearing",
+          11,
+          6.6
+        ],
+        [
+          "Thyroid Problems",
+          14,
+          8.4
+        ],
+        [
+          "Growth Issues",
+          23,
+          13.8
+        ],
+        [
+          "Developmental Delay",
+          13,
+          7.8
+        ],
+        [
+          "Gastrointestinal",
+          5,
+          3.0
+        ],
+        [
+          "Asthma",
+          3,
+          1.8
+        ]
+      ],
+      "2024": [
+        [
+          "Cardiac Issues",
+          103,
+          43.6
+        ],
+        [
+          "Ophthalmic",
+          31,
+          13.1
+        ],
+        [
+          "Ears & Hearing",
+          15,
+          6.4
+        ],
+        [
+          "Thyroid Problems",
+          19,
+          8.1
+        ],
+        [
+          "Growth Issues",
+          32,
+          13.6
+        ],
+        [
+          "Developmental Delay",
+          18,
+          7.6
+        ],
+        [
+          "Gastrointestinal",
+          7,
+          3.0
+        ],
+        [
+          "Asthma",
+          4,
+          1.7
+        ]
+      ]
+    },
+    "nutritional_status": {
+      "2023": [
+        [
+          "Underweight",
+          23,
+          13.8
+        ],
+        [
+          "Normal Weight",
+          127,
+          76.0
+        ],
+        [
+          "Overweight/Obese",
+          30,
+          18.0
+        ]
+      ],
+      "2024": [
+        [
+          "Underweight",
+          32,
+          13.6
+        ],
+        [
+          "Normal Weight",
+          180,
+          76.3
+        ],
+        [
+          "Overweight/Obese",
+          42,
+          17.8
+        ]
+      ]
+    },
+    "monthly_2024": [
+      [
+        "Jan",
+        2,
+        18
+      ],
+      [
+        "Feb",
+        1,
+        22
+      ],
+      [
+        "Mar",
+        3,
+        15
+      ],
+      [
+        "Apr",
+        2,
+        19
+      ],
+      [
+        "May",
+        1,
+        21
+      ],
+      [
+        "Jun",
+        4,
+        17
+      ],
+      [
+        "Jul",
+        1,
+        16
+      ],
+      [
+        "Aug",
+        0,
+        20
+      ],
+      [
+        "Sep",
+        2,
+        23
+      ],
+      [
+        "Oct",
+        3,
+        25
+      ],
+      [
+        "Nov",
+        1,
+        18
+      ],
+      [
+        "Dec",
+        1,
+        22
+      ]
+    ],
+    "year_comparison": [
+      [
+        "Sohar EHC",
+        61,
+        66
+      ],
+      [
+        "Suwaiq EHC",
+        22,
+        29
+      ],
+      [
+        "Khaboura EHC",
+        15,
+        26
+      ],
+      [
+        "Saham Poly Clinic",
+        9,
+        61
+      ],
+      [
+        "Shinas EHC",
+        42,
+        34
+      ],
+      [
+        "Liwa HC",
+        18,
+        20
+      ]
+    ],
+    "gov_2025": [
+      [
+        "Newly diagnosed cases (2025)",
+        27
+      ],
+      [
+        "Total registered cases",
+        295
+      ],
+      [
+        "Age 0-5",
+        152
+      ],
+      [
+        "Age 6-12",
+        114
+      ],
+      [
+        "Age 13-18",
+        27
+      ],
+      [
+        "Males",
+        154
+      ],
+      [
+        "Females",
+        141
+      ]
+    ],
+    "y2025_note": "2025 data is governorate-aggregate only (per-health-center breakdown not in the source files)."
+  },
+  "md": {
+    "by_year": [
+      [
+        2015,
+        3
+      ],
+      [
+        2016,
+        1
+      ],
+      [
+        2017,
+        2
+      ],
+      [
+        2018,
+        2
+      ],
+      [
+        2019,
+        2
+      ],
+      [
+        2020,
+        6
+      ],
+      [
+        2021,
+        8
+      ],
+      [
+        2022,
+        2
+      ],
+      [
+        2023,
+        1
+      ],
+      [
+        2024,
+        1
+      ]
+    ],
+    "causes_count": [
+      [
+        "COVID-19",
+        6
+      ],
+      [
+        "Postpartum Hemorrhage",
+        5
+      ],
+      [
+        "Pulmonary Embolism",
+        4
+      ],
+      [
+        "Brought Dead (Unknown)",
+        8
+      ],
+      [
+        "Preeclampsia",
+        2
+      ],
+      [
+        "Other",
+        5
+      ]
+    ],
+    "causes_pct": [
+      [
+        "COVID-19",
+        20.0
+      ],
+      [
+        "Postpartum Hemorrhage",
+        16.7
+      ],
+      [
+        "Brought Dead (Unknown)",
+        29.0
+      ],
+      [
+        "Other",
+        34.3
+      ]
+    ],
+    "recent_records": [
+      [
+        2024,
+        "15/02/2024",
+        "Unknown, Brought dead",
+        "-"
+      ],
+      [
+        2023,
+        "10/09/2023",
+        "Cardiogenic shock & sepsis",
+        "-"
+      ],
+      [
+        2022,
+        "10/08/2022",
+        "Pulmonary Embolism",
+        "-"
+      ],
+      [
+        2022,
+        "03/06/2022",
+        "Pulmonary Embolism",
+        "-"
+      ],
+      [
+        2021,
+        "08/09/2021",
+        "ICU - COVID-19",
+        "-"
+      ]
+    ],
+    "y2025_note": "2025: No maternal-death counts provided in the KPI presentations (maternal-death review meetings referenced only)."
+  },
+  "mt": {
+    "notifications_by_wilayat": [
+      [
+        "As Suwayq",
+        15,
+        19,
+        16.3,
+        9.74,
+        26.67
+      ],
+      [
+        "Al Khabourah",
+        3,
+        13,
+        3.26,
+        6.67,
+        333.33
+      ],
+      [
+        "Saham",
+        1,
+        22,
+        1.09,
+        11.28,
+        2100.0
+      ],
+      [
+        "Suhar",
+        50,
+        107,
+        54.35,
+        54.87,
+        114.0
+      ],
+      [
+        "Liwa",
+        2,
+        2,
+        2.17,
+        1.03,
+        0.0
+      ],
+      [
+        "Shinas",
+        21,
+        32,
+        22.83,
+        16.41,
+        52.38
+      ]
+    ],
+    "total_trend": [
+      [
+        "2019",
+        100
+      ],
+      [
+        "2020",
+        63
+      ],
+      [
+        "2021",
+        33
+      ],
+      [
+        "2022",
+        73
+      ],
+      [
+        "2023",
+        92
+      ],
+      [
+        "2024",
+        195
+      ],
+      [
+        "2025",
+        204
+      ]
+    ],
+    "wilayat_pct": [
+      [
+        "Al Suwaiq",
+        16.3,
+        9.7,
+        19.6
+      ],
+      [
+        "Al Khabourah",
+        3.3,
+        6.6,
+        19.6
+      ],
+      [
+        "Saham",
+        1.1,
+        11.3,
+        0.0
+      ],
+      [
+        "Sohar",
+        54.4,
+        54.9,
+        19.6
+      ],
+      [
+        "Liwa",
+        2.2,
+        1.0,
+        19.6
+      ],
+      [
+        "Shinas",
+        22.8,
+        16.4,
+        19.6
+      ]
+    ],
+    "type_pct": [
+      [
+        "Physical Abuse",
+        26.67,
+        29.9
+      ],
+      [
+        "Neglect",
+        41.03,
+        59.3
+      ],
+      [
+        "Sexual Abuse",
+        6.15,
+        5.8
+      ],
+      [
+        "Emotional Abuse",
+        2.05,
+        2.4
+      ],
+      [
+        "Others",
+        24.1,
+        2.4
+      ]
+    ]
+  },
+  "ca": {
+    "by_wilayat": [
+      [
+        "As Suwayq",
+        0,
+        0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        "Al Khabourah",
+        0,
+        0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        "Saham",
+        2,
+        0,
+        2.44,
+        0.0,
+        -100.0
+      ],
+      [
+        "Suhar",
+        52,
+        66,
+        63.41,
+        70.97,
+        26.92
+      ],
+      [
+        "Liwa",
+        0,
+        0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        "Shinas",
+        0,
+        0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "by_facility": [
+      [
+        "Bader Al Sama",
+        24,
+        14,
+        29.27,
+        15.05,
+        -41.67
+      ],
+      [
+        "Life Line",
+        4,
+        12,
+        4.88,
+        12.9,
+        200.0
+      ],
+      [
+        "Aster Hospital",
+        0,
+        1,
+        0.0,
+        0.0,
+        100.0
+      ],
+      [
+        "Al Saada Hospital",
+        0,
+        0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        "Suhar Hospital",
+        15,
+        17,
+        18.29,
+        18.28,
+        13.33
+      ],
+      [
+        "Al Multaqa Health Center",
+        30,
+        48,
+        36.59,
+        51.61,
+        60.0
+      ],
+      [
+        "Wadi Ahin",
+        7,
+        1,
+        8.54,
+        1.08,
+        -85.71
+      ]
+    ],
+    "by_sector": [
+      [
+        "Public",
+        54,
+        66
+      ],
+      [
+        "Private",
+        28,
+        27
+      ],
+      [
+        "Total",
+        82,
+        93
+      ]
+    ],
+    "total_trend": [
+      [
+        "2019",
+        119
+      ],
+      [
+        "2020",
+        35
+      ],
+      [
+        "2021",
+        29
+      ],
+      [
+        "2022",
+        89
+      ],
+      [
+        "2023",
+        82
+      ],
+      [
+        "2024",
+        93
+      ]
+    ],
+    "sector_pct": [
+      [
+        "2023",
+        65.9,
+        34.1
+      ],
+      [
+        "2024",
+        71.0,
+        29.0
+      ],
+      [
+        "2025",
+        4.0,
+        95.9
+      ]
+    ],
+    "y2025_note": "2025: total notification count not stated; sector split shifted sharply to private (MOH 4% / Private 95.9%)."
+  },
+  "sn": {
+    "web_monthly_detail": [
+      [
+        "Jan",
+        5,
+        0,
+        0,
+        5
+      ],
+      [
+        "Feb",
+        3,
+        0,
+        0,
+        3
+      ],
+      [
+        "Mar",
+        6,
+        0,
+        0,
+        6
+      ],
+      [
+        "Apr",
+        4,
+        0,
+        0,
+        4
+      ],
+      [
+        "May",
+        4,
+        3,
+        2,
+        9
+      ],
+      [
+        "Jun",
+        4,
+        7,
+        1,
+        12
+      ],
+      [
+        "Jul",
+        6,
+        2,
+        1,
+        9
+      ],
+      [
+        "Aug",
+        11,
+        0,
+        0,
+        11
+      ],
+      [
+        "Sep",
+        4,
+        5,
+        3,
+        12
+      ],
+      [
+        "Oct",
+        6,
+        8,
+        2,
+        16
+      ],
+      [
+        "Nov",
+        9,
+        3,
+        0,
+        12
+      ],
+      [
+        "Dec",
+        6,
+        4,
+        0,
+        10
+      ]
+    ],
+    "deck_monthly_2024": [
+      [
+        "Jan",
+        4,
+        1,
+        0,
+        5
+      ],
+      [
+        "Feb",
+        3,
+        1,
+        0,
+        4
+      ],
+      [
+        "Mar",
+        6,
+        0,
+        0,
+        6
+      ],
+      [
+        "Apr",
+        4,
+        0,
+        0,
+        4
+      ],
+      [
+        "May",
+        5,
+        4,
+        1,
+        10
+      ],
+      [
+        "Jun",
+        4,
+        7,
+        1,
+        12
+      ],
+      [
+        "Jul",
+        7,
+        2,
+        0,
+        9
+      ],
+      [
+        "Aug",
+        10,
+        0,
+        0,
+        10
+      ],
+      [
+        "Sep",
+        4,
+        5,
+        3,
+        12
+      ],
+      [
+        "Oct",
+        7,
+        9,
+        2,
+        18
+      ],
+      [
+        "Nov",
+        7,
+        6,
+        0,
+        13
+      ],
+      [
+        "Dec",
+        6,
+        4,
+        0,
+        10
+      ]
+    ],
+    "year_totals": [
+      [
+        "Stillbirth",
+        67,
+        59
+      ],
+      [
+        "Early Neonatal Death",
+        39,
+        45
+      ],
+      [
+        "Late Neonatal Death",
+        7,
+        13
+      ],
+      [
+        "TOTAL",
+        113,
+        117
+      ]
+    ],
+    "icd_maternal_2024": [
+      [
+        "M1",
+        9,
+        "Complications of placenta, cord and membranes"
+      ],
+      [
+        "M2",
+        0,
+        "(none)"
+      ],
+      [
+        "M3",
+        16,
+        "Other complications of labour and delivery"
+      ],
+      [
+        "M4",
+        56,
+        "Maternal medical & surgical conditions; noxious influences"
+      ],
+      [
+        "M5",
+        32,
+        "No maternal condition"
+      ],
+      [
+        "Total",
+        113,
+        ""
+      ]
+    ],
+    "icd_antepartum_2024": [
+      [
+        "A1",
+        13,
+        "Congenital malformations, deformations"
+      ],
+      [
+        "A2",
+        1,
+        "Infection"
+      ],
+      [
+        "A3",
+        13,
+        "Antepartum hypoxia"
+      ],
+      [
+        "A4",
+        22,
+        "Other specified antepartum disorder"
+      ],
+      [
+        "A5",
+        9,
+        "Disorders related to foetal growth"
+      ],
+      [
+        "A6",
+        7,
+        "Foetal death of unspecified cause"
+      ]
+    ],
+    "icd_intrapartum_2024": [
+      [
+        "I1",
+        0,
+        ""
+      ],
+      [
+        "I2",
+        0,
+        ""
+      ],
+      [
+        "I3",
+        2,
+        "Acute intrapartum event"
+      ],
+      [
+        "I4",
+        0,
+        ""
+      ],
+      [
+        "I5",
+        0,
+        ""
+      ],
+      [
+        "I6",
+        1,
+        "Disorders related to foetal growth"
+      ],
+      [
+        "I7",
+        0,
+        ""
+      ]
+    ],
+    "icd_neonatal_2024": [
+      [
+        "N1",
+        22,
+        "Congenital malformations, deformations & chromosomal abnormalities"
+      ],
+      [
+        "N2",
+        0,
+        ""
+      ],
+      [
+        "N3",
+        0,
+        ""
+      ],
+      [
+        "N4",
+        0,
+        ""
+      ],
+      [
+        "N5",
+        1,
+        ""
+      ],
+      [
+        "N6",
+        6,
+        "Respiratory & cardiovascular disorders"
+      ],
+      [
+        "N7",
+        5,
+        ""
+      ],
+      [
+        "N8",
+        0,
+        ""
+      ],
+      [
+        "N9",
+        10,
+        "Low birth weight and prematurity"
+      ],
+      [
+        "N10",
+        1,
+        ""
+      ],
+      [
+        "N11",
+        0,
+        ""
+      ]
+    ],
+    "y2025_summary": [
+      [
+        "Total perinatal deaths (cases)",
+        116
+      ],
+      [
+        "Surveillance review meetings",
+        14
+      ]
+    ]
+  },
+  "mc": {
+    "indicators": [
+      [
+        "Registered Pregnant Women / ANC Booking",
+        12549,
+        12753,
+        12433
+      ],
+      [
+        "First Trimester Booking (count)",
+        11848,
+        12159,
+        ""
+      ],
+      [
+        "First Trimester Booking %",
+        94.4,
+        95.0,
+        96.0
+      ],
+      [
+        "Total Pregnancy Visits",
+        83271,
+        66773,
+        ""
+      ],
+      [
+        "HIV Screening (tested)",
+        12549,
+        12753,
+        ""
+      ],
+      [
+        "HIV Screening %",
+        100.0,
+        100.0,
+        100.0
+      ],
+      [
+        "HIV Positive - New",
+        5,
+        3,
+        ""
+      ],
+      [
+        "HIV Positive - Existing",
+        0,
+        3,
+        ""
+      ],
+      [
+        "Syphilis Screening (tested)",
+        12549,
+        12753,
+        ""
+      ],
+      [
+        "Syphilis Positive - RPR",
+        0,
+        2,
+        ""
+      ],
+      [
+        "Syphilis Positive - TPHA",
+        0,
+        0,
+        ""
+      ],
+      [
+        "Anaemia in Pregnancy (cases)",
+        4056,
+        4385,
+        ""
+      ],
+      [
+        "Anaemia %",
+        34.0,
+        34.0,
+        28.5
+      ],
+      [
+        "Gestational Diabetes (GDM) %",
+        21.2,
+        23.0,
+        19.6
+      ],
+      [
+        "Total Deliveries",
+        8822,
+        8553,
+        ""
+      ],
+      [
+        "Natural (Normal) Deliveries",
+        "",
+        6127,
+        ""
+      ],
+      [
+        "Cesarean Deliveries",
+        2387,
+        2481,
+        ""
+      ],
+      [
+        "Teenage Pregnancy",
+        125,
+        "",
+        ""
+      ],
+      [
+        "Deliveries Outside Health Facility",
+        "",
+        957,
+        ""
+      ]
+    ],
+    "delivery_methods_2024": [
+      [
+        "Normal Delivery",
+        6127,
+        71.6
+      ],
+      [
+        "Cesarean Section",
+        2481,
+        29.0
+      ],
+      [
+        "Outside Health Facility",
+        957,
+        11.2
+      ]
+    ],
+    "anc_trend": [
+      [
+        "2019",
+        15895
+      ],
+      [
+        "2020",
+        14199
+      ],
+      [
+        "2021",
+        15122
+      ],
+      [
+        "2022",
+        13584
+      ],
+      [
+        "2023",
+        12549
+      ],
+      [
+        "2024",
+        12754
+      ],
+      [
+        "2025",
+        12433
+      ]
+    ],
+    "booking_trend": [
+      [
+        "2019",
+        81.2
+      ],
+      [
+        "2020",
+        82.0
+      ],
+      [
+        "2021",
+        88.8
+      ],
+      [
+        "2022",
+        89.0
+      ],
+      [
+        "2023",
+        94.5
+      ],
+      [
+        "2024",
+        95.4
+      ],
+      [
+        "2025",
+        96.0
+      ]
+    ],
+    "anaemia_trend": [
+      [
+        "2019",
+        32.5
+      ],
+      [
+        "2020",
+        28.0
+      ],
+      [
+        "2021",
+        27.0
+      ],
+      [
+        "2022",
+        28.0
+      ],
+      [
+        "2023",
+        33.9
+      ],
+      [
+        "2024",
+        34.4
+      ],
+      [
+        "2025",
+        28.5
+      ]
+    ],
+    "gdm_trend": [
+      [
+        "2022",
+        21.4
+      ],
+      [
+        "2023",
+        21.2
+      ],
+      [
+        "2024",
+        23.0
+      ],
+      [
+        "2025",
+        19.6
+      ]
+    ],
+    "by_wilayat_2025": [
+      [
+        "Sohar",
+        3273,
+        3188,
+        1066,
+        1357,
+        1283,
+        8,
+        83,
+        1784
+      ],
+      [
+        "Saham",
+        2573,
+        2445,
+        760,
+        920,
+        1032,
+        33,
+        79,
+        2315
+      ],
+      [
+        "As Suwayq",
+        3055,
+        2830,
+        842,
+        674,
+        1285,
+        39,
+        70,
+        2591
+      ],
+      [
+        "Al Khabourah",
+        1435,
+        1404,
+        285,
+        481,
+        409,
+        27,
+        36,
+        1076
+      ],
+      [
+        "Shinas",
+        1193,
+        1152,
+        352,
+        231,
+        252,
+        17,
+        20,
+        981
+      ],
+      [
+        "Liwa",
+        959,
+        948,
+        258,
+        312,
+        400,
+        4,
+        10,
+        808
+      ]
+    ]
+  },
+  "fp": {
+    "indicators": [
+      [
+        "HIV Positive (New Cases)",
+        5,
+        3
+      ],
+      [
+        "HIV Positive (Existing Cases)",
+        0,
+        3
+      ],
+      [
+        "Syphilis Positive (RPR)",
+        0,
+        2
+      ],
+      [
+        "Girls Age 15-19 in the Governorate",
+        "N/A",
+        "N/A"
+      ],
+      [
+        "Teenage Births (Age 15-19)",
+        "N/A",
+        125
+      ],
+      [
+        "4+ Prenatal Visits",
+        "N/A",
+        "N/A"
+      ],
+      [
+        "8+ Prenatal Visits",
+        "N/A",
+        "N/A"
+      ],
+      [
+        "Health Centers with Ultrasound Trained Doctors",
+        8,
+        8
+      ],
+      [
+        "Health Centers with Implant Insertion Training",
+        18,
+        14
+      ],
+      [
+        "Integrated Breast Cancer Screening Available",
+        "No",
+        "Mobile Unit Only"
+      ],
+      [
+        "Mammogram Device Available",
+        "Yes",
+        "Yes"
+      ],
+      [
+        "Breast Cancer Cases Detected",
+        18,
+        "No Specialized Clinic"
+      ],
+      [
+        "Breast Cancer Awareness Workshops",
+        1,
+        0
+      ],
+      [
+        "Pre-marriage Community Activities",
+        29,
+        126
+      ],
+      [
+        "Reference Hospitals with HPLC Device",
+        1,
+        1
+      ],
+      [
+        "Newborns Screened for Hearing",
+        10495,
+        10671
+      ],
+      [
+        "Newborns Screened for Thyroid",
+        10498,
+        10671
+      ],
+      [
+        "Health Centers for Down Syndrome Follow-up",
+        6,
+        6
+      ],
+      [
+        "Health Centers with Trained Staff for Down Syndrome",
+        6,
+        6
+      ],
+      [
+        "Health Centers with Trained Staff for Autism Screening",
+        28,
+        28
+      ],
+      [
+        "Safe Transport for Children Workshops",
+        1,
+        1
+      ]
+    ],
+    "birth_spacing_trend": [
+      [
+        "2019",
+        3980
+      ],
+      [
+        "2020",
+        2973
+      ],
+      [
+        "2021",
+        3482
+      ],
+      [
+        "2022",
+        4119
+      ],
+      [
+        "2023",
+        3678
+      ],
+      [
+        "2024",
+        3190
+      ],
+      [
+        "2025",
+        2953
+      ]
+    ],
+    "iucd_trend": [
+      [
+        "2018",
+        3.0
+      ],
+      [
+        "2019",
+        7.0
+      ],
+      [
+        "2020",
+        3.0
+      ],
+      [
+        "2021",
+        6.0
+      ],
+      [
+        "2022",
+        19.0
+      ],
+      [
+        "2023",
+        22.0
+      ],
+      [
+        "2024",
+        25.0
+      ],
+      [
+        "2025",
+        31.0
+      ]
+    ],
+    "implanon_trend": [
+      [
+        "2018",
+        3.0
+      ],
+      [
+        "2019",
+        7.0
+      ],
+      [
+        "2020",
+        3.0
+      ],
+      [
+        "2021",
+        6.0
+      ],
+      [
+        "2022",
+        13.0
+      ],
+      [
+        "2023",
+        19.0
+      ],
+      [
+        "2024",
+        25.0
+      ],
+      [
+        "2025",
+        31.5
+      ]
+    ],
+    "premarital_trend": [
+      [
+        "2019",
+        381
+      ],
+      [
+        "2020",
+        387
+      ],
+      [
+        "2021",
+        525
+      ],
+      [
+        "2022",
+        406
+      ],
+      [
+        "2023",
+        1670
+      ],
+      [
+        "2024",
+        973
+      ],
+      [
+        "2025",
+        1498
+      ]
+    ],
+    "hearing_trend": [
+      [
+        "2019",
+        100,
+        24
+      ],
+      [
+        "2020",
+        100,
+        17
+      ],
+      [
+        "2021",
+        100,
+        10
+      ],
+      [
+        "2022",
+        100,
+        25
+      ],
+      [
+        "2023",
+        100,
+        16
+      ],
+      [
+        "2024",
+        100,
+        51
+      ],
+      [
+        "2025",
+        103,
+        178
+      ]
+    ],
+    "tsh_trend": [
+      [
+        "2019",
+        100,
+        8
+      ],
+      [
+        "2020",
+        100,
+        4
+      ],
+      [
+        "2021",
+        100,
+        2
+      ],
+      [
+        "2022",
+        100,
+        3
+      ],
+      [
+        "2023",
+        100,
+        1
+      ],
+      [
+        "2024",
+        100,
+        2
+      ],
+      [
+        "2025",
+        100,
+        4
+      ]
+    ],
+    "contraceptive_2025": [
+      [
+        "Sohar",
+        169,
+        250,
+        665
+      ],
+      [
+        "Saham",
+        150,
+        93,
+        721
+      ],
+      [
+        "As Suwayq",
+        186,
+        184,
+        791
+      ],
+      [
+        "Al Khabourah",
+        114,
+        220,
+        285
+      ],
+      [
+        "Shinas",
+        101,
+        134,
+        305
+      ],
+      [
+        "Liwa",
+        43,
+        51,
+        186
+      ]
+    ],
+    "newborn_2025": [
+      [
+        "Total Live Births (governorate)",
+        8467
+      ],
+      [
+        "Screened for Congenital Hypothyroidism (TSH)",
+        8467
+      ],
+      [
+        "TSH Screening Coverage %",
+        100.0
+      ],
+      [
+        "Initial cord TSH >= 40 mIU/L",
+        36
+      ],
+      [
+        "Confirmed Congenital Hypothyroidism cases",
+        4
+      ],
+      [
+        "Neonatal Hearing Screened",
+        8978
+      ],
+      [
+        "Hearing Screening Coverage %",
+        106.0
+      ]
+    ],
+    "visit_coverage_2025": [
+      [
+        "Three-Year Visits in PHC",
+        14591,
+        5341,
+        36.6
+      ],
+      [
+        "Four-Year Visits in PHC",
+        14666,
+        5244,
+        35.8
+      ]
+    ],
+    "y2025_note": "KPI-deck headline: 3-yr coverage 37%, 4-yr 36%. Newborn hearing 2025 also reported as 103% (deck) / 106% (source file)."
+  }
+}
