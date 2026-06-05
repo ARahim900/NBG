@@ -55,7 +55,7 @@ const SECTION_BAR: Record<Section['accent'], string> = {
   teal: 'before:bg-teal-600',
 }
 const SECTION_ICONBG: Record<Section['accent'], string> = {
-  navy: 'bg-navy/10 text-navy',
+  navy: 'bg-tint/10 text-heading',
   azure: 'bg-azure/10 text-azure',
   teal: 'bg-teal/15 text-teal-700',
 }
@@ -67,11 +67,17 @@ export default function About({ onNavigate }: ViewProps) {
   return (
     <div className="space-y-10">
       {/* ===== Official letterhead ===== */}
-      <section className="flex justify-center rounded-2xl border border-navy/10 bg-white px-6 py-5 shadow-card">
+      <section className="flex justify-center rounded-2xl border border-line/10 bg-white px-6 py-7 shadow-card transition-colors duration-300 dark:border-white/10 dark:bg-navy">
         <img
-          src="/moh-logo.png"
-          alt="Ministry of Health — Directorate General of Health Services, North Batinah — Primary Health Care"
-          className="max-h-28 w-auto"
+          src="/moh-logo-navy.png"
+          alt="وزارة الصحة — Ministry of Health, Oman"
+          className="block max-h-36 w-auto dark:hidden"
+        />
+        <img
+          src="/moh-logo-white.png"
+          alt=""
+          aria-hidden="true"
+          className="hidden max-h-36 w-auto dark:block"
         />
       </section>
 
@@ -140,7 +146,7 @@ export default function About({ onNavigate }: ViewProps) {
           { v: `${demographics.birthRate2025}`, labEn: 'Crude Birth Rate', labAr: 'معدل المواليد الخام', unit: '‰' },
         ].map((s) => (
           <div key={s.labEn} className="card p-4 text-center">
-            <p className="text-2xl font-extrabold tracking-tight text-navy">
+            <p className="text-2xl font-extrabold tracking-tight text-heading">
               {s.v}
               {s.unit && <span className="text-base text-ink/40"> {s.unit}</span>}
             </p>
@@ -154,11 +160,11 @@ export default function About({ onNavigate }: ViewProps) {
       <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <article className="card relative overflow-hidden p-6">
           <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-navy/10 text-navy">
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-tint/10 text-heading">
               <Eye className="h-5 w-5" />
             </span>
             <div dir="rtl" className="font-ar">
-              <h2 className="text-xl font-extrabold text-navy">الرؤية</h2>
+              <h2 className="text-xl font-extrabold text-heading">الرؤية</h2>
               <p className="text-xs font-semibold uppercase tracking-wide text-azure">
                 Vision
               </p>
@@ -170,7 +176,7 @@ export default function About({ onNavigate }: ViewProps) {
           >
             {vision.ar}
           </p>
-          <p className="mt-3 border-t border-navy/5 pt-3 text-sm leading-relaxed text-ink/60">
+          <p className="mt-3 border-t border-line/5 pt-3 text-sm leading-relaxed text-ink/60">
             {vision.en}
           </p>
         </article>
@@ -181,7 +187,7 @@ export default function About({ onNavigate }: ViewProps) {
               <Compass className="h-5 w-5" />
             </span>
             <div dir="rtl" className="font-ar">
-              <h2 className="text-xl font-extrabold text-navy">الرسالة</h2>
+              <h2 className="text-xl font-extrabold text-heading">الرسالة</h2>
               <p className="text-xs font-semibold uppercase tracking-wide text-azure">
                 Mission
               </p>
@@ -193,7 +199,7 @@ export default function About({ onNavigate }: ViewProps) {
           >
             {mission.ar}
           </p>
-          <p className="mt-3 border-t border-navy/5 pt-3 text-sm leading-relaxed text-ink/60">
+          <p className="mt-3 border-t border-line/5 pt-3 text-sm leading-relaxed text-ink/60">
             {mission.en}
           </p>
         </article>
@@ -202,7 +208,7 @@ export default function About({ onNavigate }: ViewProps) {
       {/* ===== Values ===== */}
       <section>
         <div dir="rtl" className="mb-4 text-center font-ar">
-          <h2 className="text-2xl font-extrabold text-navy">القِيَم</h2>
+          <h2 className="text-2xl font-extrabold text-heading">القِيَم</h2>
           <p className="text-sm text-ink/55">
             القيم المؤسسية الموجِّهة للعمل · Our Core Values
           </p>
@@ -215,7 +221,7 @@ export default function About({ onNavigate }: ViewProps) {
                 <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-navy to-navy-600 text-white shadow-sm">
                   <Icon className="h-5 w-5" />
                 </span>
-                <h3 dir="rtl" className="mt-3 font-ar text-lg font-bold text-navy">
+                <h3 dir="rtl" className="mt-3 font-ar text-lg font-bold text-heading">
                   {v.ar}
                 </h3>
                 <p className="text-xs font-semibold uppercase tracking-wide text-azure">
@@ -233,7 +239,7 @@ export default function About({ onNavigate }: ViewProps) {
       {/* ===== Department sections / مهام الأقسام ===== */}
       <section>
         <div dir="rtl" className="mb-4 text-center font-ar">
-          <h2 className="text-2xl font-extrabold text-navy">مهام الأقسام</h2>
+          <h2 className="text-2xl font-extrabold text-heading">مهام الأقسام</h2>
           <p className="text-sm text-ink/55">
             الأقسام الثلاثة للدائرة وأهدافها الاستراتيجية · Department Sections
           </p>
@@ -256,7 +262,7 @@ export default function About({ onNavigate }: ViewProps) {
                         <Icon className="h-6 w-6" />
                       </span>
                       <div dir="rtl" className="font-ar">
-                        <h3 className="text-xl font-extrabold text-navy">{s.titleAr}</h3>
+                        <h3 className="text-xl font-extrabold text-heading">{s.titleAr}</h3>
                         <p className="text-xs font-semibold uppercase tracking-wide text-azure">
                           {s.titleEn}
                         </p>
@@ -275,7 +281,7 @@ export default function About({ onNavigate }: ViewProps) {
                   <div className="lg:col-span-3">
                     <p
                       dir="rtl"
-                      className="mb-3 font-ar text-sm font-bold text-navy/80"
+                      className="mb-3 font-ar text-sm font-bold text-heading/80"
                     >
                       الأهداف الاستراتيجية (2026–2030)
                     </p>
@@ -301,7 +307,7 @@ export default function About({ onNavigate }: ViewProps) {
       {/* ===== Wilayats ===== */}
       <section>
         <div dir="rtl" className="mb-4 text-center font-ar">
-          <h2 className="text-2xl font-extrabold text-navy">ولايات شمال الباطنة</h2>
+          <h2 className="text-2xl font-extrabold text-heading">ولايات شمال الباطنة</h2>
           <p className="text-sm text-ink/55">
             ست ولايات تغطيها خدمات الدائرة · The Six Wilayat of North Batinah
           </p>
@@ -312,17 +318,17 @@ export default function About({ onNavigate }: ViewProps) {
               key={w.en}
               className="card group p-4 text-center transition-all hover:-translate-y-0.5 hover:shadow-card-hover"
             >
-              <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-mist text-navy ring-1 ring-navy/10">
+              <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-mist text-heading ring-1 ring-line/10">
                 <MapPin className="h-5 w-5" />
               </span>
-              <h3 dir="rtl" className="mt-3 font-ar text-lg font-extrabold text-navy">
+              <h3 dir="rtl" className="mt-3 font-ar text-lg font-extrabold text-heading">
                 {w.ar}
               </h3>
               <p className="text-xs font-semibold text-ink/55">{w.en}</p>
               <p dir="rtl" className="mt-1 font-ar text-[0.7rem] text-ink/45">
                 {w.note}
               </p>
-              <div className="mt-3 border-t border-navy/5 pt-2">
+              <div className="mt-3 border-t border-line/5 pt-2">
                 <p className="text-base font-extrabold text-azure">{int(ancFor(w.dataKey))}</p>
                 <p className="text-[0.62rem] font-medium uppercase tracking-wide text-ink/45">
                   ANC 2025
@@ -334,8 +340,8 @@ export default function About({ onNavigate }: ViewProps) {
       </section>
 
       {/* ===== CTA footer ===== */}
-      <section className="rounded-2xl border border-navy/10 bg-white p-6 text-center shadow-card">
-        <h2 dir="rtl" className="font-ar text-xl font-extrabold text-navy">
+      <section className="rounded-2xl border border-line/10 bg-surface p-6 text-center shadow-card">
+        <h2 dir="rtl" className="font-ar text-xl font-extrabold text-heading">
           المؤشرات الصحية للأعوام 2023 و2024 و2025
         </h2>
         <p className="mx-auto mt-2 max-w-xl text-sm text-ink/60">

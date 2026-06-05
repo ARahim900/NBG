@@ -227,13 +227,13 @@ export default function Overview({ onNavigate }: ViewProps) {
               onClick={() => onNavigate(d.id)}
               className="card group flex items-start gap-3.5 p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:shadow-card-hover"
             >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-navy/5 text-navy transition-colors group-hover:bg-navy group-hover:text-white">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-tint/5 text-heading transition-colors group-hover:bg-navy group-hover:text-white">
                 <d.icon className="h-[1.35rem] w-[1.35rem]" />
               </span>
               <span className="min-w-0 flex-1">
                 <span className="flex items-center gap-2">
-                  <span className="font-bold text-navy">{d.name}</span>
-                  <span className="rounded-md bg-navy/5 px-1.5 py-0.5 text-[0.6rem] font-bold text-navy/55">
+                  <span className="font-bold text-heading">{d.name}</span>
+                  <span className="rounded-md bg-tint/5 px-1.5 py-0.5 text-[0.6rem] font-bold text-heading/55">
                     {d.code}
                   </span>
                 </span>

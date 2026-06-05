@@ -44,7 +44,7 @@ export default function KpiCard({
       </div>
       <div className="mt-3.5">
         <div className="flex items-baseline gap-1">
-          <span className="text-2xl font-extrabold tracking-tight text-navy sm:text-[1.7rem]">
+          <span className="text-2xl font-extrabold tracking-tight text-heading sm:text-[1.7rem]">
             {value}
           </span>
           {unit && <span className="text-sm font-semibold text-ink/45">{unit}</span>}

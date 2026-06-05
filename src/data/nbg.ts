@@ -306,12 +306,30 @@ export const mc = {
 // =========================================================================
 // Family Planning / 5-Year Plan Indicators
 // =========================================================================
+/** 5-Year-Plan indicators that belong to child health, split out from FP. */
+const FP_CHILD_INDICATORS = new Set([
+  'Newborns Screened for Hearing',
+  'Newborns Screened for Thyroid',
+  'Health Centers for Down Syndrome Follow-up',
+  'Health Centers with Trained Staff for Down Syndrome',
+  'Health Centers with Trained Staff for Autism Screening',
+  'Safe Transport for Children Workshops',
+])
+const fpAllIndicators = db.fp.indicators.map((r) => ({
+  indicator: s(r[0]),
+  y2023: r[1],
+  y2024: r[2],
+}))
+
 export const fp = {
-  indicators: db.fp.indicators.map((r) => ({
-    indicator: s(r[0]),
-    y2023: r[1],
-    y2024: r[2],
-  })),
+  /** Women & general 5-year-plan indicators (child rows split to childIndicators). */
+  indicators: fpAllIndicators.filter(
+    (r) => !FP_CHILD_INDICATORS.has(r.indicator),
+  ),
+  /** Child-health 5-year-plan indicators (surfaced on the Newborn Screening view). */
+  childIndicators: fpAllIndicators.filter((r) =>
+    FP_CHILD_INDICATORS.has(r.indicator),
+  ),
   birthSpacingTrend: xy(db.fp.birth_spacing_trend),
   iucdTrend: xy(db.fp.iucd_trend),
   implanonTrend: xy(db.fp.implanon_trend),

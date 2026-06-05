@@ -8,6 +8,25 @@
       name="description"
       content="Health Monitoring Dashboards for North Batinah Governorate (NBG) — Women & Child Health Department, Ministry of Health Oman. Data 2023, 2024 & 2025."
     />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="color-scheme" content="light dark" />
+    <!-- Apply the saved/system theme before paint to avoid a flash of the wrong theme -->
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem('nbg-theme')
+          var dark =
+            saved === 'dark' ||
+            (saved !== 'light' &&
+              window.matchMedia('(prefers-color-scheme: dark)').matches)
+          var root = document.documentElement
+          root.classList.toggle('dark', dark)
+          root.style.colorScheme = dark ? 'dark' : 'light'
+        } catch (e) {
+          /* localStorage unavailable — default to light */
+        }
+      })()
+    </script>
     <title>NBG Health Dashboards — Women &amp; Child Health (2023–2025)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

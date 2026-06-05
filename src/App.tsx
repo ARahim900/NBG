@@ -10,6 +10,7 @@ import MaternalDeaths from './views/MaternalDeaths'
 import ChildMaltreatment from './views/ChildMaltreatment'
 import CongenitalAnomalies from './views/CongenitalAnomalies'
 import StillbirthNeonatal from './views/StillbirthNeonatal'
+import NewbornScreening from './views/NewbornScreening'
 import MaternalCare from './views/MaternalCare'
 import FamilyPlanning from './views/FamilyPlanning'
 import ChildNutrition from './views/ChildNutrition'
@@ -24,6 +25,7 @@ const VIEWS: Record<ViewId, (props: { onNavigate: (id: ViewId) => void }) => JSX
   mt: ChildMaltreatment,
   ca: CongenitalAnomalies,
   sn: StillbirthNeonatal,
+  ns: NewbornScreening,
   mc: MaternalCare,
   fp: FamilyPlanning,
   cn: ChildNutrition,
@@ -57,7 +59,7 @@ export default function App() {
             <View onNavigate={navigate} />
           </div>
         </main>
-        <footer className="border-t border-navy/10 bg-white px-4 py-5 text-center text-xs text-ink/45 sm:px-6 lg:px-8">
+        <footer className="border-t border-line/10 bg-surface px-4 py-5 text-center text-xs text-ink/45 transition-colors duration-300 sm:px-6 lg:px-8">
           Health Monitoring Dashboards · North Batinah Governorate · Women &amp; Child
           Health Department · Ministry of Health, Oman · Data 2023–2025
         </footer>

@@ -3,6 +3,32 @@
 @tailwind utilities;
 
 @layer base {
+  /* ── Light theme (default) — Ministry of Health Oman palette ── */
+  :root {
+    color-scheme: light;
+    --canvas: 234 241 246; /* #eaf1f6 page background */
+    --surface: 255 255 255; /* cards, header, footer */
+    --mist: 234 241 246; /* subtle panels & inset wells */
+    --ink: 26 39 51; /* #1a2733 body text */
+    --heading: 20 64 102; /* #144066 headings */
+    --line: 20 64 102; /* borders (used at low opacity) */
+    --tint: 20 64 102; /* soft accent washes */
+    --shadow: 16 48 73; /* navy-tinted shadow */
+  }
+
+  /* ── Dark theme — Ministry of Health navy (Regal Blue #144066 family) ── */
+  .dark {
+    color-scheme: dark;
+    --canvas: 8 26 44; /* #081a2c deep MoH-navy page */
+    --surface: 17 44 70; /* #112c46 elevated navy cards */
+    --mist: 13 35 57; /* #0d2339 inset wells */
+    --ink: 201 216 234; /* #c9d8ea body text */
+    --heading: 234 242 252; /* #eaf2fc headings */
+    --line: 110 152 200; /* #6e98c8 blue hairlines */
+    --tint: 125 165 212; /* #7da5d4 soft washes */
+    --shadow: 0 0 0; /* black shadow */
+  }
+
   html {
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -10,25 +36,44 @@
   }
 
   body {
-    @apply bg-mist text-ink font-sans;
+    @apply bg-canvas text-ink font-sans;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
   }
 
-  /* Thin, navy-tinted scrollbar to match the brand */
+  /* Thin, brand-tinted scrollbar that adapts to the theme */
   ::-webkit-scrollbar {
     width: 10px;
     height: 10px;
   }
   ::-webkit-scrollbar-thumb {
-    @apply rounded-full bg-navy/20;
+    @apply rounded-full;
+    background: rgb(var(--line) / 0.22);
   }
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-navy/35;
+    background: rgb(var(--line) / 0.4);
   }
 }
 
 @layer components {
   .card {
-    @apply rounded-2xl border border-navy/10 bg-white shadow-card;
+    @apply rounded-2xl border border-line/10 bg-surface shadow-card;
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+  /* Deeper, blacker elevation in dark mode + a hairline top highlight */
+  .dark .card {
+    box-shadow:
+      0 1px 2px rgb(0 0 0 / 0.4),
+      0 12px 30px -12px rgb(0 0 0 / 0.65);
+  }
+  .dark .hover\:shadow-card-hover:hover {
+    box-shadow:
+      0 2px 6px rgb(0 0 0 / 0.45),
+      0 18px 40px -14px rgb(0 0 0 / 0.75);
   }
 
   .nav-link {

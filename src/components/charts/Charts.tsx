@@ -15,7 +15,8 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
-import { C, SERIES } from '../../lib/theme'
+import { SERIES } from '../../lib/theme'
+import { useThemeMode } from '../../lib/theme-mode'
 
 export interface Series {
   key: string
@@ -44,9 +45,9 @@ interface TipProps {
 function ChartTooltip({ active, label, payload, unit, formatter }: TipProps) {
   if (!active || !payload || payload.length === 0) return null
   return (
-    <div className="rounded-xl border border-navy/10 bg-white/95 px-3 py-2 shadow-card backdrop-blur">
+    <div className="rounded-xl border border-line/10 bg-surface/95 px-3 py-2 shadow-card backdrop-blur">
       {label !== undefined && (
-        <p className="mb-1 text-xs font-bold text-navy">{label}</p>
+        <p className="mb-1 text-xs font-bold text-heading">{label}</p>
       )}
       <ul className="space-y-0.5">
         {payload.map((item, i) => {
@@ -70,8 +71,25 @@ function ChartTooltip({ active, label, payload, unit, formatter }: TipProps) {
   )
 }
 
-const axisTick = { fontSize: 11, fill: C.muted }
 const legendStyle = { fontSize: 12, paddingTop: 8 }
+
+interface ChartTheme {
+  grid: string
+  axisTick: { fontSize: number; fill: string }
+  cursorFill: string
+  sliceStroke: string
+}
+
+/** Theme-aware chart chrome: axes, gridlines, hover cursor and pie-slice gaps. */
+function useChartTheme(): ChartTheme {
+  const { isDark } = useThemeMode()
+  return {
+    grid: isDark ? '#1f4264' : '#e2e9f0',
+    axisTick: { fontSize: 11, fill: isDark ? '#86a6cc' : '#6b7a88' },
+    cursorFill: isDark ? 'rgba(125,165,212,0.10)' : 'rgba(20,64,102,0.05)',
+    sliceStroke: isDark ? '#112c46' : '#ffffff',
+  }
+}
 
 // ---- Trend (line or area) ------------------------------------------------
 interface TrendProps {
@@ -97,6 +115,7 @@ export function TrendChart({
   valueFormatter,
   showLegend = true,
 }: TrendProps) {
+  const { grid, axisTick } = useChartTheme()
   return (
     <ResponsiveContainer width="100%" height={height}>
       {variant === 'area' ? (
@@ -116,8 +135,8 @@ export function TrendChart({
               </linearGradient>
             ))}
           </defs>
-          <CartesianGrid stroke={C.grid} vertical={false} />
-          <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: C.grid }} />
+          <CartesianGrid stroke={grid} vertical={false} />
+          <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: grid }} />
           <YAxis tick={axisTick} tickLine={false} axisLine={false} domain={yDomain} width={44} />
           <Tooltip content={<ChartTooltip unit={unit} formatter={valueFormatter} />} />
           {showLegend && series.length > 1 && <Legend wrapperStyle={legendStyle} />}
@@ -137,8 +156,8 @@ export function TrendChart({
         </AreaChart>
       ) : (
         <LineChart data={data} margin={{ top: 6, right: 8, left: -8, bottom: 0 }}>
-          <CartesianGrid stroke={C.grid} vertical={false} />
-          <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: C.grid }} />
+          <CartesianGrid stroke={grid} vertical={false} />
+          <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: grid }} />
           <YAxis tick={axisTick} tickLine={false} axisLine={false} domain={yDomain} width={44} />
           <Tooltip content={<ChartTooltip unit={unit} formatter={valueFormatter} />} />
           {showLegend && series.length > 1 && <Legend wrapperStyle={legendStyle} />}
@@ -185,6 +204,7 @@ export function ComparisonBars({
   showLegend = true,
 }: BarsProps) {
   const vertical = layout === 'vertical'
+  const { grid, axisTick, cursorFill } = useChartTheme()
   return (
     <ResponsiveContainer width="100%" height={height}>
       <BarChart
@@ -194,7 +214,7 @@ export function ComparisonBars({
         barGap={stacked ? 0 : 3}
         barCategoryGap={vertical ? '22%' : '28%'}
       >
-        <CartesianGrid stroke={C.grid} vertical={vertical} horizontal={!vertical} />
+        <CartesianGrid stroke={grid} vertical={vertical} horizontal={!vertical} />
         {vertical ? (
           <>
             <XAxis type="number" tick={axisTick} tickLine={false} axisLine={false} />
@@ -203,18 +223,18 @@ export function ComparisonBars({
               dataKey={xKey}
               tick={axisTick}
               tickLine={false}
-              axisLine={{ stroke: C.grid }}
+              axisLine={{ stroke: grid }}
               width={92}
             />
           </>
         ) : (
           <>
-            <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: C.grid }} />
+            <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: grid }} />
             <YAxis tick={axisTick} tickLine={false} axisLine={false} width={44} />
           </>
         )}
         <Tooltip
-          cursor={{ fill: 'rgba(20,64,102,0.05)' }}
+          cursor={{ fill: cursorFill }}
           content={<ChartTooltip unit={unit} formatter={valueFormatter} />}
         />
         {showLegend && series.length > 1 && <Legend wrapperStyle={legendStyle} />}
@@ -257,6 +277,7 @@ export function DonutChart({
   innerRadius = 56,
   outerRadius = 84,
 }: DonutProps) {
+  const { sliceStroke } = useChartTheme()
   return (
     <ResponsiveContainer width="100%" height={height}>
       <PieChart>
@@ -269,7 +290,7 @@ export function DonutChart({
           innerRadius={innerRadius}
           outerRadius={outerRadius}
           paddingAngle={1.5}
-          stroke="#fff"
+          stroke={sliceStroke}
           strokeWidth={2}
         >
           {data.map((slice, i) => (

@@ -33,11 +33,11 @@ export default function DataTable({
     <div className="-mx-1 overflow-x-auto">
       <table className="w-full border-collapse text-sm">
         <thead>
-          <tr className="border-b-2 border-navy/15">
+          <tr className="border-b-2 border-line/15">
             {columns.map((c, i) => (
               <th
                 key={i}
-                className={`${pad} ${alignClass(c.align)} text-xs font-bold uppercase tracking-wide text-navy/70 ${c.className ?? ''}`}
+                className={`${pad} ${alignClass(c.align)} text-xs font-bold uppercase tracking-wide text-heading/70 ${c.className ?? ''}`}
               >
                 {c.label}
               </th>
@@ -48,7 +48,7 @@ export default function DataTable({
           {rows.map((row, ri) => (
             <tr
               key={ri}
-              className={`border-b border-navy/5 transition-colors hover:bg-mist/60 ${
+              className={`border-b border-line/5 transition-colors hover:bg-mist/60 ${
                 highlightRows.includes(ri) ? 'bg-azure/[0.06] font-semibold' : ''
               }`}
             >
@@ -67,11 +67,11 @@ export default function DataTable({
         </tbody>
         {total && (
           <tfoot>
-            <tr className="border-t-2 border-navy/20 bg-navy/[0.04]">
+            <tr className="border-t-2 border-line/20 bg-tint/[0.04]">
               {total.map((cellValue, ci) => (
                 <td
                   key={ci}
-                  className={`${pad} ${alignClass(columns[ci]?.align)} text-[0.84rem] font-bold text-navy`}
+                  className={`${pad} ${alignClass(columns[ci]?.align)} text-[0.84rem] font-bold text-heading`}
                 >
                   {cellValue}
                 </td>

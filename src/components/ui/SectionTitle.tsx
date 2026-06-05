@@ -14,11 +14,11 @@ export default function SectionTitle({
 }: SectionTitleProps) {
   return (
     <div className="mb-4 mt-2 flex items-center gap-3">
-      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-navy/10 text-navy">
+      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-tint/10 text-heading">
         <Icon className="h-4 w-4" />
       </span>
       <div>
-        <h2 className="text-sm font-bold uppercase tracking-wide text-navy">
+        <h2 className="text-sm font-bold uppercase tracking-wide text-heading">
           {title}
         </h2>
         {subtitle && <p className="text-xs text-ink/55">{subtitle}</p>}

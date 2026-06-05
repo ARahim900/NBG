@@ -12,7 +12,7 @@ interface DeltaProps {
 export default function Delta({ value, invert = false, suffix = '%' }: DeltaProps) {
   if (value == null || Number.isNaN(value)) {
     return (
-      <span className="chip bg-navy/5 text-ink/50">
+      <span className="chip bg-tint/5 text-ink/50">
         <Minus className="h-3 w-3" /> n/a
       </span>
     )
@@ -22,7 +22,7 @@ export default function Delta({ value, invert = false, suffix = '%' }: DeltaProp
   const positive = value > 0
   const isGood = flat ? null : invert ? !positive : positive
   const tone = flat
-    ? 'bg-navy/5 text-ink/55'
+    ? 'bg-tint/5 text-ink/55'
     : isGood
       ? 'bg-good/10 text-good'
       : 'bg-alert/10 text-alert'

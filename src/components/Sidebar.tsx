@@ -1,5 +1,5 @@
 import { X } from 'lucide-react'
-import { NAV, type ViewId } from '../lib/dashboards'
+import { NAV, NAV_GROUPS, type NavItem, type ViewId } from '../lib/dashboards'
 
 interface SidebarProps {
   active: ViewId
@@ -14,6 +14,30 @@ export default function Sidebar({
   mobileOpen,
   onClose,
 }: SidebarProps) {
+  const renderItem = (item: NavItem) => {
+    const isActive = item.id === active
+    return (
+      <button
+        key={item.id}
+        onClick={() => onSelect(item.id)}
+        className={`nav-link w-full text-left ${isActive ? 'nav-link-active' : ''}`}
+        aria-current={isActive ? 'page' : undefined}
+      >
+        <item.icon className="h-[1.15rem] w-[1.15rem] shrink-0" />
+        <span className="flex-1">{item.name}</span>
+        {item.code && (
+          <span
+            className={`rounded-md px-1.5 py-0.5 text-[0.62rem] font-bold ${
+              isActive ? 'bg-white/20 text-white' : 'bg-white/5 text-white/50'
+            }`}
+          >
+            {item.code}
+          </span>
+        )}
+      </button>
+    )
+  }
+
   return (
     <>
       {/* Mobile backdrop */}
@@ -26,15 +50,15 @@ export default function Sidebar({
       />
 
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-72 flex-col bg-gradient-to-b from-navy via-navy to-navy-800 transition-transform duration-300 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-r border-white/[0.06] bg-gradient-to-b from-navy via-navy to-navy-800 transition-transform duration-300 dark:from-navy-800 dark:via-navy-900 dark:to-[#091523] lg:translate-x-0 ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Brand */}
         <div className="flex items-center gap-3 px-5 pb-5 pt-6">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white p-1.5 shadow-sm ring-1 ring-white/20">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center">
             <img
-              src="/moh-mark.png"
+              src="/moh-emblem-white.png"
               alt="Ministry of Health, Oman"
               className="h-full w-full object-contain"
             />
@@ -58,32 +82,19 @@ export default function Sidebar({
 
         {/* Nav */}
         <nav className="flex-1 space-y-1 overflow-y-auto px-3 pb-4">
-          <p className="px-3 pb-1.5 pt-1 text-[0.65rem] font-bold uppercase tracking-widest text-white/40">
-            Dashboards
-          </p>
-          {NAV.map((item) => {
-            const isActive = item.id === active
-            return (
-              <button
-                key={item.id}
-                onClick={() => onSelect(item.id)}
-                className={`nav-link w-full text-left ${isActive ? 'nav-link-active' : ''}`}
-                aria-current={isActive ? 'page' : undefined}
-              >
-                <item.icon className="h-[1.15rem] w-[1.15rem] shrink-0" />
-                <span className="flex-1">{item.name}</span>
-                {item.code && (
-                  <span
-                    className={`rounded-md px-1.5 py-0.5 text-[0.62rem] font-bold ${
-                      isActive ? 'bg-white/20 text-white' : 'bg-white/5 text-white/50'
-                    }`}
-                  >
-                    {item.code}
-                  </span>
-                )}
-              </button>
-            )
-          })}
+          {NAV.filter((i) => i.group === 'general').map(renderItem)}
+
+          {NAV_GROUPS.map((g) => (
+            <div key={g.id} className="pt-3">
+              <p className="flex items-baseline justify-between px-3 pb-1.5 pt-1 text-[0.65rem] font-bold uppercase tracking-widest text-white/40">
+                <span>{g.label}</span>
+                <span className="font-ar text-[0.78rem] normal-case tracking-normal text-teal/70">
+                  {g.labelAr}
+                </span>
+              </p>
+              {NAV.filter((i) => i.group === g.id).map(renderItem)}
+            </div>
+          ))}
         </nav>
 
         {/* Footer */}

@@ -10,6 +10,7 @@ import {
   Microscope,
   ShieldAlert,
   Stethoscope,
+  TestTubes,
   Users,
   type LucideIcon,
 } from 'lucide-react'
@@ -23,10 +24,14 @@ export type ViewId =
   | 'mt'
   | 'ca'
   | 'sn'
+  | 'ns'
   | 'mc'
   | 'fp'
   | 'cn'
   | 'an'
+
+/** Top-level grouping used to segregate the sidebar into care domains. */
+export type NavGroup = 'general' | 'women' | 'children'
 
 export interface ViewProps {
   onNavigate: (id: ViewId) => void
@@ -39,15 +44,30 @@ export interface NavItem {
   /** Short blurb shown on the overview cards. */
   blurb: string
   icon: LucideIcon
+  group: NavGroup
 }
 
+export interface NavGroupMeta {
+  id: Exclude<NavGroup, 'general'>
+  label: string
+  labelAr: string
+}
+
+/** Rendered as labelled sections in the sidebar, in this order. */
+export const NAV_GROUPS: NavGroupMeta[] = [
+  { id: 'women', label: "Women's Health", labelAr: 'صحة المرأة' },
+  { id: 'children', label: "Children's Health", labelAr: 'صحة الطفل' },
+]
+
 export const NAV: NavItem[] = [
+  // ── General ──
   {
     id: 'about',
     code: '',
     name: 'Home · الرئيسية',
     blurb: 'Vision, mission & department sections',
     icon: Home,
+    group: 'general',
   },
   {
     id: 'overview',
@@ -55,20 +75,17 @@ export const NAV: NavItem[] = [
     name: 'Overview',
     blurb: 'Governorate-wide headline indicators',
     icon: LayoutDashboard,
+    group: 'general',
   },
+
+  // ── Women's Health ──
   {
-    id: 'asd',
-    code: 'ASD',
-    name: 'ASD Early Screening',
-    blurb: '18 & 24-month developmental (M-CHAT/R) screening',
-    icon: Brain,
-  },
-  {
-    id: 'ds',
-    code: 'DS',
-    name: 'Down Syndrome',
-    blurb: 'Registry, associated morbidities & nutrition',
-    icon: Dna,
+    id: 'mc',
+    code: 'MC',
+    name: 'Maternal Care',
+    blurb: 'Antenatal, screening & delivery indicators',
+    icon: Stethoscope,
+    group: 'women',
   },
   {
     id: 'md',
@@ -76,13 +93,33 @@ export const NAV: NavItem[] = [
     name: 'Maternal Deaths',
     blurb: '10-year surveillance, causes & records',
     icon: HeartPulse,
+    group: 'women',
   },
   {
-    id: 'mt',
-    code: 'CM',
-    name: 'Child Maltreatment',
-    blurb: 'Notifications by wilayat, type & trend',
-    icon: ShieldAlert,
+    id: 'fp',
+    code: 'FP',
+    name: 'Family Planning',
+    blurb: 'Contraceptive uptake & premarital screening',
+    icon: Users,
+    group: 'women',
+  },
+
+  // ── Children's Health ──
+  {
+    id: 'asd',
+    code: 'ASD',
+    name: 'ASD Early Screening',
+    blurb: '18 & 24-month developmental (M-CHAT/R) screening',
+    icon: Brain,
+    group: 'children',
+  },
+  {
+    id: 'ds',
+    code: 'DS',
+    name: 'Down Syndrome',
+    blurb: 'Registry, associated morbidities & nutrition',
+    icon: Dna,
+    group: 'children',
   },
   {
     id: 'ca',
@@ -90,6 +127,7 @@ export const NAV: NavItem[] = [
     name: 'Congenital Anomalies',
     blurb: 'Notifications by facility, sector & trend',
     icon: Microscope,
+    group: 'children',
   },
   {
     id: 'sn',
@@ -97,20 +135,23 @@ export const NAV: NavItem[] = [
     name: 'Stillbirth & Neonatal',
     blurb: 'Perinatal mortality & ICD-PM classification',
     icon: Baby,
+    group: 'children',
   },
   {
-    id: 'mc',
-    code: 'MC',
-    name: 'Maternal Care',
-    blurb: 'Antenatal, screening & delivery indicators',
-    icon: Stethoscope,
+    id: 'ns',
+    code: 'NS',
+    name: 'Newborn Screening',
+    blurb: 'Congenital hypothyroidism (TSH), hearing & developmental visits',
+    icon: TestTubes,
+    group: 'children',
   },
   {
-    id: 'fp',
-    code: 'FP',
-    name: 'Family Planning',
-    blurb: '5-year-plan, contraception & newborn screening',
-    icon: Users,
+    id: 'mt',
+    code: 'CM',
+    name: 'Child Maltreatment',
+    blurb: 'Notifications by wilayat, type & trend',
+    icon: ShieldAlert,
+    group: 'children',
   },
   {
     id: 'cn',
@@ -118,6 +159,7 @@ export const NAV: NavItem[] = [
     name: 'Child Nutrition',
     blurb: 'Malnutrition categories & infant feeding',
     icon: Apple,
+    group: 'children',
   },
   {
     id: 'an',
@@ -125,6 +167,7 @@ export const NAV: NavItem[] = [
     name: 'Child Anaemia',
     blurb: '9 & 18-month anaemia screening',
     icon: Droplets,
+    group: 'children',
   },
 ]
 
