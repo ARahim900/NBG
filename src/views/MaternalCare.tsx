@@ -225,9 +225,17 @@ export default function MaternalCare() {
           />
           <div className="mt-3">
             <Note title="Source note:">
-              ANC 2025 is 12,433 (deck headline) vs 12,488 (sum of centres); ANC
-              2024 12,753 (web) / 12,754 (deck); anaemia 2024 34.0% / 34.4%. HIV
-              screening reached 100% every year.
+              2025 antenatal figures (1st-trimester bookings, total ANC visits,
+              anaemia cases) are taken from the North Batinah MCH&nbsp;2025
+              workbook — 28 health centres across the 6 wilayat — and reconcile
+              with the by-wilayat table above. HIV &amp; syphilis &ldquo;tested&rdquo;
+              2025 are derived from the 100% screening coverage recorded that year.
+              2025 delivery, congenital-screening positives (HIV/syphilis),
+              teenage-pregnancy and out-of-facility delivery figures are not in
+              the antenatal workbook and remain blank pending the maternity/lab
+              source. ANC 2025 is 12,433 (deck headline) vs 12,488 (sum of
+              centres); ANC 2024 12,753 (web) / 12,754 (deck); anaemia 2024
+              34.0% / 34.4%.
             </Note>
           </div>
         </ChartCard>
