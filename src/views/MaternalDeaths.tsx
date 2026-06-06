@@ -60,16 +60,16 @@ export default function MaternalDeaths() {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-5">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ChartCard
           title="Maternal Deaths by Year"
           subtitle="2015–2024"
-          className="xl:col-span-3"
           footnote="The 2020–2021 spike coincides with the COVID-19 pandemic; 2023–2024 returned to 1 death/year."
         >
           <ComparisonBars
             data={md.byYear}
             xKey="year"
+            height={300}
             series={[{ key: 'deaths', name: 'Deaths', color: C.navy }]}
             showLegend={false}
           />
@@ -77,9 +77,9 @@ export default function MaternalDeaths() {
         <ChartCard
           title="Causes of Death"
           subtitle="Cumulative count"
-          className="xl:col-span-2"
+          footnote="Brought-dead and postpartum haemorrhage together account for ~43% of the 30 recorded deaths."
         >
-          <DonutChart data={causeSlices} />
+          <DonutChart data={causeSlices} height={300} />
         </ChartCard>
       </div>
 

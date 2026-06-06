@@ -76,11 +76,10 @@ export default function DownSyndrome() {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ChartCard
           title="Registered Cases by Health Centre"
           subtitle="2023 vs 2024"
-          className="xl:col-span-2"
         >
           <ComparisonBars
             data={ds.yearComparison}
@@ -97,7 +96,7 @@ export default function DownSyndrome() {
           title="Age Distribution (2025)"
           subtitle={`${int(totalReg)} registered children`}
         >
-          <DonutChart data={ageData} />
+          <DonutChart data={ageData} height={300} />
         </ChartCard>
       </div>
 
@@ -119,8 +118,9 @@ export default function DownSyndrome() {
         <ChartCard
           title="Nutritional Status (2024)"
           subtitle="Weight categories"
+          footnote="Most registered children (71%) are a normal weight; 17% are overweight or obese and 13% underweight."
         >
-          <DonutChart data={nutrition2024} />
+          <DonutChart data={nutrition2024} height={320} />
         </ChartCard>
       </div>
 

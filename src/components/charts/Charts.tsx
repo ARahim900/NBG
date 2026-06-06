@@ -3,8 +3,8 @@ import {
   AreaChart,
   Bar,
   BarChart,
-  CartesianGrid,
   Cell,
+  LabelList,
   Legend,
   Line,
   LineChart,
@@ -15,6 +15,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts'
+import type { PieLabelRenderProps } from 'recharts'
 import { SERIES } from '../../lib/theme'
 import { useThemeMode } from '../../lib/theme-mode'
 
@@ -74,21 +75,46 @@ function ChartTooltip({ active, label, payload, unit, formatter }: TipProps) {
 const legendStyle = { fontSize: 12, paddingTop: 8 }
 
 interface ChartTheme {
-  grid: string
   axisTick: { fontSize: number; fill: string }
   cursorFill: string
   sliceStroke: string
+  /** Subtle baseline under the category axis (no full gridlines). */
+  axisLine: string
+  /** Value labels sat on top of bars / points. */
+  dataLabel: string
+  /** Bold category names / percentages on the donut + its legend. */
+  donutName: string
 }
 
-/** Theme-aware chart chrome: axes, gridlines, hover cursor and pie-slice gaps. */
+/** Theme-aware chart chrome: axis ticks, hover cursor, slice gaps and data labels. */
 function useChartTheme(): ChartTheme {
   const { isDark } = useThemeMode()
   return {
-    grid: isDark ? '#1f4264' : '#e2e9f0',
     axisTick: { fontSize: 11, fill: isDark ? '#86a6cc' : '#6b7a88' },
     cursorFill: isDark ? 'rgba(125,165,212,0.10)' : 'rgba(20,64,102,0.05)',
     sliceStroke: isDark ? '#112c46' : '#ffffff',
+    axisLine: isDark ? '#23456b' : '#dbe5ee',
+    dataLabel: isDark ? '#c9d8ea' : '#41617d',
+    donutName: isDark ? '#eaf2fc' : '#144066',
   }
+}
+
+/** Format a value sat on top of a bar / point. Labels are always whole numbers
+ *  (no decimals) to keep charts clean; large counts compact to "k". A caller's
+ *  valueFormatter still wins when it needs bespoke formatting. */
+function formatDataLabel(
+  v: number | string | undefined,
+  unit?: string,
+  valueFormatter?: (v: number) => string,
+): string {
+  if (v === undefined || v === null || v === '') return ''
+  const n = typeof v === 'number' ? v : Number(v)
+  if (Number.isNaN(n)) return String(v)
+  if (valueFormatter) return valueFormatter(n)
+  const r = Math.round(n)
+  if (unit === '%') return `${r}%`
+  if (Math.abs(r) >= 10000) return `${(r / 1000).toFixed(r % 1000 === 0 ? 0 : 1)}k`
+  return r.toLocaleString('en-US')
 }
 
 // ---- Trend (line or area) ------------------------------------------------
@@ -115,11 +141,15 @@ export function TrendChart({
   valueFormatter,
   showLegend = true,
 }: TrendProps) {
-  const { grid, axisTick } = useChartTheme()
+  const { axisTick, axisLine, dataLabel } = useChartTheme()
+  // Single-series trends get a tidy value sat above each point; multi-series
+  // stays label-free (rely on the tooltip) to avoid overlapping figures.
+  const showValues = series.length === 1
+  const labelStyle = { fontSize: 10, fontWeight: 600, fill: dataLabel } as const
   return (
     <ResponsiveContainer width="100%" height={height}>
       {variant === 'area' ? (
-        <AreaChart data={data} margin={{ top: 6, right: 8, left: -8, bottom: 0 }}>
+        <AreaChart data={data} margin={{ top: 18, right: 12, left: -8, bottom: 0 }}>
           <defs>
             {series.map((sdef) => (
               <linearGradient
@@ -135,8 +165,7 @@ export function TrendChart({
               </linearGradient>
             ))}
           </defs>
-          <CartesianGrid stroke={grid} vertical={false} />
-          <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: grid }} />
+          <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: axisLine }} />
           <YAxis tick={axisTick} tickLine={false} axisLine={false} domain={yDomain} width={44} />
           <Tooltip content={<ChartTooltip unit={unit} formatter={valueFormatter} />} />
           {showLegend && series.length > 1 && <Legend wrapperStyle={legendStyle} />}
@@ -151,13 +180,22 @@ export function TrendChart({
               fill={`url(#grad-${sdef.key})`}
               dot={{ r: 2.5, strokeWidth: 0, fill: sdef.color }}
               activeDot={{ r: 4.5 }}
-            />
+            >
+              {showValues && (
+                <LabelList
+                  dataKey={sdef.key}
+                  position="top"
+                  offset={10}
+                  style={labelStyle}
+                  formatter={(v: number) => formatDataLabel(v, unit, valueFormatter)}
+                />
+              )}
+            </Area>
           ))}
         </AreaChart>
       ) : (
-        <LineChart data={data} margin={{ top: 6, right: 8, left: -8, bottom: 0 }}>
-          <CartesianGrid stroke={grid} vertical={false} />
-          <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: grid }} />
+        <LineChart data={data} margin={{ top: 18, right: 12, left: -8, bottom: 0 }}>
+          <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: axisLine }} />
           <YAxis tick={axisTick} tickLine={false} axisLine={false} domain={yDomain} width={44} />
           <Tooltip content={<ChartTooltip unit={unit} formatter={valueFormatter} />} />
           {showLegend && series.length > 1 && <Legend wrapperStyle={legendStyle} />}
@@ -171,7 +209,17 @@ export function TrendChart({
               strokeWidth={2.5}
               dot={{ r: 2.5, strokeWidth: 0, fill: sdef.color }}
               activeDot={{ r: 5 }}
-            />
+            >
+              {showValues && (
+                <LabelList
+                  dataKey={sdef.key}
+                  position="top"
+                  offset={10}
+                  style={labelStyle}
+                  formatter={(v: number) => formatDataLabel(v, unit, valueFormatter)}
+                />
+              )}
+            </Line>
           ))}
         </LineChart>
       )}
@@ -204,33 +252,42 @@ export function ComparisonBars({
   showLegend = true,
 }: BarsProps) {
   const vertical = layout === 'vertical'
-  const { grid, axisTick, cursorFill } = useChartTheme()
+  const { axisTick, axisLine, cursorFill, dataLabel } = useChartTheme()
+  // Grouped bars carry their figure at the bar tip and drop the numeric axis;
+  // stacked bars keep the axis (per-segment labels would collide).
+  const showValues = !stacked
+  const labelStyle = { fontSize: 10, fontWeight: 600, fill: dataLabel } as const
   return (
     <ResponsiveContainer width="100%" height={height}>
       <BarChart
         data={data}
         layout={layout}
-        margin={{ top: 6, right: 10, left: vertical ? 8 : -8, bottom: 0 }}
+        margin={{ top: 16, right: vertical ? 36 : 12, left: vertical ? 8 : -8, bottom: 0 }}
         barGap={stacked ? 0 : 3}
         barCategoryGap={vertical ? '22%' : '28%'}
       >
-        <CartesianGrid stroke={grid} vertical={vertical} horizontal={!vertical} />
         {vertical ? (
           <>
-            <XAxis type="number" tick={axisTick} tickLine={false} axisLine={false} />
+            <XAxis
+              type="number"
+              tick={axisTick}
+              tickLine={false}
+              axisLine={false}
+              hide={showValues}
+            />
             <YAxis
               type="category"
               dataKey={xKey}
               tick={axisTick}
               tickLine={false}
-              axisLine={{ stroke: grid }}
+              axisLine={{ stroke: axisLine }}
               width={92}
             />
           </>
         ) : (
           <>
-            <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: grid }} />
-            <YAxis tick={axisTick} tickLine={false} axisLine={false} width={44} />
+            <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: axisLine }} />
+            <YAxis tick={axisTick} tickLine={false} axisLine={false} width={44} hide={showValues} />
           </>
         )}
         <Tooltip
@@ -247,7 +304,17 @@ export function ComparisonBars({
             stackId={stacked ? 'a' : undefined}
             radius={stacked ? [0, 0, 0, 0] : vertical ? [0, 4, 4, 0] : [4, 4, 0, 0]}
             maxBarSize={vertical ? 22 : 46}
-          />
+          >
+            {showValues && (
+              <LabelList
+                dataKey={sdef.key}
+                position={vertical ? 'right' : 'top'}
+                offset={6}
+                style={labelStyle}
+                formatter={(v: number) => formatDataLabel(v, unit, valueFormatter)}
+              />
+            )}
+          </Bar>
         ))}
       </BarChart>
     </ResponsiveContainer>
@@ -269,29 +336,68 @@ interface DonutProps {
   outerRadius?: number
 }
 
+const RADIAN = Math.PI / 180
+
 export function DonutChart({
   data,
   height = 250,
   unit,
   valueFormatter,
-  innerRadius = 56,
-  outerRadius = 84,
+  innerRadius,
+  outerRadius,
 }: DonutProps) {
-  const { sliceStroke } = useChartTheme()
+  const { sliceStroke, donutName } = useChartTheme()
+  // Scale the ring with the card height so the donut fills taller cards
+  // (paired with bar charts) instead of floating with empty space.
+  const outer = outerRadius ?? Math.min(Math.max(Math.round(height * 0.33), 72), 104)
+  const inner = innerRadius ?? Math.round(outer * 0.64)
+
+  // Only the % share sits around the ring — it is always short, so it never
+  // clips regardless of card width. Category names live in the legend below,
+  // which handles any label length cleanly.
+  const renderLabel = (props: PieLabelRenderProps) => {
+    const cx = Number(props.cx)
+    const cy = Number(props.cy)
+    const mid = Number(props.midAngle ?? 0)
+    const or = Number(props.outerRadius ?? 0)
+    const pct = Number(props.percent ?? 0)
+    if (pct < 0.02) return null // skip a vanishingly small sliver to avoid overlap
+    const r = or + 13
+    const x = cx + r * Math.cos(-mid * RADIAN)
+    const y = cy + r * Math.sin(-mid * RADIAN)
+    const anchor = x >= cx ? 'start' : 'end'
+    return (
+      <text
+        x={x}
+        y={y}
+        textAnchor={anchor}
+        dominantBaseline="central"
+        fontSize={12}
+        fontWeight={700}
+        fill={donutName}
+      >
+        {`${Math.round(pct * 100)}%`}
+      </text>
+    )
+  }
+
   return (
     <ResponsiveContainer width="100%" height={height}>
-      <PieChart>
+      <PieChart margin={{ top: 6, right: 6, bottom: 6, left: 6 }}>
         <Pie
           data={data}
           dataKey="value"
           nameKey="name"
           cx="50%"
           cy="50%"
-          innerRadius={innerRadius}
-          outerRadius={outerRadius}
+          innerRadius={inner}
+          outerRadius={outer}
           paddingAngle={1.5}
           stroke={sliceStroke}
           strokeWidth={2}
+          minAngle={4}
+          labelLine={false}
+          label={renderLabel}
         >
           {data.map((slice, i) => (
             <Cell key={i} fill={slice.color ?? SERIES[i % SERIES.length]} />
@@ -299,10 +405,12 @@ export function DonutChart({
         </Pie>
         <Tooltip content={<ChartTooltip unit={unit} formatter={valueFormatter} />} />
         <Legend
-          wrapperStyle={{ fontSize: 12 }}
           iconType="circle"
-          layout="horizontal"
-          align="center"
+          iconSize={9}
+          wrapperStyle={legendStyle}
+          formatter={(value) => (
+            <span style={{ color: donutName, fontSize: 12 }}>{value}</span>
+          )}
         />
       </PieChart>
     </ResponsiveContainer>

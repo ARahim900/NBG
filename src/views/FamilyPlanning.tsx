@@ -73,7 +73,7 @@ export default function FamilyPlanning() {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
         <ChartCard
           title="Birth-Spacing Registered Cases"
           subtitle="2019–2025"
@@ -83,6 +83,7 @@ export default function FamilyPlanning() {
             xKey="year"
             variant="area"
             unit=""
+            height={260}
             series={[{ key: 'value', name: 'Cases', color: C.teal }]}
           />
         </ChartCard>
@@ -94,6 +95,7 @@ export default function FamilyPlanning() {
             data={contraTrend}
             xKey="year"
             unit="%"
+            height={260}
             series={[
               { key: 'iucd', name: 'IUCD', color: C.navy },
               { key: 'implanon', name: 'Implanon', color: C.azure },
@@ -108,6 +110,7 @@ export default function FamilyPlanning() {
             data={fp.premaritalTrend}
             xKey="year"
             unit=""
+            height={260}
             series={[{ key: 'value', name: 'Screened', color: C.azure }]}
             showLegend={false}
           />
