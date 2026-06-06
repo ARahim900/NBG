@@ -1,4 +1,4 @@
-import { CalendarDays, Map, Menu, User } from 'lucide-react'
+import { CalendarDays, Map, User } from 'lucide-react'
 import { NAV_BY_ID, type ViewId } from '../lib/dashboards'
 import { meta } from '../data/nbg'
 import { YEAR_COLORS } from '../lib/theme'
@@ -6,24 +6,15 @@ import ThemeToggle from './ThemeToggle'
 
 interface HeaderProps {
   active: ViewId
-  onMenu: () => void
 }
 
 const wilayatCount = meta.wilayats.length
 
-export default function Header({ active, onMenu }: HeaderProps) {
+export default function Header({ active }: HeaderProps) {
   const item = NAV_BY_ID[active]
   return (
     <header className="sticky top-0 z-20 border-b border-line/10 bg-surface/85 backdrop-blur-md transition-colors duration-300">
       <div className="flex items-center gap-3 px-4 py-3.5 sm:px-6 lg:px-8">
-        <button
-          onClick={onMenu}
-          className="rounded-lg p-2 text-heading hover:bg-tint/5 lg:hidden"
-          aria-label="Open menu"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
-
         <span className="flex h-9 w-9 shrink-0 items-center justify-center lg:hidden">
           <img
             src="/moh-emblem-navy.png"

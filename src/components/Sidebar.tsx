@@ -26,10 +26,12 @@ export default function Sidebar({
   collapsed,
   onToggleCollapse,
 }: SidebarProps) {
+  // Section dropdowns start collapsed; they open only when the user clicks the
+  // section header. (general has no header — its items always render.)
   const [openGroups, setOpenGroups] = useState<Record<NavGroup, boolean>>({
     general: true,
-    women: true,
-    children: true,
+    women: false,
+    children: false,
   })
   const toggleGroup = (g: NavGroup) =>
     setOpenGroups((s) => ({ ...s, [g]: !s[g] }))
@@ -127,17 +129,17 @@ export default function Sidebar({
                 <button
                   onClick={() => toggleGroup(g.id)}
                   aria-expanded={open}
-                  className={`flex w-full items-center gap-2 rounded-lg px-3 py-1 text-[0.65rem] font-bold uppercase tracking-widest text-white/40 transition-colors hover:text-white/75 ${
+                  className={`flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-semibold tracking-wide text-white/65 transition-colors hover:bg-white/5 hover:text-white ${
                     collapsed ? 'lg:hidden' : ''
                   }`}
                 >
                   <ChevronDown
-                    className={`h-3.5 w-3.5 shrink-0 transition-transform duration-200 ${
+                    className={`h-4 w-4 shrink-0 transition-transform duration-200 ${
                       open ? '' : '-rotate-90'
                     }`}
                   />
                   <span className="flex-1 text-left">{g.label}</span>
-                  <span className="font-ar text-[0.78rem] normal-case tracking-normal text-teal/70">
+                  <span className="font-ar text-[0.82rem] font-medium tracking-normal text-teal/80">
                     {g.labelAr}
                   </span>
                 </button>

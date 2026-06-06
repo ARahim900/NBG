@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
+import BottomNav from './components/BottomNav'
+import InstallPrompt from './components/InstallPrompt'
 import type { ViewId } from './lib/dashboards'
 import About from './views/About'
 import Overview from './views/Overview'
@@ -93,8 +95,8 @@ export default function App() {
         collapsed={collapsed}
         onToggleCollapse={() => setCollapsed((c) => !c)}
       />
-      <div className="flex min-h-screen flex-col">
-        <Header active={active} onMenu={() => setMobileOpen(true)} />
+      <div className="flex min-h-screen flex-col pb-[4.75rem] lg:pb-0">
+        <Header active={active} />
         <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
           <div key={active} className="mx-auto max-w-7xl animate-fade-up">
             <View onNavigate={navigate} />
@@ -105,6 +107,12 @@ export default function App() {
           Health Department · Ministry of Health, Oman · Data 2023–2025
         </footer>
       </div>
+
+      {/* Mobile-only bottom navigation (replaces the slide-in drawer on phones) */}
+      <BottomNav active={active} onSelect={navigate} />
+
+      {/* First-run "Add to Home Screen" prompt for new visitors */}
+      <InstallPrompt />
     </div>
   )
 }
