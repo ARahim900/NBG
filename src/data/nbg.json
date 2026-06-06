@@ -1413,6 +1413,10 @@
       [
         "2024",
         93
+      ],
+      [
+        "2025",
+        175
       ]
     ],
     "sector_pct": [
@@ -1428,11 +1432,11 @@
       ],
       [
         "2025",
-        4.0,
-        95.9
+        96.0,
+        4.0
       ]
     ],
-    "y2025_note": "2025: total notification count not stated; sector split shifted sharply to private (MOH 4% / Private 95.9%)."
+    "y2025_note": "2025: MOH cases rose to 175 (WCH 2025 KPI deck chart; slide headline cites 168). MOH share of registered cases rose to 96% (Private 4%), up from 71% in 2024."
   },
   "sn": {
     "web_monthly_detail": [

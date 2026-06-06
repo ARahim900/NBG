@@ -9,9 +9,10 @@ import { ca, sumBy } from '../data/nbg'
 import { C } from '../lib/theme'
 import { deltaPct, int, pct } from '../lib/format'
 
+const n2025 = ca.totalTrend.find((r) => r.year === '2025')?.value ?? 0
 const n2024 = ca.totalTrend.find((r) => r.year === '2024')?.value ?? 0
 const n2023 = ca.totalTrend.find((r) => r.year === '2023')?.value ?? 0
-const publicShare2024 = ca.sectorPct.find((r) => r.year === '2024')?.moh ?? 0
+const publicShare2025 = ca.sectorPct.find((r) => r.year === '2025')?.moh ?? 0
 const topWilayat = ca.byWilayat.reduce((a, b) => (b.y2024 > a.y2024 ? b : a))
 
 const sector2024 = ca.bySector.find((r) => r.sector === 'Public')
@@ -30,31 +31,32 @@ export default function CongenitalAnomalies() {
       <SectionTitle
         icon={Microscope}
         title="Congenital Anomalies & Genetic Disorders"
-        subtitle="Notifications by wilayat / facility / sector (2023–2024), 2019–2024 trend & 2023–2025 sector split"
+        subtitle="Notifications by wilayat / facility / sector (2023–2024), 2019–2025 trend & 2023–2025 sector split"
       />
 
       <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
         <KpiCard
+          label="Notifications (2025)"
+          value={int(n2025)}
+          icon={Microscope}
+          accent="navy"
+          delta={deltaPct(n2025, n2024)}
+          hint="vs 93 in 2024"
+        />
+        <KpiCard
           label="Notifications (2024)"
           value={int(n2024)}
           icon={Microscope}
-          accent="navy"
+          accent="azure"
           delta={deltaPct(n2024, n2023)}
           hint="vs 82 in 2023"
         />
         <KpiCard
-          label="Notifications (2023)"
-          value={int(n2023)}
-          icon={Microscope}
-          accent="azure"
-          hint="Prior year"
-        />
-        <KpiCard
-          label="Public-Sector Share (2024)"
-          value={pct(publicShare2024)}
+          label="Public-Sector Share (2025)"
+          value={pct(publicShare2025)}
           icon={PieChart}
           accent="teal"
-          hint="Reported via MOH facilities"
+          hint="Up from 71% in 2024"
         />
         <KpiCard
           label="Most Reported Wilayat"
@@ -65,32 +67,32 @@ export default function CongenitalAnomalies() {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-5">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ChartCard
           title="Total Notifications Trend"
-          subtitle="MOH · 2019–2024"
-          className="xl:col-span-3"
+          subtitle="MOH · 2019–2025"
+          footnote="MOH notifications reached 175 in 2025 — the highest in the seven-year series."
         >
           <TrendChart
             data={ca.totalTrend}
             xKey="year"
             variant="area"
             unit=""
+            height={280}
             series={[{ key: 'value', name: 'Notifications', color: C.azure }]}
           />
         </ChartCard>
         <ChartCard
           title="Sector Split: MOH vs Private"
           subtitle="% of notifications · 2023–2025"
-          className="xl:col-span-2"
-          footnote="2025 shifted sharply to private reporting (MOH 4% / Private 95.9%)."
+          footnote="2025: MOH share rose to 96% (Private 4%) of registered cases."
         >
           <ComparisonBars
             data={ca.sectorPct}
             xKey="year"
             stacked
             unit="%"
-            height={250}
+            height={280}
             series={[
               { key: 'moh', name: 'MOH', color: C.navy },
               { key: 'private', name: 'Private', color: C.teal },
@@ -99,11 +101,10 @@ export default function CongenitalAnomalies() {
         </ChartCard>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ChartCard
           title="Notifications by Reporting Facility"
           subtitle="2023 vs 2024"
-          className="xl:col-span-2"
         >
           <ComparisonBars
             data={ca.byFacility}
@@ -120,7 +121,7 @@ export default function CongenitalAnomalies() {
           title="By Sector (2024)"
           subtitle="Public vs private count"
         >
-          <DonutChart data={sectorDonut} />
+          <DonutChart data={sectorDonut} height={320} />
         </ChartCard>
       </div>
 
