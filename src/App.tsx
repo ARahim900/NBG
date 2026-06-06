@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import type { ViewId } from './lib/dashboards'
@@ -35,6 +35,21 @@ const VIEWS: Record<ViewId, (props: { onNavigate: (id: ViewId) => void }) => JSX
 export default function App() {
   const [active, setActive] = useState<ViewId>('about')
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [collapsed, setCollapsed] = useState<boolean>(() => {
+    try {
+      return localStorage.getItem('nbg-sidebar-collapsed') === '1'
+    } catch {
+      return false
+    }
+  })
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('nbg-sidebar-collapsed', collapsed ? '1' : '0')
+    } catch {
+      /* storage unavailable — collapse still applies for this session */
+    }
+  }, [collapsed])
 
   const navigate = (id: ViewId) => {
     setActive(id)
@@ -45,12 +60,18 @@ export default function App() {
   const View = VIEWS[active]
 
   return (
-    <div className="min-h-screen lg:pl-72">
+    <div
+      className={`min-h-screen transition-[padding] duration-300 ${
+        collapsed ? 'lg:pl-20' : 'lg:pl-72'
+      }`}
+    >
       <Sidebar
         active={active}
         onSelect={navigate}
         mobileOpen={mobileOpen}
         onClose={() => setMobileOpen(false)}
+        collapsed={collapsed}
+        onToggleCollapse={() => setCollapsed((c) => !c)}
       />
       <div className="flex min-h-screen flex-col">
         <Header active={active} onMenu={() => setMobileOpen(true)} />
