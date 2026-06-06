@@ -51,6 +51,20 @@ export default function App() {
     }
   }, [collapsed])
 
+  // Register the PWA service worker (offline support). Production-only so the
+  // Vite dev server / HMR is never intercepted, and after window 'load' so it
+  // never competes with first paint. Renders nothing — desktop UI is unchanged.
+  useEffect(() => {
+    if (!import.meta.env.PROD || !('serviceWorker' in navigator)) return
+    const register = () => {
+      navigator.serviceWorker.register('/sw.js').catch(() => {
+        /* SW registration is best-effort; the app works normally without it */
+      })
+    }
+    window.addEventListener('load', register)
+    return () => window.removeEventListener('load', register)
+  }, [])
+
   const navigate = (id: ViewId) => {
     setActive(id)
     setMobileOpen(false)

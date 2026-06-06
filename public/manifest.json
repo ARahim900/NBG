@@ -1,0 +1,27 @@
+{
+  "name": "NBG-OM",
+  "short_name": "NBG-OM",
+  "description": "NBG Women & Child Health Dashboards — Ministry of Health, Oman.",
+  "lang": "en",
+  "dir": "ltr",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#eaf1f6",
+  "theme_color": "#144066",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

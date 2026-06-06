@@ -10,6 +10,14 @@
     />
     <meta name="theme-color" content="#ffffff" />
     <meta name="color-scheme" content="light dark" />
+    <!-- PWA: installable standalone app. All additive — these tags are inert on
+         desktop browsers, so the desktop/PC experience is unchanged. -->
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/logo.png" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="NBG-OM" />
     <!-- Apply the saved/system theme before paint to avoid a flash of the wrong theme -->
     <script>
       (function () {
