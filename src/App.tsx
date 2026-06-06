@@ -52,8 +52,10 @@ export default function App() {
   }, [collapsed])
 
   // Register the PWA service worker (offline support). Production-only so the
-  // Vite dev server / HMR is never intercepted, and after window 'load' so it
-  // never competes with first paint. Renders nothing — desktop UI is unchanged.
+  // Vite dev server / HMR is never intercepted. Renders nothing — desktop UI
+  // is unchanged. Register now if the page already finished loading (the SPA
+  // usually reaches readyState 'complete' before this effect runs), otherwise
+  // defer to the 'load' event so we never compete with first paint.
   useEffect(() => {
     if (!import.meta.env.PROD || !('serviceWorker' in navigator)) return
     const register = () => {
@@ -61,7 +63,11 @@ export default function App() {
         /* SW registration is best-effort; the app works normally without it */
       })
     }
-    window.addEventListener('load', register)
+    if (document.readyState === 'complete') {
+      register()
+      return
+    }
+    window.addEventListener('load', register, { once: true })
     return () => window.removeEventListener('load', register)
   }, [])
 
