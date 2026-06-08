@@ -1,4 +1,4 @@
-import { CalendarDays, Map, User } from 'lucide-react'
+import { CalendarDays, Map } from 'lucide-react'
 import { NAV_BY_ID, type ViewId } from '../lib/dashboards'
 import { meta } from '../data/nbg'
 import { YEAR_COLORS } from '../lib/theme'
@@ -66,10 +66,6 @@ export default function Header({ active }: HeaderProps) {
         <span className="flex items-center gap-1.5">
           <Map className="h-3.5 w-3.5 text-teal-600" />
           North Batinah · {wilayatCount} wilayat
-        </span>
-        <span className="flex items-center gap-1.5">
-          <User className="h-3.5 w-3.5 text-teal-600" />
-          Created by {meta.created_by}
         </span>
         <span className="ml-auto hidden font-medium text-ink/45 sm:inline">
           {meta.source_authority}

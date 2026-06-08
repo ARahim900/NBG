@@ -37,7 +37,6 @@ interface RawMeta {
   full_title_en: string
   governorate: string
   years: string
-  created_by: string
   source_authority: string
   source_url: string
   extracted_on: string

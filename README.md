@@ -4,8 +4,8 @@ An interactive dashboard for the **Health Monitoring Dashboards of North Batinah
 Governorate (NBG)** — Women & Child Health Department, Ministry of Health, Oman.
 It visualises eight indicator areas across **2023, 2024 and 2025**.
 
-Created by **Dr. Wajud Al Shibli**. Colours follow the Ministry of Health Oman
-eHealth-portal palette (navy `#144066` · azure `#2884c6` · teal `#7cb6bc`).
+Colours follow the Ministry of Health Oman eHealth-portal palette (navy
+`#144066` · azure `#2884c6` · teal `#7cb6bc`).
 
 ## Pages
 
