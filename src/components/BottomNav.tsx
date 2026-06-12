@@ -38,7 +38,7 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
 
   const tabClass = (on: boolean) =>
     `flex flex-1 flex-col items-center justify-center gap-1 py-2 text-[0.62rem] font-semibold transition-colors ${
-      on ? 'text-teal' : 'text-white/60'
+      on ? 'text-glow drop-shadow-[0_0_8px_rgba(94,234,212,0.6)]' : 'text-white/60'
     }`
 
   return (
@@ -52,7 +52,7 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
             aria-hidden="true"
           />
           <div
-            className="fixed inset-x-0 bottom-0 z-50 animate-fade-up rounded-t-2xl border-t border-white/10 bg-gradient-to-b from-navy to-navy-800 px-3 pt-3 shadow-2xl dark:from-navy-800 dark:to-navy-900"
+            className="fixed inset-x-0 bottom-0 z-50 animate-fade-up rounded-t-3xl border-t border-glow/20 bg-[#06121f]/95 px-3 pt-3 shadow-2xl backdrop-blur-xl"
             style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 4.75rem)' }}
             role="dialog"
             aria-label={`${GROUP_SHORT[sheet]} dashboards`}
@@ -87,7 +87,7 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
 
       {/* Fixed bottom bar */}
       <nav
-        className="fixed inset-x-0 bottom-0 z-30 flex border-t border-white/10 bg-navy/95 backdrop-blur-md dark:bg-navy-900/95"
+        className="fixed inset-x-0 bottom-0 z-30 flex border-t border-white/10 bg-[#06121f]/92 backdrop-blur-xl"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
         aria-label="Primary"
       >

@@ -3,30 +3,36 @@
 @tailwind utilities;
 
 @layer base {
-  /* ── Light theme (default) — Ministry of Health Oman palette ── */
+  /* ── Light theme — "porcelain observatory": ice gradients, white glass ── */
   :root {
     color-scheme: light;
-    --canvas: 234 241 246; /* #eaf1f6 page background */
+    --canvas: 233 241 248; /* #e9f1f8 page background */
     --surface: 255 255 255; /* cards, header, footer */
-    --mist: 234 241 246; /* subtle panels & inset wells */
+    --mist: 230 239 247; /* subtle panels & inset wells */
     --ink: 26 39 51; /* #1a2733 body text */
-    --heading: 20 64 102; /* #144066 headings */
+    --heading: 16 52 84; /* #103454 headings */
     --line: 20 64 102; /* borders (used at low opacity) */
     --tint: 20 64 102; /* soft accent washes */
     --shadow: 16 48 73; /* navy-tinted shadow */
+    --glass: 255 255 255; /* glass panel fill channel */
+    --glass-alpha: 0.66;
+    --aurora-opacity: 0.5;
   }
 
-  /* ── Dark theme — Ministry of Health navy (Regal Blue #144066 family) ── */
+  /* ── Dark theme — "deep space command center": navy void + aurora ── */
   .dark {
     color-scheme: dark;
-    --canvas: 8 26 44; /* #081a2c deep MoH-navy page */
-    --surface: 17 44 70; /* #112c46 elevated navy cards */
-    --mist: 13 35 57; /* #0d2339 inset wells */
-    --ink: 201 216 234; /* #c9d8ea body text */
-    --heading: 234 242 252; /* #eaf2fc headings */
-    --line: 110 152 200; /* #6e98c8 blue hairlines */
-    --tint: 125 165 212; /* #7da5d4 soft washes */
+    --canvas: 4 12 24; /* #040c18 near-void navy */
+    --surface: 12 28 48; /* #0c1c30 elevated panels */
+    --mist: 9 22 39; /* inset wells */
+    --ink: 199 215 234; /* body text */
+    --heading: 235 243 253; /* headings */
+    --line: 116 158 206; /* blue hairlines */
+    --tint: 125 165 212; /* soft washes */
     --shadow: 0 0 0; /* black shadow */
+    --glass: 11 26 45; /* glass panel fill channel */
+    --glass-alpha: 0.55;
+    --aurora-opacity: 1;
   }
 
   html {
@@ -38,8 +44,50 @@
   body {
     @apply bg-canvas text-ink font-sans;
     transition:
-      background-color 0.3s ease,
-      color 0.3s ease;
+      background-color 0.4s ease,
+      color 0.4s ease;
+  }
+
+  /* ── Aurora atmosphere: two fixed gradient veils drifting behind the UI.
+        Pure CSS so it renders instantly; the WebGL particle field layers on
+        top of it once Three.js lazy-loads. ── */
+  body::before,
+  body::after {
+    content: '';
+    position: fixed;
+    inset: -20%;
+    z-index: -2;
+    pointer-events: none;
+    opacity: calc(var(--aurora-opacity) * 0.85);
+    will-change: transform;
+  }
+  body::before {
+    background:
+      radial-gradient(38% 42% at 18% 18%, rgba(40, 132, 198, 0.2), transparent 70%),
+      radial-gradient(34% 38% at 85% 12%, rgba(124, 182, 188, 0.16), transparent 70%),
+      radial-gradient(40% 44% at 78% 88%, rgba(20, 64, 102, 0.22), transparent 70%);
+    animation: aurora 22s ease-in-out infinite;
+  }
+  body::after {
+    background:
+      radial-gradient(30% 34% at 65% 30%, rgba(94, 234, 212, 0.07), transparent 70%),
+      radial-gradient(26% 30% at 25% 80%, rgba(192, 138, 30, 0.07), transparent 70%);
+    animation: aurora 30s ease-in-out infinite reverse;
+  }
+  .light body::before,
+  :root:not(.dark) body::before {
+    filter: saturate(0.9);
+  }
+
+  /* Fine film-grain so large gradients never band. */
+  .grain::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
   }
 
   /* Thin, brand-tinted scrollbar that adapts to the theme */
@@ -54,43 +102,282 @@
   ::-webkit-scrollbar-thumb:hover {
     background: rgb(var(--line) / 0.4);
   }
+
+  ::selection {
+    background: rgba(40, 132, 198, 0.35);
+  }
 }
 
 @layer components {
+  /* ── Glass card: the core surface of the redesign. Every dashboard view
+        already composes from `.card`, so this single class re-skins the
+        entire app. ── */
   .card {
-    @apply rounded-2xl border border-line/10 bg-surface shadow-card;
+    @apply relative rounded-2xl;
+    background:
+      linear-gradient(
+        160deg,
+        rgb(var(--glass) / calc(var(--glass-alpha) + 0.14)),
+        rgb(var(--glass) / var(--glass-alpha))
+      );
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgb(var(--line) / 0.12);
+    box-shadow:
+      0 1px 2px rgb(var(--shadow) / 0.05),
+      0 10px 30px -12px rgb(var(--shadow) / 0.18);
     transition:
-      background-color 0.3s ease,
-      border-color 0.3s ease,
-      box-shadow 0.3s ease;
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      border-color 0.35s ease,
+      box-shadow 0.35s ease,
+      background-color 0.35s ease;
   }
-  /* Deeper, blacker elevation in dark mode + a hairline top highlight */
+  /* Gradient hairline along the top edge — catches light like bevelled glass */
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      120deg,
+      rgba(94, 234, 212, 0.35),
+      rgba(40, 132, 198, 0.18) 28%,
+      transparent 55%,
+      rgba(192, 138, 30, 0.14) 90%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.55;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  .card:hover::before {
+    opacity: 1;
+  }
+  .card:hover {
+    border-color: rgb(var(--line) / 0.22);
+    box-shadow:
+      0 2px 6px rgb(var(--shadow) / 0.07),
+      0 24px 52px -18px rgb(var(--shadow) / 0.32);
+  }
   .dark .card {
     box-shadow:
-      0 1px 2px rgb(0 0 0 / 0.4),
-      0 12px 30px -12px rgb(0 0 0 / 0.65);
+      0 1px 2px rgb(0 0 0 / 0.45),
+      0 16px 38px -14px rgb(0 0 0 / 0.7);
   }
-  .dark .hover\:shadow-card-hover:hover {
+  .dark .card:hover {
     box-shadow:
-      0 2px 6px rgb(0 0 0 / 0.45),
-      0 18px 40px -14px rgb(0 0 0 / 0.75);
+      0 2px 6px rgb(0 0 0 / 0.5),
+      0 26px 60px -18px rgb(0 0 0 / 0.8),
+      0 0 36px -14px rgba(94, 234, 212, 0.18);
+  }
+
+  /* Interactive lift used by KPI tiles & link cards */
+  .card-lift:hover {
+    transform: translateY(-4px);
   }
 
   .nav-link {
-    @apply flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/70 transition-colors duration-150 hover:bg-white/10 hover:text-white;
+    @apply relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/65 transition-all duration-200 hover:bg-white/[0.07] hover:text-white;
   }
-
+  .nav-link .nav-ico {
+    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .nav-link:hover .nav-ico {
+    transform: translateX(2px) scale(1.12);
+  }
   .nav-link-active {
-    @apply bg-white/15 text-white shadow-sm;
+    @apply text-white;
+    background: linear-gradient(
+      90deg,
+      rgba(94, 234, 212, 0.16),
+      rgba(40, 132, 198, 0.12) 60%,
+      rgba(255, 255, 255, 0.04)
+    );
+    box-shadow:
+      inset 0 0 0 1px rgba(94, 234, 212, 0.22),
+      0 0 18px -6px rgba(94, 234, 212, 0.35);
+  }
+  .nav-link-active::before {
+    content: '';
+    position: absolute;
+    left: -0.25rem;
+    top: 50%;
+    height: 55%;
+    width: 3px;
+    border-radius: 9999px;
+    background: linear-gradient(180deg, #5eead4, #2884c6);
+    transform: translateY(-50%);
+    box-shadow: 0 0 12px rgba(94, 234, 212, 0.8);
   }
 
   .chip {
     @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold;
   }
 
+  /* Gradient headline text used across heroes & section labels */
+  .text-aurora {
+    background: linear-gradient(92deg, #5eead4 0%, #7cc6e8 45%, #2884c6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+  .text-gold {
+    background: linear-gradient(92deg, #e8c476, #c08a1e);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  /* Primary CTA — luminous gradient pill with a sheen sweep on hover */
+  .btn-glow {
+    @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-2xl px-6 py-3 text-sm font-bold text-navy-900;
+    background: linear-gradient(110deg, #8ff0de, #5eead4 35%, #6cc3d5);
+    box-shadow:
+      0 10px 30px -10px rgba(94, 234, 212, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transition:
+      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.3s ease;
+  }
+  .btn-glow:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 16px 40px -10px rgba(94, 234, 212, 0.65),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  }
+  .btn-glow::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 35%,
+      rgba(255, 255, 255, 0.65) 50%,
+      transparent 65%
+    );
+    transform: translateX(-120%);
+    transition: transform 0.7s ease;
+  }
+  .btn-glow:hover::after {
+    transform: translateX(120%);
+  }
+
+  /* Secondary CTA — outlined glass */
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-semibold text-white ring-1 ring-white/20 transition-all duration-300 hover:bg-white/10 hover:ring-white/40;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+
+  /* Sheen sweep on hoverable tiles (KPI cards) */
+  .sheen {
+    position: relative;
+    overflow: hidden;
+  }
+  .sheen::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      105deg,
+      transparent 40%,
+      rgb(var(--heading) / 0.06) 50%,
+      transparent 60%
+    );
+    transform: translateX(-130%);
+    transition: transform 0.8s ease;
+  }
+  .sheen:hover::after {
+    transform: translateX(130%);
+  }
+
   /* Recharts focus outlines off for a cleaner look */
   .recharts-wrapper:focus,
   .recharts-surface:focus {
     outline: none;
+  }
+
+  /* ── Custom cursor (desktop, fine pointers only) ── */
+  @media (pointer: fine) {
+    .cursor-dot,
+    .cursor-ring {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 90;
+      pointer-events: none;
+      border-radius: 9999px;
+      mix-blend-mode: difference;
+    }
+    .cursor-dot {
+      width: 6px;
+      height: 6px;
+      background: #fff;
+    }
+    .cursor-ring {
+      width: 34px;
+      height: 34px;
+      border: 1.5px solid rgba(255, 255, 255, 0.65);
+      transition:
+        width 0.25s ease,
+        height 0.25s ease,
+        border-color 0.25s ease;
+    }
+    .cursor-ring.is-active {
+      width: 52px;
+      height: 52px;
+      border-color: #fff;
+    }
+  }
+
+  /* Scroll progress beam pinned to the very top of the viewport */
+  .scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2.5px;
+    z-index: 80;
+    transform-origin: 0 50%;
+    transform: scaleX(0);
+    background: linear-gradient(90deg, #5eead4, #2884c6 55%, #c08a1e);
+    box-shadow: 0 0 12px rgba(94, 234, 212, 0.6);
+    pointer-events: none;
+  }
+
+  /* Page-transition curtain */
+  .page-curtain {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    pointer-events: none;
+    visibility: hidden;
+    clip-path: inset(100% 0 0 0);
+    background:
+      radial-gradient(60% 50% at 50% 50%, rgba(94, 234, 212, 0.14), transparent 70%),
+      linear-gradient(160deg, #06101f, #0b2235 55%, #0d2741);
+  }
+
+  /* Reduced motion: kill the decorative loops, keep content legible */
+  @media (prefers-reduced-motion: reduce) {
+    body::before,
+    body::after {
+      animation: none;
+    }
+    .cursor-dot,
+    .cursor-ring {
+      display: none;
+    }
   }
 }

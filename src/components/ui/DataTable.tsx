@@ -33,11 +33,11 @@ export default function DataTable({
     <div className="-mx-1 overflow-x-auto">
       <table className="w-full border-collapse text-sm">
         <thead>
-          <tr className="border-b-2 border-line/15">
+          <tr className="border-b border-glow/20">
             {columns.map((c, i) => (
               <th
                 key={i}
-                className={`${pad} ${alignClass(c.align)} text-xs font-bold uppercase tracking-wide text-heading/70 ${c.className ?? ''}`}
+                className={`${pad} ${alignClass(c.align)} font-display text-xs font-bold uppercase tracking-[0.08em] text-heading/75 ${c.className ?? ''}`}
               >
                 {c.label}
               </th>
@@ -48,8 +48,8 @@ export default function DataTable({
           {rows.map((row, ri) => (
             <tr
               key={ri}
-              className={`border-b border-line/5 transition-colors hover:bg-mist/60 ${
-                highlightRows.includes(ri) ? 'bg-azure/[0.06] font-semibold' : ''
+              className={`border-b border-line/10 transition-colors duration-200 hover:bg-tint/[0.07] ${
+                highlightRows.includes(ri) ? 'bg-azure/[0.08] font-semibold' : ''
               }`}
             >
               {row.map((cellValue, ci) => (

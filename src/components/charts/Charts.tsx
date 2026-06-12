@@ -90,12 +90,12 @@ interface ChartTheme {
 function useChartTheme(): ChartTheme {
   const { isDark } = useThemeMode()
   return {
-    axisTick: { fontSize: 11, fill: isDark ? '#86a6cc' : '#6b7a88' },
-    cursorFill: isDark ? 'rgba(125,165,212,0.10)' : 'rgba(20,64,102,0.05)',
-    sliceStroke: isDark ? '#112c46' : '#ffffff',
-    axisLine: isDark ? '#23456b' : '#dbe5ee',
-    dataLabel: isDark ? '#c9d8ea' : '#41617d',
-    donutName: isDark ? '#eaf2fc' : '#144066',
+    axisTick: { fontSize: 11, fill: isDark ? '#8fb3da' : '#6b7a88' },
+    cursorFill: isDark ? 'rgba(94,234,212,0.07)' : 'rgba(20,64,102,0.05)',
+    sliceStroke: isDark ? '#0c1c30' : '#ffffff',
+    axisLine: isDark ? '#1d3a5c' : '#dbe5ee',
+    dataLabel: isDark ? '#c7d7ea' : '#41617d',
+    donutName: isDark ? '#ebf3fd' : '#144066',
   }
 }
 
@@ -302,7 +302,7 @@ export function ComparisonBars({
             name={sdef.name}
             fill={sdef.color}
             stackId={stacked ? 'a' : undefined}
-            radius={stacked ? [0, 0, 0, 0] : vertical ? [0, 4, 4, 0] : [4, 4, 0, 0]}
+            radius={stacked ? [0, 0, 0, 0] : vertical ? [0, 6, 6, 0] : [6, 6, 0, 0]}
             maxBarSize={vertical ? 22 : 46}
           >
             {showValues && (

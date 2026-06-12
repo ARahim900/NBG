@@ -84,7 +84,7 @@ export default function InstallPrompt() {
         role="dialog"
         aria-modal="true"
         aria-labelledby="install-title"
-        className="relative z-10 w-full animate-fade-up rounded-t-2xl border-t border-white/10 bg-gradient-to-b from-navy to-navy-800 p-5 text-white shadow-2xl dark:from-navy-800 dark:to-navy-900 sm:max-w-md sm:rounded-2xl sm:border"
+        className="relative z-10 w-full animate-fade-up rounded-t-3xl border-t border-glow/20 bg-[#081626]/95 p-5 text-white shadow-2xl backdrop-blur-xl sm:max-w-md sm:rounded-3xl sm:border"
         style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 1.25rem)' }}
       >
         <button

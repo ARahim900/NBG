@@ -13,6 +13,8 @@ export default defineConfig({
           react: ['react', 'react-dom'],
           charts: ['recharts'],
           icons: ['lucide-react'],
+          motion: ['gsap'],
+          three: ['three'],
         },
       },
     },

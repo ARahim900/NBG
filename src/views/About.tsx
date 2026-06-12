@@ -1,4 +1,6 @@
+import { Suspense, lazy, useLayoutEffect, useRef } from 'react'
 import {
+  ArrowDown,
   Award,
   Baby,
   Building2,
@@ -30,6 +32,11 @@ import {
 } from '../data/department'
 import { mc } from '../data/nbg'
 import { int } from '../lib/format'
+import { animateHero } from '../lib/motion'
+import { useMagnetic, useTilt } from '../lib/interactions'
+import AnimatedNumber from '../components/ui/AnimatedNumber'
+
+const HeroScene = lazy(() => import('../components/three/HeroScene'))
 
 interface ViewProps {
   onNavigate: (id: ViewId) => void
@@ -50,122 +57,216 @@ const SECTION_ICONS: Record<string, LucideIcon> = {
   child: Baby,
 }
 const SECTION_BAR: Record<Section['accent'], string> = {
-  navy: 'before:bg-navy',
-  azure: 'before:bg-azure',
-  teal: 'before:bg-teal-600',
+  navy: 'before:bg-gradient-to-b before:from-azure before:to-navy',
+  azure: 'before:bg-gradient-to-b before:from-glow before:to-azure',
+  teal: 'before:bg-gradient-to-b before:from-teal before:to-teal-700',
 }
 const SECTION_ICONBG: Record<Section['accent'], string> = {
-  navy: 'bg-tint/10 text-heading',
-  azure: 'bg-azure/10 text-azure',
-  teal: 'bg-teal/15 text-teal-700',
+  navy: 'bg-tint/10 text-heading ring-1 ring-azure/25',
+  azure: 'bg-azure/10 text-azure ring-1 ring-azure/30',
+  teal: 'bg-teal/15 text-teal-700 ring-1 ring-teal/30 dark:text-teal',
 }
 
 const ancFor = (key: string): number =>
   mc.byWilayat2025.find((w) => w.wilayat === key)?.newAnc ?? 0
 
-export default function About({ onNavigate }: ViewProps) {
+/** Core-value tile with pointer tilt. */
+function ValueCard({ v }: { v: (typeof values)[number] }) {
+  const ref = useTilt<HTMLElement>(8)
+  const Icon = VALUE_ICONS[v.iconKey]
   return (
-    <div className="space-y-10">
-      {/* ===== Official letterhead ===== */}
-      <section className="flex justify-center rounded-2xl border border-line/10 bg-white px-6 py-7 shadow-card transition-colors duration-300 dark:border-white/10 dark:bg-navy">
-        <img
-          src="/moh-logo-navy.png"
-          alt="وزارة الصحة — Ministry of Health, Oman"
-          className="block max-h-36 w-auto dark:hidden"
-        />
-        <img
-          src="/moh-logo-white.png"
-          alt=""
-          aria-hidden="true"
-          className="hidden max-h-36 w-auto dark:block"
-        />
-      </section>
+    <article ref={ref} className="card card-lift sheen group p-4">
+      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-navy to-navy-600 text-glow shadow-md transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6">
+        <Icon className="h-5 w-5" />
+      </span>
+      <h3 dir="rtl" className="mt-3 font-ar text-lg font-bold text-heading">
+        {v.ar}
+      </h3>
+      <p className="font-display text-xs font-semibold uppercase tracking-[0.12em] text-azure">
+        {v.en}
+      </p>
+      <p dir="rtl" className="mt-2 font-ar text-[0.8rem] leading-relaxed text-ink/65">
+        {v.descAr}
+      </p>
+    </article>
+  )
+}
 
-      {/* ===== Hero ===== */}
-      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-navy via-navy-700 to-navy-800 px-6 py-10 text-white shadow-card sm:px-10 sm:py-14">
-        <div
-          className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-teal/10 blur-2xl"
-          aria-hidden="true"
+/** Wilayat tile with its live ANC counter. */
+function WilayatCard({ w }: { w: (typeof wilayats)[number] }) {
+  const ref = useTilt<HTMLElement>(9)
+  return (
+    <article ref={ref} className="card card-lift group p-4 text-center">
+      <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-mist text-heading ring-1 ring-glow/25 transition-all duration-300 group-hover:text-glow group-hover:shadow-glow-teal">
+        <MapPin className="h-5 w-5" />
+      </span>
+      <h3 dir="rtl" className="mt-3 font-ar text-lg font-extrabold text-heading">
+        {w.ar}
+      </h3>
+      <p className="text-xs font-semibold text-ink/55">{w.en}</p>
+      <p dir="rtl" className="mt-1 font-ar text-[0.7rem] text-ink/45">
+        {w.note}
+      </p>
+      <div className="mt-3 border-t border-line/10 pt-2">
+        <AnimatedNumber
+          value={int(ancFor(w.dataKey))}
+          className="font-display text-base font-bold text-azure"
         />
-        <div
-          className="pointer-events-none absolute -bottom-20 -left-10 h-64 w-64 rounded-full bg-azure/10 blur-2xl"
-          aria-hidden="true"
-        />
-        <div className="relative">
-          <span className="chip bg-white/10 text-teal">
+        <p className="text-[0.62rem] font-medium uppercase tracking-wide text-ink/45">
+          ANC 2025
+        </p>
+      </div>
+    </article>
+  )
+}
+
+export default function About({ onNavigate }: ViewProps) {
+  const heroRef = useRef<HTMLElement>(null)
+  const ctaRef = useMagnetic<HTMLButtonElement>(0.22)
+  const cta2Ref = useMagnetic<HTMLButtonElement>(0.22)
+  const finaleRef = useMagnetic<HTMLButtonElement>(0.18)
+
+  useLayoutEffect(() => {
+    if (!heroRef.current) return
+    return animateHero(heroRef.current)
+  }, [])
+
+  return (
+    <div className="space-y-12">
+      {/* ===== Immersive hero — 3D helix, layered light, staged reveal ===== */}
+      <section
+        ref={heroRef}
+        className="relative -mt-1 overflow-hidden rounded-3xl bg-[#071527] text-white shadow-card ring-1 ring-white/10"
+        data-reveal
+      >
+        {/* 3D scene — fills the panel, content floats above it */}
+        <div className="absolute inset-0 opacity-90 lg:left-1/3">
+          <Suspense fallback={null}>
+            <HeroScene />
+          </Suspense>
+        </div>
+        {/* Light field & legibility gradients */}
+        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+          <div className="absolute -left-24 -top-24 h-80 w-80 rounded-full bg-azure/20 blur-3xl" />
+          <div className="absolute -bottom-32 right-1/4 h-96 w-96 rounded-full bg-glow/10 blur-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#071527] via-[#071527]/80 to-transparent lg:via-[#071527]/55" />
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-glow/50 to-transparent" />
+        </div>
+
+        <div className="relative px-6 py-12 sm:px-10 sm:py-16 lg:py-20">
+          <span className="chip bg-white/10 text-glow ring-1 ring-glow/30" data-hero>
             <Sparkles className="h-3.5 w-3.5" />
             الخطة الخمسية الحادية عشرة · 2026–2030
           </span>
 
           <h1
             dir="rtl"
-            className="mt-5 font-ar text-3xl font-extrabold leading-tight sm:text-5xl"
+            className="mt-6 max-w-3xl font-ar text-4xl font-extrabold leading-tight sm:text-6xl"
+            data-hero
           >
             {department.nameAr}
           </h1>
-          <p className="mt-2 text-lg font-semibold text-teal sm:text-2xl">
+          <p
+            className="text-aurora mt-3 font-display text-xl font-bold sm:text-3xl"
+            data-hero
+          >
             {department.nameEn}
           </p>
 
-          <div className="mt-4 h-1 w-24 rounded-full bg-gradient-to-r from-teal to-azure" />
+          <div
+            className="mt-5 h-1 w-28 rounded-full bg-gradient-to-r from-glow via-azure to-warn shadow-glow-teal"
+            data-hero
+            aria-hidden="true"
+          />
 
-          <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-white/75">
+          <div
+            className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-white/75"
+            data-hero
+          >
             <span dir="rtl" className="flex items-center gap-2 font-ar">
-              <MapPin className="h-4 w-4 text-teal" />
+              <MapPin className="h-4 w-4 text-glow" />
               {department.governorateAr}
             </span>
             <span dir="rtl" className="flex items-center gap-2 font-ar">
-              <Building2 className="h-4 w-4 text-teal" />
+              <Building2 className="h-4 w-4 text-glow" />
               {department.authorityAr}
             </span>
           </div>
 
-          <div className="mt-7 flex flex-wrap gap-3">
-            <button
-              onClick={() => onNavigate('overview')}
-              className="inline-flex items-center gap-2 rounded-xl bg-teal px-5 py-2.5 text-sm font-bold text-navy-900 shadow-sm transition-transform hover:-translate-y-0.5"
-            >
+          <div className="mt-8 flex flex-wrap gap-4" data-hero>
+            <button ref={ctaRef} onClick={() => onNavigate('overview')} className="btn-glow">
               استعراض لوحات المؤشرات · View Dashboards
             </button>
-            <button
-              onClick={() => onNavigate('asd')}
-              className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-5 py-2.5 text-sm font-semibold text-white ring-1 ring-white/15 transition-colors hover:bg-white/15"
-            >
+            <button ref={cta2Ref} onClick={() => onNavigate('asd')} className="btn-ghost">
               المؤشرات الصحية 2023–2025
             </button>
+          </div>
+
+          {/* Quick stats — live counters */}
+          <div
+            className="mt-12 grid max-w-2xl grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-4"
+            data-hero
+          >
+            {[
+              { v: int(demographics.population2025), en: 'Population 2025', ar: 'إجمالي السكان' },
+              { v: int(demographics.under18Omani), en: 'Omanis under 18', ar: 'دون 18 عاماً' },
+              { v: int(demographics.liveBirths2025), en: 'Live Births 2025', ar: 'المواليد الأحياء' },
+              { v: `${demographics.birthRate2025}‰`, en: 'Crude Birth Rate', ar: 'معدل المواليد' },
+            ].map((s) => (
+              <div key={s.en}>
+                <AnimatedNumber
+                  value={s.v}
+                  className="font-display text-2xl font-bold text-white sm:text-[1.7rem]"
+                />
+                <p className="mt-0.5 text-[0.7rem] font-semibold uppercase tracking-wide text-white/55">
+                  {s.en}
+                </p>
+                <p dir="rtl" className="font-ar text-[0.72rem] text-glow/70">
+                  {s.ar}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div
+            className="mt-10 hidden items-center gap-2 text-[0.7rem] font-medium uppercase tracking-[0.2em] text-white/40 sm:flex"
+            data-hero
+          >
+            <ArrowDown className="h-3.5 w-3.5 animate-bounce" />
+            Scroll to explore
           </div>
         </div>
       </section>
 
-      {/* ===== Governorate context ===== */}
-      <section className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
-        {[
-          { v: int(demographics.population2025), labEn: 'Population (2025)', labAr: 'إجمالي السكان' },
-          { v: int(demographics.under18Omani), labEn: 'Omanis under 18', labAr: 'العُمانيون دون 18' },
-          { v: int(demographics.liveBirths2025), labEn: 'Live Births (2025)', labAr: 'المواليد الأحياء' },
-          { v: `${demographics.birthRate2025}`, labEn: 'Crude Birth Rate', labAr: 'معدل المواليد الخام', unit: '‰' },
-        ].map((s) => (
-          <div key={s.labEn} className="card p-4 text-center">
-            <p className="text-2xl font-extrabold tracking-tight text-heading">
-              {s.v}
-              {s.unit && <span className="text-base text-ink/40"> {s.unit}</span>}
-            </p>
-            <p className="mt-0.5 text-xs font-semibold text-ink/65">{s.labEn}</p>
-            <p dir="rtl" className="font-ar text-[0.72rem] text-ink/45">{s.labAr}</p>
-          </div>
-        ))}
+      {/* ===== Official letterhead ===== */}
+      <section className="card flex justify-center px-6 py-7">
+        <img
+          src="/moh-logo-navy.png"
+          alt="وزارة الصحة — Ministry of Health, Oman"
+          className="block max-h-32 w-auto dark:hidden"
+        />
+        <img
+          src="/moh-logo-white.png"
+          alt=""
+          aria-hidden="true"
+          className="hidden max-h-32 w-auto dark:block"
+        />
       </section>
 
       {/* ===== Vision & Mission ===== */}
       <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <article className="card relative overflow-hidden p-6">
+          <Eye
+            className="pointer-events-none absolute -bottom-7 -left-7 h-36 w-36 text-azure/[0.07]"
+            aria-hidden="true"
+          />
           <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-tint/10 text-heading">
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-tint/10 text-heading ring-1 ring-azure/25">
               <Eye className="h-5 w-5" />
             </span>
             <div dir="rtl" className="font-ar">
               <h2 className="text-xl font-extrabold text-heading">الرؤية</h2>
-              <p className="text-xs font-semibold uppercase tracking-wide text-azure">
+              <p className="font-display text-xs font-semibold uppercase tracking-[0.14em] text-azure">
                 Vision
               </p>
             </div>
@@ -176,19 +277,23 @@ export default function About({ onNavigate }: ViewProps) {
           >
             {vision.ar}
           </p>
-          <p className="mt-3 border-t border-line/5 pt-3 text-sm leading-relaxed text-ink/60">
+          <p className="mt-3 border-t border-line/10 pt-3 text-sm leading-relaxed text-ink/60">
             {vision.en}
           </p>
         </article>
 
         <article className="card relative overflow-hidden p-6">
+          <Compass
+            className="pointer-events-none absolute -bottom-7 -left-7 h-36 w-36 text-teal/[0.1]"
+            aria-hidden="true"
+          />
           <div className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal/15 text-teal-700">
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal/15 text-teal-700 ring-1 ring-teal/30 dark:text-teal">
               <Compass className="h-5 w-5" />
             </span>
             <div dir="rtl" className="font-ar">
               <h2 className="text-xl font-extrabold text-heading">الرسالة</h2>
-              <p className="text-xs font-semibold uppercase tracking-wide text-azure">
+              <p className="font-display text-xs font-semibold uppercase tracking-[0.14em] text-azure">
                 Mission
               </p>
             </div>
@@ -199,7 +304,7 @@ export default function About({ onNavigate }: ViewProps) {
           >
             {mission.ar}
           </p>
-          <p className="mt-3 border-t border-line/5 pt-3 text-sm leading-relaxed text-ink/60">
+          <p className="mt-3 border-t border-line/10 pt-3 text-sm leading-relaxed text-ink/60">
             {mission.en}
           </p>
         </article>
@@ -207,38 +312,22 @@ export default function About({ onNavigate }: ViewProps) {
 
       {/* ===== Values ===== */}
       <section>
-        <div dir="rtl" className="mb-4 text-center font-ar">
+        <div dir="rtl" className="mb-5 text-center font-ar" data-reveal>
           <h2 className="text-2xl font-extrabold text-heading">القِيَم</h2>
           <p className="text-sm text-ink/55">
             القيم المؤسسية الموجِّهة للعمل · Our Core Values
           </p>
         </div>
         <div className="grid grid-cols-2 gap-3.5 md:grid-cols-3 xl:grid-cols-4">
-          {values.map((v) => {
-            const Icon = VALUE_ICONS[v.iconKey]
-            return (
-              <article key={v.en} className="card p-4 transition-shadow hover:shadow-card-hover">
-                <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-navy to-navy-600 text-white shadow-sm">
-                  <Icon className="h-5 w-5" />
-                </span>
-                <h3 dir="rtl" className="mt-3 font-ar text-lg font-bold text-heading">
-                  {v.ar}
-                </h3>
-                <p className="text-xs font-semibold uppercase tracking-wide text-azure">
-                  {v.en}
-                </p>
-                <p dir="rtl" className="mt-2 font-ar text-[0.8rem] leading-relaxed text-ink/65">
-                  {v.descAr}
-                </p>
-              </article>
-            )
-          })}
+          {values.map((v) => (
+            <ValueCard key={v.en} v={v} />
+          ))}
         </div>
       </section>
 
       {/* ===== Department sections / مهام الأقسام ===== */}
       <section>
-        <div dir="rtl" className="mb-4 text-center font-ar">
+        <div dir="rtl" className="mb-5 text-center font-ar" data-reveal>
           <h2 className="text-2xl font-extrabold text-heading">مهام الأقسام</h2>
           <p className="text-sm text-ink/55">
             الأقسام الثلاثة للدائرة وأهدافها الاستراتيجية · Department Sections
@@ -263,7 +352,7 @@ export default function About({ onNavigate }: ViewProps) {
                       </span>
                       <div dir="rtl" className="font-ar">
                         <h3 className="text-xl font-extrabold text-heading">{s.titleAr}</h3>
-                        <p className="text-xs font-semibold uppercase tracking-wide text-azure">
+                        <p className="font-display text-xs font-semibold uppercase tracking-[0.14em] text-azure">
                           {s.titleEn}
                         </p>
                       </div>
@@ -306,7 +395,7 @@ export default function About({ onNavigate }: ViewProps) {
 
       {/* ===== Wilayats ===== */}
       <section>
-        <div dir="rtl" className="mb-4 text-center font-ar">
+        <div dir="rtl" className="mb-5 text-center font-ar" data-reveal>
           <h2 className="text-2xl font-extrabold text-heading">ولايات شمال الباطنة</h2>
           <p className="text-sm text-ink/55">
             ست ولايات تغطيها خدمات الدائرة · The Six Wilayat of North Batinah
@@ -314,46 +403,37 @@ export default function About({ onNavigate }: ViewProps) {
         </div>
         <div className="grid grid-cols-2 gap-3.5 md:grid-cols-3 lg:grid-cols-6">
           {wilayats.map((w) => (
-            <article
-              key={w.en}
-              className="card group p-4 text-center transition-all hover:-translate-y-0.5 hover:shadow-card-hover"
-            >
-              <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-mist text-heading ring-1 ring-line/10">
-                <MapPin className="h-5 w-5" />
-              </span>
-              <h3 dir="rtl" className="mt-3 font-ar text-lg font-extrabold text-heading">
-                {w.ar}
-              </h3>
-              <p className="text-xs font-semibold text-ink/55">{w.en}</p>
-              <p dir="rtl" className="mt-1 font-ar text-[0.7rem] text-ink/45">
-                {w.note}
-              </p>
-              <div className="mt-3 border-t border-line/5 pt-2">
-                <p className="text-base font-extrabold text-azure">{int(ancFor(w.dataKey))}</p>
-                <p className="text-[0.62rem] font-medium uppercase tracking-wide text-ink/45">
-                  ANC 2025
-                </p>
-              </div>
-            </article>
+            <WilayatCard key={w.en} w={w} />
           ))}
         </div>
       </section>
 
-      {/* ===== CTA footer ===== */}
-      <section className="rounded-2xl border border-line/10 bg-surface p-6 text-center shadow-card">
-        <h2 dir="rtl" className="font-ar text-xl font-extrabold text-heading">
-          المؤشرات الصحية للأعوام 2023 و2024 و2025
-        </h2>
-        <p className="mx-auto mt-2 max-w-xl text-sm text-ink/60">
-          Explore eight monitoring dashboards — screening, maternal care, perinatal
-          outcomes and family planning — across the six wilayat of North Batinah.
-        </p>
-        <button
-          onClick={() => onNavigate('overview')}
-          className="mt-5 inline-flex items-center gap-2 rounded-xl bg-navy px-6 py-3 text-sm font-bold text-white shadow-sm transition-transform hover:-translate-y-0.5"
-        >
-          استعراض لوحات المؤشرات · Open Dashboards
-        </button>
+      {/* ===== CTA finale ===== */}
+      <section
+        className="relative overflow-hidden rounded-3xl bg-[#071527] p-8 text-center text-white shadow-card ring-1 ring-white/10 sm:p-10"
+        data-reveal
+      >
+        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+          <div className="absolute -left-20 top-0 h-64 w-64 rounded-full bg-glow/10 blur-3xl" />
+          <div className="absolute -right-16 bottom-0 h-64 w-64 rounded-full bg-azure/20 blur-3xl" />
+          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-glow/40 to-transparent" />
+        </div>
+        <div className="relative">
+          <h2 dir="rtl" className="font-ar text-2xl font-extrabold">
+            المؤشرات الصحية للأعوام 2023 و2024 و2025
+          </h2>
+          <p className="mx-auto mt-2 max-w-xl text-sm text-white/65">
+            Explore eight monitoring dashboards — screening, maternal care, perinatal
+            outcomes and family planning — across the six wilayat of North Batinah.
+          </p>
+          <button
+            ref={finaleRef}
+            onClick={() => onNavigate('overview')}
+            className="btn-glow mt-6"
+          >
+            استعراض لوحات المؤشرات · Open Dashboards
+          </button>
+        </div>
       </section>
     </div>
   )
