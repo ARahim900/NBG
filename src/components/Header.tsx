@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { CalendarDays, Map, Menu } from 'lucide-react'
+import { CalendarDays, Map, Menu, Printer } from 'lucide-react'
 import { NAV_BY_ID, type ViewId } from '../lib/dashboards'
 import { meta } from '../data/nbg'
 import { YEAR_COLORS } from '../lib/theme'
@@ -104,7 +104,19 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
             ))}
           </div>
 
-          <ThemeToggle />
+          <button
+            type="button"
+            onClick={() => window.print()}
+            aria-label="Print or save this dashboard as PDF"
+            title="Print / save as PDF"
+            data-print-hide
+            className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-line/15 text-heading transition-colors hover:bg-tint/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azure/50 sm:flex"
+          >
+            <Printer className="h-4 w-4" />
+          </button>
+          <span data-print-hide className="contents">
+            <ThemeToggle />
+          </span>
         </div>
 
         {/* Context strip */}

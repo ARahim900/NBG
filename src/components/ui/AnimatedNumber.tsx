@@ -81,7 +81,11 @@ export default function AnimatedNumber({
       once: true,
       onEnter: () => tween.play(),
     })
+    // Printing never scrolls, so jump every counter to its final value first.
+    const finish = () => tween.progress(1)
+    window.addEventListener('beforeprint', finish)
     return () => {
+      window.removeEventListener('beforeprint', finish)
       st.kill()
       tween.kill()
       el.textContent = fmt(target)

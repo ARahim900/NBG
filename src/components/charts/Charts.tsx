@@ -16,7 +16,8 @@ import {
   YAxis,
 } from 'recharts'
 import type { PieLabelRenderProps } from 'recharts'
-import { SERIES } from '../../lib/theme'
+import { useId } from 'react'
+import { C, SERIES } from '../../lib/theme'
 import { useThemeMode } from '../../lib/theme-mode'
 
 export interface Series {
@@ -84,7 +85,12 @@ interface ChartTheme {
   dataLabel: string
   /** Bold category names / percentages on the donut + its legend. */
   donutName: string
+  /** Series colour adjusted for the theme (brand navy is invisible on dark). */
+  paint: (color: string) => string
 }
+
+/** Lighter stand-in for brand navy on the dark canvas (contrast ≥ 3:1). */
+const NAVY_ON_DARK = '#9bbfe8'
 
 /** Theme-aware chart chrome: axis ticks, hover cursor, slice gaps and data labels. */
 function useChartTheme(): ChartTheme {
@@ -96,7 +102,14 @@ function useChartTheme(): ChartTheme {
     axisLine: isDark ? '#1d3a5c' : '#dbe5ee',
     dataLabel: isDark ? '#c7d7ea' : '#41617d',
     donutName: isDark ? '#ebf3fd' : '#144066',
+    paint: (color) => (isDark && color === C.navy ? NAVY_ON_DARK : color),
   }
+}
+
+/** Compact numeric axis ticks: 150000 → 150k. */
+const compactTick = (v: number): string => {
+  const a = Math.abs(v)
+  return a >= 1000 ? `${(v / 1000).toFixed(a % 1000 === 0 ? 0 : 1)}k` : `${v}`
 }
 
 /** Format a value sat on top of a bar / point. Labels are always whole numbers
@@ -141,7 +154,10 @@ export function TrendChart({
   valueFormatter,
   showLegend = true,
 }: TrendProps) {
-  const { axisTick, axisLine, dataLabel } = useChartTheme()
+  const { axisTick, axisLine, dataLabel, paint } = useChartTheme()
+  // Gradient ids must be unique per chart: several charts on one page share
+  // series keys like "value", and SVG ids are global to the document.
+  const uid = useId().replace(/:/g, '')
   // Single-series trends get a tidy value sat above each point; multi-series
   // stays label-free (rely on the tooltip) to avoid overlapping figures.
   const showValues = series.length === 1
@@ -154,14 +170,14 @@ export function TrendChart({
             {series.map((sdef) => (
               <linearGradient
                 key={sdef.key}
-                id={`grad-${sdef.key}`}
+                id={`grad-${uid}-${sdef.key}`}
                 x1="0"
                 y1="0"
                 x2="0"
                 y2="1"
               >
-                <stop offset="0%" stopColor={sdef.color} stopOpacity={0.32} />
-                <stop offset="100%" stopColor={sdef.color} stopOpacity={0.02} />
+                <stop offset="0%" stopColor={paint(sdef.color)} stopOpacity={0.32} />
+                <stop offset="100%" stopColor={paint(sdef.color)} stopOpacity={0.02} />
               </linearGradient>
             ))}
           </defs>
@@ -175,10 +191,10 @@ export function TrendChart({
               type="monotone"
               dataKey={sdef.key}
               name={sdef.name}
-              stroke={sdef.color}
+              stroke={paint(sdef.color)}
               strokeWidth={2.5}
-              fill={`url(#grad-${sdef.key})`}
-              dot={{ r: 2.5, strokeWidth: 0, fill: sdef.color }}
+              fill={`url(#grad-${uid}-${sdef.key})`}
+              dot={{ r: 2.5, strokeWidth: 0, fill: paint(sdef.color) }}
               activeDot={{ r: 4.5 }}
             >
               {showValues && (
@@ -205,9 +221,9 @@ export function TrendChart({
               type="monotone"
               dataKey={sdef.key}
               name={sdef.name}
-              stroke={sdef.color}
+              stroke={paint(sdef.color)}
               strokeWidth={2.5}
-              dot={{ r: 2.5, strokeWidth: 0, fill: sdef.color }}
+              dot={{ r: 2.5, strokeWidth: 0, fill: paint(sdef.color) }}
               activeDot={{ r: 5 }}
             >
               {showValues && (
@@ -255,7 +271,7 @@ export function ComparisonBars({
   categoryWidth = 92,
 }: BarsProps) {
   const vertical = layout === 'vertical'
-  const { axisTick, axisLine, cursorFill, dataLabel } = useChartTheme()
+  const { axisTick, axisLine, cursorFill, dataLabel, paint } = useChartTheme()
   // Grouped bars carry their figure at the bar tip and drop the numeric axis;
   // stacked bars keep the axis (per-segment labels would collide).
   const showValues = !stacked
@@ -277,6 +293,7 @@ export function ComparisonBars({
               tickLine={false}
               axisLine={false}
               hide={showValues}
+              tickFormatter={compactTick}
             />
             <YAxis
               type="category"
@@ -290,7 +307,14 @@ export function ComparisonBars({
         ) : (
           <>
             <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: axisLine }} />
-            <YAxis tick={axisTick} tickLine={false} axisLine={false} width={44} hide={showValues} />
+            <YAxis
+              tick={axisTick}
+              tickLine={false}
+              axisLine={false}
+              width={44}
+              hide={showValues}
+              tickFormatter={compactTick}
+            />
           </>
         )}
         <Tooltip
@@ -303,7 +327,7 @@ export function ComparisonBars({
             key={sdef.key}
             dataKey={sdef.key}
             name={sdef.name}
-            fill={sdef.color}
+            fill={paint(sdef.color)}
             stackId={stacked ? 'a' : undefined}
             radius={stacked ? [0, 0, 0, 0] : vertical ? [0, 6, 6, 0] : [6, 6, 0, 0]}
             maxBarSize={vertical ? 22 : 46}
@@ -334,10 +358,6 @@ interface PyramidProps {
   height?: number
 }
 
-const compact = (v: number): string => {
-  const a = Math.abs(v)
-  return a >= 1000 ? `${(a / 1000).toFixed(a % 1000 === 0 ? 0 : 1)}k` : `${Math.round(a)}`
-}
 
 /**
  * Horizontal back-to-back bars: males to the left of the axis, females to the
@@ -345,7 +365,7 @@ const compact = (v: number): string => {
  * positive numbers; the component negates the male side itself.
  */
 export function PyramidChart({ data, bandKey, male, female, height = 440 }: PyramidProps) {
-  const { axisTick, axisLine, cursorFill } = useChartTheme()
+  const { axisTick, axisLine, cursorFill, paint } = useChartTheme()
   const maleKeys = new Set(male.map((s) => s.key))
   // Oldest band on top, as in a conventional pyramid.
   const rows = [...data].reverse().map((d) => {
@@ -369,7 +389,7 @@ export function PyramidChart({ data, bandKey, male, female, height = 440 }: Pyra
           tick={axisTick}
           tickLine={false}
           axisLine={{ stroke: axisLine }}
-          tickFormatter={compact}
+          tickFormatter={(v: number) => compactTick(Math.abs(v))}
         />
         <YAxis
           type="category"
@@ -391,7 +411,7 @@ export function PyramidChart({ data, bandKey, male, female, height = 440 }: Pyra
             key={sdef.key}
             dataKey={sdef.key}
             name={sdef.name}
-            fill={sdef.color}
+            fill={paint(sdef.color)}
             stackId="pyramid"
             maxBarSize={18}
           />
@@ -426,7 +446,7 @@ export function DonutChart({
   innerRadius,
   outerRadius,
 }: DonutProps) {
-  const { sliceStroke, donutName } = useChartTheme()
+  const { sliceStroke, donutName, paint } = useChartTheme()
   // Scale the ring with the card height so the donut fills taller cards
   // (paired with bar charts) instead of floating with empty space.
   const outer = outerRadius ?? Math.min(Math.max(Math.round(height * 0.33), 72), 104)
@@ -480,7 +500,7 @@ export function DonutChart({
           label={renderLabel}
         >
           {data.map((slice, i) => (
-            <Cell key={i} fill={slice.color ?? SERIES[i % SERIES.length]} />
+            <Cell key={i} fill={paint(slice.color ?? SERIES[i % SERIES.length])} />
           ))}
         </Pie>
         <Tooltip content={<ChartTooltip unit={unit} formatter={valueFormatter} />} />

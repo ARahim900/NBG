@@ -381,3 +381,53 @@
     }
   }
 }
+
+/* ── Print / Save as PDF: a clean, light, paper-friendly report ──
+      Scroll-reveal animations hide below-the-fold cards until they scroll into
+      view; without these overrides a printed dashboard comes out blank. */
+@media print {
+  @page {
+    margin: 12mm;
+  }
+  html {
+    color-scheme: light;
+  }
+  body {
+    background: #fff !important;
+  }
+  body::before,
+  body::after,
+  .grain::before,
+  aside,
+  nav,
+  canvas,
+  footer,
+  .page-curtain,
+  .scroll-progress,
+  .cursor-dot,
+  .cursor-ring,
+  [data-print-hide] {
+    display: none !important;
+  }
+  header {
+    position: static !important;
+    backdrop-filter: none !important;
+  }
+  .card,
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    break-inside: avoid;
+  }
+  .card {
+    background: #fff !important;
+    border-color: #d6e2ee !important;
+  }
+  .overflow-x-auto {
+    overflow: visible !important;
+  }
+}
