@@ -1,4 +1,4 @@
-import { Suspense, lazy, useLayoutEffect, useRef } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 import {
   ArrowDown,
   Award,
@@ -35,9 +35,7 @@ import { int } from '../lib/format'
 import { animateHero } from '../lib/motion'
 import { useMagnetic } from '../lib/interactions'
 import AnimatedNumber from '../components/ui/AnimatedNumber'
-import ErrorBoundary from '../components/ErrorBoundary'
 
-const HeroScene = lazy(() => import('../components/three/HeroScene'))
 
 interface ViewProps {
   onNavigate: (id: ViewId) => void
@@ -132,20 +130,12 @@ export default function About({ onNavigate }: ViewProps) {
 
   return (
     <div className="space-y-12">
-      {/* ===== Immersive hero — 3D helix, layered light, staged reveal ===== */}
+      {/* ===== Hero — layered light and a staged reveal; no moving scene ===== */}
       <section
         ref={heroRef}
         className="relative -mt-1 overflow-hidden rounded-3xl bg-[#071527] text-white shadow-card ring-1 ring-white/10"
         data-reveal
       >
-        {/* 3D scene — fills the panel, content floats above it */}
-        <div className="absolute inset-0 opacity-90 lg:left-1/3">
-          <ErrorBoundary fallback={null}>
-            <Suspense fallback={null}>
-              <HeroScene />
-            </Suspense>
-          </ErrorBoundary>
-        </div>
         {/* Light field & legibility gradients */}
         <div className="pointer-events-none absolute inset-0" aria-hidden="true">
           <div className="absolute -left-24 -top-24 h-80 w-80 rounded-full bg-azure/20 blur-3xl" />
@@ -233,7 +223,7 @@ export default function About({ onNavigate }: ViewProps) {
             className="mt-10 hidden items-center gap-2 text-[0.7rem] font-medium uppercase tracking-[0.2em] text-white/40 sm:flex"
             data-hero
           >
-            <ArrowDown className="h-3.5 w-3.5 animate-bounce" />
+            <ArrowDown className="h-3.5 w-3.5" />
             Scroll to explore
           </div>
         </div>
