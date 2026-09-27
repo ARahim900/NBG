@@ -47,7 +47,7 @@ interface TipProps {
 function ChartTooltip({ active, label, payload, unit, formatter }: TipProps) {
   if (!active || !payload || payload.length === 0) return null
   return (
-    <div className="rounded-xl border border-line/10 bg-surface/95 px-3 py-2 shadow-card backdrop-blur">
+    <div className="rounded-[4px] border border-[rgb(var(--card-border))] bg-surface px-3 py-2 shadow-card">
       {label !== undefined && (
         <p className="mb-1 text-xs font-bold text-heading">{label}</p>
       )}

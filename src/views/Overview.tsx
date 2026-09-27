@@ -18,6 +18,7 @@ import AnimatedNumber from '../components/ui/AnimatedNumber'
 import { ComparisonBars, TrendChart } from '../components/charts/Charts'
 import { NAV, type ViewId } from '../lib/dashboards'
 import { asd, fp, mc, meta, mt, sn, type YearPoint } from '../data/nbg'
+import { INSTITUTIONS } from '../data/population'
 import { C } from '../lib/theme'
 import { deltaPct, int, pct } from '../lib/format'
 
@@ -59,9 +60,11 @@ export default function Overview({ onNavigate }: ViewProps) {
               <span className="font-semibold text-white">2023, 2024 &amp; 2025</span>.
             </p>
           </div>
-          <div className="grid shrink-0 grid-cols-3 gap-2 text-center sm:gap-3 lg:min-w-[20rem]">
+          {/* Four figures: an even 2 × 2 on phones, one row of 4 on wider screens. */}
+          <div className="grid shrink-0 grid-cols-2 gap-2 text-center sm:grid-cols-4 sm:gap-3 lg:min-w-[26rem]">
             {[
               { v: String(DASHBOARD_COUNT), l: 'Dashboards' },
+              { v: String(INSTITUTIONS.length), l: 'Health centres' },
               { v: String(meta.wilayats.length), l: 'Wilayat' },
               { v: '3', l: 'Years' },
             ].map((s) => (
@@ -231,7 +234,8 @@ export default function Overview({ onNavigate }: ViewProps) {
           title="Explore the Dashboards"
           subtitle="Open any indicator for full detail"
         />
-        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+        {/* 14 pages → an even 7 × 2 grid. */}
+        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
           {NAV.filter((d) => d.id !== 'overview').map((d) => (
             <button
               key={d.id}
@@ -244,9 +248,11 @@ export default function Overview({ onNavigate }: ViewProps) {
               <span className="min-w-0 flex-1">
                 <span className="flex items-center gap-2">
                   <span className="font-bold text-heading">{d.name}</span>
-                  <span className="rounded-md bg-tint/5 px-1.5 py-0.5 text-[0.6rem] font-bold text-heading/55">
+                  {d.code && (
+                    <span className="rounded-md bg-tint/5 px-1.5 py-0.5 text-[0.6rem] font-bold text-heading/55">
                     {d.code}
                   </span>
+                  )}
                 </span>
                 <span className="mt-0.5 block text-xs leading-relaxed text-ink/55">
                   {d.blurb}

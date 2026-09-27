@@ -15,7 +15,6 @@ import Header from './components/Header'
 import Sidebar from './components/Sidebar'
 import BottomNav from './components/BottomNav'
 import InstallPrompt from './components/InstallPrompt'
-import Cursor from './components/Cursor'
 import ErrorBoundary from './components/ErrorBoundary'
 import { animateViewIn, gsap, motionOK } from './lib/motion'
 import { NAV_BY_ID, type ViewId, type ViewProps } from './lib/dashboards'
@@ -252,7 +251,6 @@ export default function App() {
         collapsed ? 'lg:pl-20' : 'lg:pl-72'
       }`}
     >
-      <Cursor />
 
       <Sidebar
         active={active}

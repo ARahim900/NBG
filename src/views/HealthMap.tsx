@@ -415,7 +415,7 @@ export default function HealthMap() {
             </svg>
 
             {/* Legend — floats over the sea on wider screens */}
-            <div className="border-t border-line/10 p-3 text-xs sm:absolute sm:right-3 sm:top-3 sm:w-56 sm:rounded-xl sm:border sm:bg-surface/85 sm:shadow-card sm:backdrop-blur">
+            <div className="border-t border-line/10 p-3 text-xs sm:absolute sm:right-3 sm:top-3 sm:w-56 sm:rounded-[4px] sm:border sm:border-[rgb(var(--card-border))] sm:bg-surface sm:shadow-card">
               <p className="font-semibold text-heading">{metric.label}</p>
               {metric.kind === 'count' ? (
                 <>

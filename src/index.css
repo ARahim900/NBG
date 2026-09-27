@@ -91,44 +91,56 @@
   /* ── Glass card: the core surface of the redesign. Every dashboard view
         already composes from `.card`, so this single class re-skins the
         entire app. ── */
-  /* ── Card: the MOH template card — flat white, a light-blue hairline and
-        the template's cut top-right corner. Every view composes from `.card`,
-        so this one rule styles the whole app. ── */
+  /* ── Card: the MOH template card — white, a light-blue hairline and the
+        template's cut top-right corner, lifted by a soft shadow that follows
+        the cut. Drawn as two layers behind the content: ::before is the
+        hairline, ::after the white face inset by 1px. (A clip-path on the card
+        itself would clip its shadow away.) Every view composes from `.card`. ── */
   .card {
-    @apply relative rounded-[4px];
+    @apply relative;
     --cut: 14px;
-    background-color: rgb(var(--surface));
-    border: 1px solid rgb(var(--card-border));
-    clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
+    isolation: isolate;
+    filter: drop-shadow(0 1px 1px rgb(var(--shadow) / 0.05))
+      drop-shadow(0 3px 8px rgb(var(--shadow) / 0.07));
     transition:
       transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-      border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-      background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      filter 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  /* The hairline continues along the cut corner. */
+  .card::before,
   .card::after {
     content: '';
     position: absolute;
-    /* Positioned in border-box coordinates (the padding box starts 1px in). */
-    top: -1px;
-    left: calc(100% + 1px - var(--cut));
-    width: calc(var(--cut) * 1.4142);
-    height: 1px;
-    background-color: rgb(var(--card-border));
-    transform-origin: 0 0;
-    transform: rotate(45deg);
+    z-index: -1;
     pointer-events: none;
     transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
-  .card:hover {
-    border-color: rgb(var(--card-border-hover, 185 214 239));
+  .card::before {
+    inset: 0;
+    border-radius: 4px;
+    background-color: rgb(var(--card-border));
+    clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
   }
-  .card:hover::after {
-    background-color: rgb(var(--card-border-hover, 185 214 239));
+  .card::after {
+    inset: 1px;
+    border-radius: 3px;
+    background-color: rgb(var(--surface));
+    /* 0.41px = 1px × (√2 − 1): keeps the hairline 1px wide along the cut. */
+    clip-path: polygon(
+      0 0,
+      calc(100% - var(--cut) + 0.41px) 0,
+      100% calc(var(--cut) - 0.41px),
+      100% 100%,
+      0 100%
+    );
   }
-  .dark .card:hover,
-  .dark .card:hover::after {
-    --card-border-hover: 52 92 136;
+  .card:hover::before {
+    background-color: rgb(185 214 239);
+  }
+  .dark .card {
+    filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.35)) drop-shadow(0 4px 10px rgb(0 0 0 / 0.3));
+  }
+  .dark .card:hover::before {
+    background-color: rgb(52 92 136);
   }
 
   /* Template accent tab: a short bar with a slanted end, in a flat colour.
@@ -143,6 +155,8 @@
   /* Interactive lift used by KPI tiles & link cards */
   .card-lift:hover {
     transform: translateY(-1px);
+    filter: drop-shadow(0 2px 2px rgb(var(--shadow) / 0.06))
+      drop-shadow(0 6px 14px rgb(var(--shadow) / 0.1));
   }
 
   .nav-link {
@@ -201,40 +215,6 @@
     outline: none;
   }
 
-  /* ── Custom cursor (desktop, fine pointers only) ── */
-  @media (pointer: fine) {
-    .cursor-dot,
-    .cursor-ring {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 90;
-      pointer-events: none;
-      border-radius: 9999px;
-      mix-blend-mode: difference;
-    }
-    .cursor-dot {
-      width: 6px;
-      height: 6px;
-      background: #fff;
-    }
-    .cursor-ring {
-      width: 34px;
-      height: 34px;
-      border: 1.5px solid rgba(255, 255, 255, 0.65);
-      transition:
-        width 0.25s ease,
-        height 0.25s ease,
-        border-color 0.25s ease;
-    }
-    .cursor-ring.is-active {
-      width: 52px;
-      height: 52px;
-      border-color: #fff;
-    }
-  }
-
-  /* Scroll progress beam pinned to the very top of the viewport */
   .scroll-progress {
     position: fixed;
     top: 0;
@@ -248,13 +228,6 @@
     pointer-events: none;
   }
 
-  /* Reduced motion: no custom cursor */
-  @media (prefers-reduced-motion: reduce) {
-    .cursor-dot,
-    .cursor-ring {
-      display: none;
-    }
-  }
 }
 
 /* ── Print / Save as PDF: a clean, light, paper-friendly report ──
@@ -275,8 +248,6 @@
   canvas,
   footer,
   .scroll-progress,
-  .cursor-dot,
-  .cursor-ring,
   [data-print-hide] {
     display: none !important;
   }
@@ -295,8 +266,10 @@
     break-inside: avoid;
   }
   .card {
-    background: #fff !important;
-    border-color: #d6e2ee !important;
+    filter: none !important;
+  }
+  .card::after {
+    background-color: #fff !important;
   }
   .overflow-x-auto {
     overflow: visible !important;

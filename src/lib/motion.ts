@@ -8,10 +8,6 @@ export const motionOK = (): boolean =>
   typeof window !== 'undefined' &&
   !window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-/** Fine-pointer desktop check for hover-driven effects (tilt, cursor…). */
-export const finePointer = (): boolean =>
-  typeof window !== 'undefined' && window.matchMedia('(pointer: fine)').matches
-
 /**
  * View entrance: every `.card` / `[data-reveal]` inside `root` rises gently
  * into place as it enters the viewport, and any chart inside it draws in from

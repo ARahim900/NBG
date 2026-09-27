@@ -33,7 +33,6 @@ import {
 import { mc } from '../data/nbg'
 import { int } from '../lib/format'
 import { animateHero } from '../lib/motion'
-import { useMagnetic } from '../lib/interactions'
 import AnimatedNumber from '../components/ui/AnimatedNumber'
 
 
@@ -56,9 +55,9 @@ const SECTION_ICONS: Record<string, LucideIcon> = {
   child: Baby,
 }
 const SECTION_BAR: Record<Section['accent'], string> = {
-  navy: 'before:bg-navy',
-  azure: 'before:bg-azure',
-  teal: 'before:bg-teal-700',
+  navy: 'bg-navy',
+  azure: 'bg-azure',
+  teal: 'bg-teal-700',
 }
 const SECTION_ICONBG: Record<Section['accent'], string> = {
   navy: 'bg-tint/10 text-heading ring-1 ring-azure/25',
@@ -119,9 +118,6 @@ function WilayatCard({ w }: { w: (typeof wilayats)[number] }) {
 
 export default function About({ onNavigate }: ViewProps) {
   const heroRef = useRef<HTMLElement>(null)
-  const ctaRef = useMagnetic<HTMLButtonElement>(0.22)
-  const cta2Ref = useMagnetic<HTMLButtonElement>(0.22)
-  const finaleRef = useMagnetic<HTMLButtonElement>(0.18)
 
   useLayoutEffect(() => {
     if (!heroRef.current) return
@@ -197,10 +193,10 @@ export default function About({ onNavigate }: ViewProps) {
           </div>
 
           <div className="mt-8 flex flex-wrap gap-4" data-hero>
-            <button ref={ctaRef} onClick={() => onNavigate('overview')} className="btn-glow">
+            <button onClick={() => onNavigate('overview')} className="btn-glow">
               استعراض لوحات المؤشرات · View Dashboards
             </button>
-            <button ref={cta2Ref} onClick={() => onNavigate('asd')} className="btn-ghost">
+            <button onClick={() => onNavigate('asd')} className="btn-ghost">
               المؤشرات الصحية 2023–2025
             </button>
           </div>
@@ -315,13 +311,23 @@ export default function About({ onNavigate }: ViewProps) {
 
       {/* ===== Values ===== */}
       <section>
-        <div dir="rtl" className="mb-5 text-center font-ar" data-reveal>
-          <h2 className="text-2xl font-extrabold text-heading">القِيَم</h2>
-          <p className="text-sm text-ink/55">
-            القيم المؤسسية الموجِّهة للعمل · Our Core Values
-          </p>
-        </div>
-        <div className="grid grid-cols-2 gap-3.5 md:grid-cols-3 xl:grid-cols-4">
+        {/* Seven values + a title tile = an even 4 × 2 grid (2 × 4 on phones). */}
+        <div dir="rtl" className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
+          <div
+            dir="rtl"
+            className="flex flex-col justify-center rounded-[4px] bg-navy p-5 text-white dark:bg-[#0b2235]"
+            style={{ clipPath: 'polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%)' }}
+            data-reveal
+          >
+            <h2 lang="ar" className="font-ar text-2xl font-bold">
+              القِيَم
+            </h2>
+            <p className="mt-1 font-serif text-lg">Our Core Values</p>
+            <span className="accent-tab mt-3 bg-glow" aria-hidden="true" />
+            <p lang="ar" className="mt-3 font-ar text-[0.8rem] leading-relaxed text-white/75">
+              القيم المؤسسية الموجِّهة للعمل
+            </p>
+          </div>
           {values.map((v) => (
             <ValueCard key={v.en} v={v} />
           ))}
@@ -342,8 +348,13 @@ export default function About({ onNavigate }: ViewProps) {
             return (
               <article
                 key={s.id}
-                className={`card relative overflow-hidden p-6 before:absolute before:inset-y-0 before:right-0 before:w-1.5 before:content-[''] ${SECTION_BAR[s.accent]}`}
+                className="card relative p-6"
               >
+                {/* Section colour bar (starts below the cut corner). */}
+                <span
+                  className={`absolute bottom-0 right-0 top-[14px] w-1.5 ${SECTION_BAR[s.accent]}`}
+                  aria-hidden="true"
+                />
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
                   {/* Identity + description */}
                   <div className="lg:col-span-2">
@@ -425,7 +436,6 @@ export default function About({ onNavigate }: ViewProps) {
             outcomes and family planning — across the six wilayat of North Batinah.
           </p>
           <button
-            ref={finaleRef}
             onClick={() => onNavigate('overview')}
             className="btn-glow mt-6"
           >
