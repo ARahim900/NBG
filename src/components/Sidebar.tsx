@@ -67,9 +67,9 @@ export default function Sidebar({
       />
 
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-r border-white/[0.07] bg-[#06121f]/90 backdrop-blur-2xl transition-[transform,width] duration-300 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-r border-white/[0.07] bg-[#06121f]/90 backdrop-blur-2xl transition-[transform,width,visibility] duration-300 lg:visible lg:translate-x-0 ${
           collapsed ? 'lg:w-20' : 'lg:w-72'
-        } ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}`}
+        } ${mobileOpen ? 'translate-x-0' : 'invisible -translate-x-full'}`}
       >
         {/* Aurora edge glow inside the panel */}
         <div

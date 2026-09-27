@@ -35,6 +35,7 @@ import { int } from '../lib/format'
 import { animateHero } from '../lib/motion'
 import { useMagnetic, useTilt } from '../lib/interactions'
 import AnimatedNumber from '../components/ui/AnimatedNumber'
+import ErrorBoundary from '../components/ErrorBoundary'
 
 const HeroScene = lazy(() => import('../components/three/HeroScene'))
 
@@ -141,9 +142,11 @@ export default function About({ onNavigate }: ViewProps) {
       >
         {/* 3D scene — fills the panel, content floats above it */}
         <div className="absolute inset-0 opacity-90 lg:left-1/3">
-          <Suspense fallback={null}>
-            <HeroScene />
-          </Suspense>
+          <ErrorBoundary fallback={null}>
+            <Suspense fallback={null}>
+              <HeroScene />
+            </Suspense>
+          </ErrorBoundary>
         </div>
         {/* Light field & legibility gradients */}
         <div className="pointer-events-none absolute inset-0" aria-hidden="true">

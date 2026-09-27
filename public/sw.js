@@ -4,7 +4,7 @@
  * changes no behavior while online — desktop users never see a difference.
  *
  * Deploy-safe by design (this is what keeps "zero behavioral shift" true):
- *   • HTML / navigations  → network-first  → a fresh Vercel deploy ALWAYS wins
+ *   • HTML / navigations  → network-first  → a fresh Netlify deploy ALWAYS wins
  *                                             when online; cache is the offline
  *                                             fallback only (no stale UI).
  *   • Hashed build assets → cache-first     → Vite fingerprints filenames, so a
@@ -13,7 +13,7 @@
  */
 
 // Bump this version string on any SW logic change to retire old caches on deploy.
-const CACHE = 'nbg-static-v1'
+const CACHE = 'nbg-static-v2'
 
 // Minimal app shell pre-cached so the app can cold-start while fully offline.
 const APP_SHELL = ['/', '/index.html', '/manifest.json', '/logo.png', '/favicon.png']
@@ -56,8 +56,10 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          const copy = response.clone()
-          caches.open(CACHE).then((cache) => cache.put('/index.html', copy))
+          if (response.ok) {
+            const copy = response.clone()
+            caches.open(CACHE).then((cache) => cache.put('/index.html', copy))
+          }
           return response
         })
         .catch(() =>
@@ -73,8 +75,12 @@ self.addEventListener('fetch', (event) => {
     caches.match(request).then((cached) => {
       const fromNetwork = fetch(request)
         .then((response) => {
-          // Cache only successful, same-origin ("basic") responses.
-          if (response && response.status === 200 && response.type === 'basic') {
+          // Cache only successful, same-origin ("basic") responses — and never an
+          // HTML page under a script/style URL. After a deploy, Netlify answers a
+          // deleted hashed chunk with index.html (200); caching that would break
+          // the app until the cache is cleared.
+          const isHtml = (response.headers.get('content-type') || '').includes('text/html')
+          if (response && response.status === 200 && response.type === 'basic' && !isHtml) {
             const copy = response.clone()
             caches.open(CACHE).then((cache) => cache.put(request, copy))
           }
