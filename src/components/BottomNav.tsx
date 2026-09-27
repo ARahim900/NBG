@@ -32,6 +32,11 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
   const [sheet, setSheet] = useState<Exclude<NavGroup, 'general'> | null>(null)
   const general = NAV.filter((i) => i.group === 'general')
   const activeGroup = NAV.find((i) => i.id === active)?.group
+  // Position of the highlighted tab, for the sliding indicator.
+  const tabCount = general.length + NAV_GROUPS.length
+  const generalIdx = general.findIndex((i) => i.id === active)
+  const tabIdx =
+    generalIdx >= 0 ? generalIdx : general.length + NAV_GROUPS.findIndex((g) => g.id === activeGroup)
 
   const go = (id: ViewId) => {
     onSelect(id)
@@ -39,7 +44,7 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
   }
 
   const tabClass = (on: boolean) =>
-    `flex flex-1 flex-col items-center justify-center gap-1 py-2 text-[0.62rem] font-semibold transition-colors ${
+    `flex flex-1 flex-col items-center justify-center gap-1 py-2 text-[0.62rem] font-semibold transition-colors duration-200 ${
       on ? 'text-glow drop-shadow-[0_0_8px_rgba(94,234,212,0.6)]' : 'text-white/70'
     }`
 
@@ -49,12 +54,12 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
       {sheet && (
         <>
           <div
-            className="fixed inset-0 z-40 bg-navy-900/50 backdrop-blur-sm"
+            className="fixed inset-0 z-40 animate-fade-in bg-navy-900/50 backdrop-blur-sm"
             onClick={() => setSheet(null)}
             aria-hidden="true"
           />
           <div
-            className="fixed inset-x-0 bottom-0 z-50 animate-fade-up rounded-t-3xl border-t border-glow/20 bg-[#06121f]/95 px-3 pt-3 shadow-2xl backdrop-blur-xl"
+            className="fixed inset-x-0 bottom-0 z-50 animate-sheet-up rounded-t-3xl border-t border-glow/20 bg-[#06121f]/95 px-3 pt-3 shadow-2xl backdrop-blur-xl"
             style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 4.75rem)' }}
             role="dialog"
             aria-label={`${GROUP_SHORT[sheet]} dashboards`}
@@ -93,6 +98,16 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
         aria-label="Primary"
       >
+        {/* Indicator glides to the active tab */}
+        {tabIdx >= 0 && (
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute left-0 top-0 flex justify-center transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
+            style={{ width: `${100 / tabCount}%`, transform: `translateX(${tabIdx * 100}%)` }}
+          >
+            <span className="h-[3px] w-8 rounded-b-full bg-glow shadow-[0_0_10px_rgba(94,234,212,0.7)]" />
+          </span>
+        )}
         {general.map((item) => {
           const isActive = active === item.id
           return (

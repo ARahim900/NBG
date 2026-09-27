@@ -33,7 +33,7 @@ import {
 import { mc } from '../data/nbg'
 import { int } from '../lib/format'
 import { animateHero } from '../lib/motion'
-import { useMagnetic, useTilt } from '../lib/interactions'
+import { useMagnetic } from '../lib/interactions'
 import AnimatedNumber from '../components/ui/AnimatedNumber'
 import ErrorBoundary from '../components/ErrorBoundary'
 
@@ -71,19 +71,18 @@ const SECTION_ICONBG: Record<Section['accent'], string> = {
 const ancFor = (key: string): number =>
   mc.byWilayat2025.find((w) => w.wilayat === key)?.newAnc ?? 0
 
-/** Core-value tile with pointer tilt. */
+/** Core-value tile. */
 function ValueCard({ v }: { v: (typeof values)[number] }) {
-  const ref = useTilt<HTMLElement>(8)
   const Icon = VALUE_ICONS[v.iconKey]
   return (
-    <article ref={ref} className="card card-lift sheen group p-4">
-      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-navy to-navy-600 text-glow shadow-md transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-6">
+    <article className="card card-lift sheen group p-4">
+      <span className="flex h-10 w-10 items-center justify-center rounded-control bg-gradient-to-br from-navy to-navy-600 text-glow shadow-md">
         <Icon className="h-5 w-5" />
       </span>
       <h3 dir="rtl" className="mt-3 font-ar text-lg font-bold text-heading">
         {v.ar}
       </h3>
-      <p className="font-display text-xs font-semibold uppercase tracking-[0.12em] text-azure">
+      <p className="text-eyebrow uppercase text-azure">
         {v.en}
       </p>
       <p dir="rtl" className="mt-2 font-ar text-[0.8rem] leading-relaxed text-ink/65">
@@ -95,9 +94,8 @@ function ValueCard({ v }: { v: (typeof values)[number] }) {
 
 /** Wilayat tile with its live ANC counter. */
 function WilayatCard({ w }: { w: (typeof wilayats)[number] }) {
-  const ref = useTilt<HTMLElement>(9)
   return (
-    <article ref={ref} className="card card-lift group p-4 text-center">
+    <article className="card card-lift group p-4 text-center">
       <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-mist text-heading ring-1 ring-glow/25 transition-all duration-300 group-hover:text-glow group-hover:shadow-glow-teal">
         <MapPin className="h-5 w-5" />
       </span>

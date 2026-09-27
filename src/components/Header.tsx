@@ -23,8 +23,8 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
     if (!titleRef.current || !motionOK()) return
     const tween = gsap.fromTo(
       titleRef.current,
-      { y: 14, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.55, ease: 'power3.out' },
+      { y: 6, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.4, ease: 'power2.out' },
     )
     return () => {
       tween.kill()
@@ -77,7 +77,7 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
             </div>
             <h1
               ref={titleRef}
-              className="truncate font-display text-lg font-bold tracking-tight text-heading sm:text-xl"
+              className="truncate text-xl font-bold tracking-[-0.02em] text-heading sm:text-display"
             >
               {active === 'about'
                 ? 'Women & Child Health Department'
@@ -110,7 +110,7 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
             aria-label="Print or save this dashboard as PDF"
             title="Print / save as PDF"
             data-print-hide
-            className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-line/15 text-heading transition-colors hover:bg-tint/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azure/50 sm:flex"
+            className="hidden h-9 w-9 shrink-0 items-center justify-center rounded-control border border-line/15 text-heading transition-colors hover:bg-tint/10 sm:flex"
           >
             <Printer className="h-4 w-4" />
           </button>

@@ -2,6 +2,11 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import { ThemeProvider } from './lib/theme-mode'
+// Self-hosted fonts (no Google Fonts request): DM Sans — the Muscat Bay
+// typeface — for Latin text, Cairo for Arabic. Only the scripts a page uses
+// are downloaded, and both work offline in the installed app.
+import '@fontsource-variable/dm-sans'
+import '@fontsource-variable/cairo'
 import './index.css'
 
 const rootEl = document.getElementById('root')

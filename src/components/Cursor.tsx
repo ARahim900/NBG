@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { gsap, finePointer, motionOK } from '../lib/motion'
 
 const INTERACTIVE = 'a, button, [role="button"], [role="switch"], [data-cursor]'
@@ -11,11 +11,14 @@ const INTERACTIVE = 'a, button, [role="button"], [role="switch"], [data-cursor]'
 export default function Cursor() {
   const dotRef = useRef<HTMLDivElement>(null)
   const ringRef = useRef<HTMLDivElement>(null)
+  // Decide once, before rendering: on touch devices or with reduced motion the
+  // elements must not exist at all (otherwise the ring sits stuck at 0,0).
+  const [enabled] = useState(() => finePointer() && motionOK())
 
   useEffect(() => {
     const dot = dotRef.current
     const ring = ringRef.current
-    if (!dot || !ring || !finePointer() || !motionOK()) return
+    if (!enabled || !dot || !ring) return
 
     gsap.set([dot, ring], { xPercent: -50, yPercent: -50, opacity: 0 })
     const dotX = gsap.quickTo(dot, 'x', { duration: 0.08, ease: 'power2.out' })
@@ -47,8 +50,9 @@ export default function Cursor() {
       window.removeEventListener('pointermove', move)
       document.documentElement.removeEventListener('pointerleave', leave)
     }
-  }, [])
+  }, [enabled])
 
+  if (!enabled) return null
   return (
     <>
       <div ref={dotRef} className="cursor-dot hidden lg:block" aria-hidden="true" />

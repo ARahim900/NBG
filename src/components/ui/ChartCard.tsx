@@ -24,20 +24,20 @@ export default function ChartCard({
       <header className="mb-4 flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
         <div className="min-w-0 flex-1">
           {/* Titles wrap rather than truncate: on phones they are the key label. */}
-          <h3 className="flex items-start gap-2 text-[0.95rem] font-bold leading-snug text-heading">
+          <h3 className="flex items-start gap-2 text-title text-heading">
             <span
-              className="mt-[0.2rem] h-3.5 w-1 shrink-0 rounded-full bg-gradient-to-b from-glow to-azure shadow-glow-teal"
+              className="mt-1 h-3.5 w-1 shrink-0 rounded-full bg-gradient-to-b from-glow to-azure shadow-glow-teal"
               aria-hidden="true"
             />
             <span className="min-w-0 [overflow-wrap:anywhere]">{title}</span>
           </h3>
-          {subtitle && <p className="mt-0.5 pl-3 text-xs text-ink/55">{subtitle}</p>}
+          {subtitle && <p className="mt-0.5 pl-3 text-caption text-ink/60">{subtitle}</p>}
         </div>
         {action && <div className="shrink-0">{action}</div>}
       </header>
       <div className="flex-1">{children}</div>
       {footnote && (
-        <p className="mt-3 border-t border-line/10 pt-3 text-[0.7rem] leading-relaxed text-ink/45">
+        <p className="mt-3 border-t border-line/10 pt-3 text-caption text-ink/55">
           {footnote}
         </p>
       )}

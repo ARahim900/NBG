@@ -2,7 +2,6 @@ import type { LucideIcon } from 'lucide-react'
 import type { ReactNode } from 'react'
 import Delta from './Delta'
 import AnimatedNumber from './AnimatedNumber'
-import { useTilt } from '../../lib/interactions'
 
 interface KpiCardProps {
   label: string
@@ -45,8 +44,9 @@ const ACCENTS: Record<string, { icon: string; beam: string; glow: string }> = {
 }
 
 /**
- * Executive KPI tile: glass surface, gradient icon gem, value that counts up
- * on first view, pointer-tracked 3D tilt and a sheen sweep on hover.
+ * KPI tile in the Muscat Bay layout — icon tile, uppercase label, value, one
+ * caption line — in this app's own colours. The value counts up on first view
+ * and glides between values when a filter changes.
  */
 export default function KpiCard({
   label,
@@ -58,14 +58,13 @@ export default function KpiCard({
   invertDelta,
   accent = 'navy',
 }: KpiCardProps) {
-  const tiltRef = useTilt<HTMLDivElement>(5)
   const a = ACCENTS[accent]
 
   return (
-    <div ref={tiltRef} className="card card-lift sheen group p-4 sm:p-5">
-      {/* Corner aura that breathes on hover */}
+    <div className="card card-lift sheen group p-4 sm:p-5">
+      {/* Corner aura that fades in on hover */}
       <div
-        className={`pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full blur-2xl transition-opacity duration-500 ${a.glow} opacity-0 group-hover:opacity-100`}
+        className={`pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full blur-2xl transition-opacity duration-300 ${a.glow} opacity-0 group-hover:opacity-100`}
         aria-hidden="true"
       />
       {/* Accent beam along the top edge */}
@@ -76,23 +75,20 @@ export default function KpiCard({
 
       <div className="relative flex items-start justify-between gap-3">
         <div
-          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br shadow-md transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3 ${a.icon}`}
+          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-control bg-gradient-to-br shadow-sm ${a.icon}`}
         >
           <Icon className="h-5 w-5" />
         </div>
         {delta !== undefined && <Delta value={delta} invert={invertDelta} />}
       </div>
 
-      <div className="relative mt-3.5">
-        <div className="flex items-baseline gap-1">
-          <AnimatedNumber
-            value={value}
-            className="font-display text-2xl font-bold tracking-tight text-heading sm:text-[1.75rem]"
-          />
-          {unit && <span className="text-sm font-semibold text-ink/45">{unit}</span>}
+      <div className="relative mt-3">
+        <p className="text-eyebrow uppercase text-ink/60">{label}</p>
+        <div className="mt-1.5 flex items-baseline gap-1">
+          <AnimatedNumber value={value} className="text-kpi tabular-nums text-heading" />
+          {unit && <span className="text-caption text-ink/55">{unit}</span>}
         </div>
-        <p className="mt-1 text-sm font-medium text-ink/70">{label}</p>
-        {hint && <p className="mt-1 text-xs text-ink/45">{hint}</p>}
+        {hint && <p className="mt-1 text-caption text-ink/55">{hint}</p>}
       </div>
     </div>
   )

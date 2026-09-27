@@ -13,13 +13,17 @@ export const finePointer = (): boolean =>
   typeof window !== 'undefined' && window.matchMedia('(pointer: fine)').matches
 
 /**
- * Cinematic view entrance: every `.card` / `[data-reveal]` inside `root`
- * rises out of a blur as it enters the viewport. Elements already on screen
- * stagger in immediately; the rest reveal on scroll (once).
+ * View entrance: every `.card` / `[data-reveal]` inside `root` rises gently
+ * into place as it enters the viewport, and any chart inside it draws in from
+ * left to right. Elements already on screen stagger in immediately; the rest
+ * reveal on scroll (once). Calm easing, no overshoot.
  *
  * Returns a cleanup that reverts all tweens & ScrollTriggers it created —
  * safe under React StrictMode double-invocation.
  */
+/** Chart containers rendered by Recharts (present before they measure). */
+const CHART = '.recharts-responsive-container'
+
 export function animateViewIn(root: HTMLElement): () => void {
   // Only top-level targets animate — a card nested inside another reveal
   // container rides its parent's tween instead of double-animating.
@@ -32,22 +36,34 @@ export function animateViewIn(root: HTMLElement): () => void {
 
   if (!motionOK() || targets.length === 0) return () => {}
 
+  const chartsIn = (els: Element[]) =>
+    els.flatMap((el) => Array.from(el.querySelectorAll<HTMLElement>(CHART)))
+
   const ctx = gsap.context(() => {
-    gsap.set(targets, { opacity: 0, y: 30, scale: 0.985 })
+    gsap.set(targets, { opacity: 0, y: 16 })
+    gsap.set(chartsIn(targets), { clipPath: 'inset(0% 100% 0% 0%)' })
     ScrollTrigger.batch(targets, {
       start: 'top 94%',
       once: true,
-      onEnter: (els) =>
+      onEnter: (els) => {
         gsap.to(els, {
           opacity: 1,
           y: 0,
-          scale: 1,
-          duration: 0.85,
-          ease: 'power3.out',
-          stagger: 0.07,
+          duration: 0.6,
+          ease: 'power2.out',
+          stagger: 0.05,
           overwrite: true,
           clearProps: 'transform',
-        }),
+        })
+        gsap.to(chartsIn(els), {
+          clipPath: 'inset(0% 0% 0% 0%)',
+          duration: 0.9,
+          ease: 'power2.inOut',
+          delay: 0.12,
+          stagger: 0.05,
+          clearProps: 'clipPath',
+        })
+      },
     })
     // Recharts containers measure themselves async — refresh trigger
     // positions once layout has settled so below-fold reveals fire on time.

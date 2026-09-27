@@ -9,6 +9,7 @@ import {
   type LazyExoticComponent,
   type ReactNode,
 } from 'react'
+import { flushSync } from 'react-dom'
 import { AlertTriangle, Home, RotateCw } from 'lucide-react'
 import Header from './components/Header'
 import Sidebar from './components/Sidebar'
@@ -48,6 +49,17 @@ const LOADERS: Record<ViewId, () => Promise<{ default: ComponentType<ViewProps> 
 }
 const VIEWS = {} as Record<ViewId, LazyExoticComponent<ComponentType<ViewProps>>>
 for (const id of Object.keys(LOADERS) as ViewId[]) VIEWS[id] = lazy(LOADERS[id])
+
+/** Views whose code has finished downloading — these render with no loading flash. */
+const READY: Partial<Record<ViewId, ComponentType<ViewProps>>> = {}
+const preload = (id: ViewId): Promise<void> =>
+  LOADERS[id]()
+    .then((m) => {
+      READY[id] = m.default
+    })
+    .catch(() => {
+      /* offline or mid-deploy — the view reports it via its error boundary */
+    })
 
 const DEFAULT_VIEW: ViewId = 'about'
 const BASE_TITLE = document.title
@@ -98,7 +110,7 @@ function ViewError({ onHome }: { onHome: () => void }) {
     <div className="mx-auto max-w-xl">
       <div className="card p-6 text-center" role="alert">
         <AlertTriangle className="mx-auto h-8 w-8 text-warn" />
-        <h2 className="mt-3 font-display text-lg font-bold text-heading">
+        <h2 className="mt-3 text-title text-heading">
           This dashboard could not be displayed
         </h2>
         <p className="mt-1 text-sm text-ink/70">
@@ -109,14 +121,14 @@ function ViewError({ onHome }: { onHome: () => void }) {
           <button
             type="button"
             onClick={() => window.location.reload()}
-            className="inline-flex items-center gap-2 rounded-xl bg-navy px-4 py-2 text-sm font-semibold text-white hover:bg-navy-600"
+            className="inline-flex items-center gap-2 rounded-control bg-navy px-4 py-2 text-label text-white hover:bg-navy-600"
           >
             <RotateCw className="h-4 w-4" /> Reload
           </button>
           <button
             type="button"
             onClick={onHome}
-            className="inline-flex items-center gap-2 rounded-xl border border-line/20 px-4 py-2 text-sm font-semibold text-heading hover:bg-tint/10"
+            className="inline-flex items-center gap-2 rounded-control border border-line/20 px-4 py-2 text-label text-heading hover:bg-tint/10"
           >
             <Home className="h-4 w-4" /> Go to Home
           </button>
@@ -138,9 +150,11 @@ export default function App() {
       return false
     }
   })
-  const curtainRef = useRef<HTMLDivElement>(null)
+  const mainRef = useRef<HTMLElement>(null)
   const activeRef = useRef<ViewId>(active)
-  const transitioning = useRef(false)
+  // The component chosen for each view is fixed on first use, so re-renders
+  // (theme, sidebar) never swap lazy ↔ loaded and remount a page mid-use.
+  const viewCache = useRef<Partial<Record<ViewId, ComponentType<ViewProps>>>>({})
 
   useEffect(() => {
     try {
@@ -158,11 +172,7 @@ export default function App() {
   useEffect(
     () =>
       onIdle(() => {
-        Object.values(LOADERS).forEach((load) => {
-          load().catch(() => {
-            /* offline or mid-deploy — the view loads (or reports) on demand */
-          })
-        })
+        ;(Object.keys(LOADERS) as ViewId[]).forEach((id) => void preload(id))
       }, 2500),
     [],
   )
@@ -193,51 +203,49 @@ export default function App() {
   // The URL hash is the single source of truth for the current view, so a
   // refresh, the Back button and shared links all land on the right dashboard.
   useEffect(() => {
-    const swap = () => {
-      const id = viewFromHash()
+    let busy = false
+
+    const swap = (id: ViewId) => {
       activeRef.current = id
-      setActive(id)
+      flushSync(() => setActive(id))
       window.scrollTo({ top: 0, behavior: 'auto' })
     }
 
-    /** Curtain sweep between views; falls back to an instant swap. */
-    const show = () => {
-      if (viewFromHash() === activeRef.current || transitioning.current) return
-      const curtain = curtainRef.current
-      if (!motionOK() || !curtain) {
-        swap()
-        return
+    /**
+     * Fade-through between views: the content area eases out (~0.2 s) while
+     * the next view's code is confirmed loaded, then the new view's cards rise
+     * in. Sidebar and header stay put. Instant under reduced motion.
+     */
+    const show = async () => {
+      const id = viewFromHash()
+      if (id === activeRef.current || busy) return
+      busy = true
+      const main = mainRef.current
+      const animate = motionOK() && main !== null
+      try {
+        const ready = preload(id)
+        if (animate) {
+          await gsap.to(main, { autoAlpha: 0, y: -6, duration: 0.18, ease: 'power2.in' })
+        }
+        await ready
+        swap(id)
+        if (animate) {
+          gsap.fromTo(
+            main,
+            { autoAlpha: 0, y: 0 },
+            { autoAlpha: 1, duration: 0.22, ease: 'power2.out', clearProps: 'opacity,visibility,transform' },
+          )
+        }
+      } finally {
+        busy = false
+        // The user picked another view mid-transition: catch up with the URL.
+        if (viewFromHash() !== activeRef.current) void show()
       }
-      transitioning.current = true
-      gsap
-        .timeline({
-          onComplete: () => {
-            transitioning.current = false
-            // The user picked another view mid-sweep: catch up with the URL.
-            if (viewFromHash() !== activeRef.current) show()
-          },
-        })
-        .set(curtain, { visibility: 'visible', clipPath: 'inset(100% 0% 0% 0%)' })
-        .to(curtain, {
-          clipPath: 'inset(0% 0% 0% 0%)',
-          duration: 0.42,
-          ease: 'power4.inOut',
-        })
-        .add(swap)
-        .to(
-          curtain,
-          {
-            clipPath: 'inset(0% 0% 100% 0%)',
-            duration: 0.5,
-            ease: 'power4.inOut',
-          },
-          '+=0.16',
-        )
-        .set(curtain, { visibility: 'hidden' })
     }
 
-    window.addEventListener('hashchange', show)
-    return () => window.removeEventListener('hashchange', show)
+    const onHash = () => void show()
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
   }, [])
 
   const navigate = (id: ViewId) => {
@@ -246,7 +254,7 @@ export default function App() {
     if (window.location.hash !== hash) window.location.hash = hash
   }
 
-  const View = VIEWS[active]
+  const View = (viewCache.current[active] ??= READY[active] ?? VIEWS[active])
 
   return (
     <div
@@ -273,7 +281,7 @@ export default function App() {
       />
       <div className="flex min-h-screen flex-col pb-[4.75rem] lg:pb-0">
         <Header active={active} />
-        <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+        <main ref={mainRef} className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
           {/* Keyed per view: a failure is contained to this dashboard and
               clears as soon as the user navigates elsewhere. */}
           <ErrorBoundary key={active} fallback={<ViewError onHome={() => navigate('about')} />}>
@@ -292,17 +300,6 @@ export default function App() {
           Health Monitoring Dashboards · North Batinah Governorate · Women &amp; Child
           Health Department · Ministry of Health, Oman · Data 2023–2025
         </footer>
-      </div>
-
-      {/* Page-transition curtain */}
-      <div ref={curtainRef} className="page-curtain" aria-hidden="true">
-        <div className="flex h-full items-center justify-center">
-          <img
-            src="/moh-emblem-white.png"
-            alt=""
-            className="h-16 w-16 object-contain opacity-80 drop-shadow-[0_0_24px_rgba(94,234,212,0.5)]"
-          />
-        </div>
       </div>
 
       {/* Mobile-only bottom navigation (replaces the slide-in drawer on phones) */}

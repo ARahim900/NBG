@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type KeyboardEvent } from 'react'
+import { useMemo, useState, type KeyboardEvent } from 'react'
 import {
   Building2,
   Crosshair,
@@ -26,6 +26,7 @@ import {
 import { ancRateGov, services } from '../data/services'
 import { MAP, MAP_H, MAP_W, PINNED, SEATS, pinnedNames } from '../data/map'
 import { useThemeMode } from '../lib/theme-mode'
+import { useNarrow } from '../lib/useMediaQuery'
 import { int, pct } from '../lib/format'
 
 // ---- metrics ---------------------------------------------------------------
@@ -114,6 +115,10 @@ const ramp = (stops: string[], t: number): string => {
 const divT = (v: number, benchmark: number) =>
   Math.max(-1, Math.min(1, (v / benchmark - 1) / 0.4))
 
+/** Muscat Bay motion curve — smooth, no overshoot. */
+const EASE = 'cubic-bezier(0.4, 0, 0.2, 1)'
+const STOP_EASE = { transition: `stop-color 500ms ${EASE}` }
+
 const compact = (v: number): string =>
   v >= 1000 ? `${(v / 1000).toFixed(v >= 100000 ? 0 : 1)}k` : `${Math.round(v)}`
 const r0 = Math.round
@@ -128,17 +133,6 @@ const UNITS_PER_KM = MAP.projection.k / 111.32
 /** Phones get a tighter crop of the same map so labels stay legible. */
 const VIEW_FULL = [0, 0, MAP_W, MAP_H] as const
 const VIEW_COMPACT = [120, 60, 880, 880] as const
-
-function useNarrow(query = '(max-width: 640px)'): boolean {
-  const [narrow, setNarrow] = useState(() => window.matchMedia(query).matches)
-  useEffect(() => {
-    const mq = window.matchMedia(query)
-    const on = () => setNarrow(mq.matches)
-    mq.addEventListener('change', on)
-    return () => mq.removeEventListener('change', on)
-  }, [query])
-  return narrow
-}
 
 /** Label to the right of a circle, or centred below it when it would run off the map. */
 function labelSpot(x: number, y: number, rr: number, name: string, line2: string, right: number) {
@@ -178,22 +172,26 @@ export default function HealthMap() {
 
   // Heat points: verified facility pins carry their own catchment; anything
   // not yet pinned is pooled at the wilayat seat so totals are never lost.
+  // Rate metrics have no density, so the glow keeps the residents layout and
+  // fades out — the same elements persist, which lets every change animate.
+  const heatMetric = metric.kind === 'count' ? metric : METRICS.pop
   const heat = useMemo(() => {
-    if (metric.kind !== 'count' || !metric.institution) return []
+    const m = heatMetric
+    if (!m.institution) return []
     const pts: { x: number; y: number; v: number }[] = []
     for (const w of WILAYATS) {
       const seat = seatOf(w.en)
       if (!seat) continue
-      let rest = metric.wilayat(w.en) ?? 0
+      let rest = m.wilayat(w.en) ?? 0
       for (const p of PINNED.filter((f) => f.wilayat === w.en)) {
-        const v = metric.institution(p.en)
+        const v = m.institution(p.en)
         pts.push({ x: p.x, y: p.y, v })
         rest -= v
       }
       if (rest > 0.5) pts.push({ x: seat.x, y: seat.y, v: rest })
     }
     return pts
-  }, [metric])
+  }, [heatMetric])
   const heatMax = Math.max(1, ...heat.map((h) => h.v))
 
   const radius = (v: number) =>
@@ -285,9 +283,9 @@ export default function HealthMap() {
                   const c = ramp(seq, 0.35 + 0.65 * (h.v / heatMax))
                   return (
                     <radialGradient key={i} id={`nbg-heat-${i}`}>
-                      <stop offset="0%" stopColor={c} stopOpacity={isDark ? 0.75 : 0.62} />
-                      <stop offset="45%" stopColor={c} stopOpacity={isDark ? 0.34 : 0.26} />
-                      <stop offset="100%" stopColor={c} stopOpacity={0} />
+                      <stop offset="0%" stopOpacity={isDark ? 0.75 : 0.62} style={{ stopColor: c, ...STOP_EASE }} />
+                      <stop offset="45%" stopOpacity={isDark ? 0.34 : 0.26} style={{ stopColor: c, ...STOP_EASE }} />
+                      <stop offset="100%" stopOpacity={0} style={{ stopColor: c }} />
                     </radialGradient>
                   )
                 })}
@@ -298,13 +296,20 @@ export default function HealthMap() {
               <path d={MAP.oman.fill} fill={theme.land} />
 
               {/* Heat layer — clipped to land, where people actually live */}
-              <g clipPath="url(#nbg-land)" style={{ mixBlendMode: isDark ? 'screen' : 'multiply' }}>
+              <g
+                clipPath="url(#nbg-land)"
+                style={{
+                  mixBlendMode: isDark ? 'screen' : 'multiply',
+                  opacity: metric.kind === 'count' ? 1 : 0,
+                  transition: `opacity 400ms ${EASE}`,
+                }}
+              >
                 {heat.map((h, i) => (
                   <circle
                     key={i}
                     cx={h.x}
                     cy={h.y}
-                    r={70 + 190 * Math.sqrt(h.v / heatMax)}
+                    style={{ r: 70 + 190 * Math.sqrt(h.v / heatMax), transition: `r 600ms ${EASE}` }}
                     fill={`url(#nbg-heat-${i})`}
                   />
                 ))}
@@ -375,28 +380,39 @@ export default function HealthMap() {
                   >
                     {/* generous invisible hit target */}
                     <circle cx={seat.x} cy={seat.y} r={Math.max(rr, 34) + 10} fill="transparent" />
+                    {/* Size and colour are set as CSS properties (not SVG
+                        attributes) so the browser animates metric changes. */}
                     <circle
                       cx={seat.x}
                       cy={seat.y}
-                      r={rr}
-                      fill={fillFor(value)}
                       fillOpacity={0.9}
                       stroke={on ? theme.text : theme.ring}
-                      strokeWidth={on ? 4 : 2.5}
+                      style={{
+                        r: rr,
+                        fill: fillFor(value),
+                        strokeWidth: on ? 4 : 2.5,
+                        transition: `r 500ms ${EASE}, fill 400ms ${EASE}, stroke-width 200ms ${EASE}`,
+                      }}
                     />
                     <circle cx={seat.x} cy={seat.y} r={4} fill={theme.ring} />
                     {(() => {
                       const line2 = `${fmt(value)} · ${n} centres`
                       const at = labelSpot(seat.x, seat.y, rr, wilayat, line2, vx + vw)
+                      // Positioned by a CSS transform so the label glides with its circle.
                       return (
-                        <>
-                          <text x={at.x} y={at.y1} textAnchor={at.anchor} fontSize={30} fontWeight={700} fill={theme.text}>
+                        <g
+                          style={{
+                            transform: `translate(${at.x}px, ${at.y1}px)`,
+                            transition: `transform 500ms ${EASE}`,
+                          }}
+                        >
+                          <text textAnchor={at.anchor} fontSize={30} fontWeight={700} fill={theme.text}>
                             {wilayat}
                           </text>
-                          <text x={at.x} y={at.y2} textAnchor={at.anchor} fontSize={25} fill={theme.sub}>
+                          <text y={at.y2 - at.y1} textAnchor={at.anchor} fontSize={25} fill={theme.sub}>
                             {line2}
                           </text>
-                        </>
+                        </g>
                       )
                     })()}
                   </g>
@@ -458,11 +474,12 @@ export default function HealthMap() {
 
         {/* ===== Details panel ===== */}
         <section className="card flex flex-col p-5 xl:col-span-2" aria-live="polite">
+          <div key={focus ?? 'all'} className="flex animate-fade-in flex-col">
           {focus && focusW ? (
             <>
               <header className="flex items-start justify-between gap-3">
                 <div>
-                  <h3 className="font-display text-lg font-bold text-heading">{focus}</h3>
+                  <h3 className="text-title text-heading">{focus}</h3>
                   <p lang="ar" dir="rtl" className="font-ar text-sm text-ink/60">
                     {focusW.wilayatAr}
                   </p>
@@ -471,7 +488,7 @@ export default function HealthMap() {
                   <button
                     type="button"
                     onClick={() => setSelected(null)}
-                    className="inline-flex items-center gap-1 rounded-lg border border-line/15 px-2 py-1 text-xs font-semibold text-heading hover:bg-tint/10"
+                    className="inline-flex items-center gap-1 rounded-control border border-line/15 px-2 py-1 text-label text-heading hover:bg-tint/10"
                   >
                     <X className="h-3.5 w-3.5" /> All wilayat
                   </button>
@@ -484,13 +501,13 @@ export default function HealthMap() {
                   ['Health institutions', String(focusCentres.length)],
                   [metric.label, fmt(metric.wilayat(focus) ?? 0)],
                 ].map(([k, v]) => (
-                  <div key={k} className="rounded-xl bg-mist/60 px-3 py-2">
-                    <dt className="text-[0.7rem] font-medium text-ink/60">{k}</dt>
-                    <dd className="font-display text-base font-bold text-heading">{v}</dd>
+                  <div key={k} className="rounded-control bg-mist/60 px-3 py-2">
+                    <dt className="text-eyebrow uppercase text-ink/60">{k}</dt>
+                    <dd className="mt-0.5 text-title tabular-nums text-heading">{v}</dd>
                   </div>
                 ))}
               </dl>
-              <h4 className="mt-5 text-xs font-bold uppercase tracking-[0.12em] text-heading/75">
+              <h4 className="mt-5 text-eyebrow uppercase text-heading/75">
                 Health institutions · catchment residents
               </h4>
               <ul className="mt-2 space-y-2">
@@ -508,7 +525,10 @@ export default function HealthMap() {
                       <span className="shrink-0 font-semibold tabular-nums text-heading">{int(r0(c.total))}</span>
                     </div>
                     <div className="mt-1 h-1.5 rounded-full bg-mist">
-                      <div className="h-full rounded-full bg-azure/70" style={{ width: `${(c.total / centreMax) * 100}%` }} />
+                      <div
+                        className="h-full rounded-full bg-azure/70 transition-[width] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
+                        style={{ width: `${(c.total / centreMax) * 100}%` }}
+                      />
                     </div>
                   </li>
                 ))}
@@ -516,7 +536,7 @@ export default function HealthMap() {
             </>
           ) : (
             <>
-              <h3 className="font-display text-lg font-bold text-heading">All wilayat</h3>
+              <h3 className="text-title text-heading">All wilayat</h3>
               <p className="text-xs text-ink/60">
                 Ranked by {metric.label.toLowerCase()} · select a wilayat for its health centres
               </p>
@@ -528,7 +548,7 @@ export default function HealthMap() {
                       onClick={() => setSelected(v.wilayat)}
                       onMouseEnter={() => setHovered(v.wilayat)}
                       onMouseLeave={() => setHovered(null)}
-                      className="w-full rounded-xl px-2.5 py-2 text-left transition-colors hover:bg-tint/[0.07] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azure/60"
+                      className="w-full rounded-control px-2.5 py-2 text-left transition-colors hover:bg-tint/[0.07]"
                     >
                       <span className="flex items-center justify-between gap-2 text-sm">
                         <span className="font-semibold text-ink">
@@ -543,8 +563,8 @@ export default function HealthMap() {
                       </span>
                       <span className="mt-1 block h-1.5 rounded-full bg-mist">
                         <span
-                          className="block h-full rounded-full"
-                          style={{ width: `${(v.value / max) * 100}%`, background: fillFor(v.value) }}
+                          className="block h-full rounded-full transition-[width,background-color] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
+                          style={{ width: `${(v.value / max) * 100}%`, backgroundColor: fillFor(v.value) }}
                         />
                       </span>
                     </button>
@@ -553,6 +573,7 @@ export default function HealthMap() {
               </ul>
             </>
           )}
+          </div>
         </section>
       </div>
 

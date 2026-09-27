@@ -159,13 +159,13 @@ export default function Population() {
       <div className="card flex flex-col gap-4 p-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
           <label className="block min-w-0">
-            <span className="mb-1 block text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-ink/55">
+            <span className="mb-1.5 block text-eyebrow uppercase text-ink/60">
               Wilayat
             </span>
             <select
               value={wilayat}
               onChange={(e) => setWilayat(e.target.value)}
-              className="w-full rounded-xl border border-line/15 bg-mist/60 px-3 py-2 text-sm font-semibold text-heading focus:outline-none focus-visible:ring-2 focus-visible:ring-azure/60 sm:w-56"
+              className="w-full rounded-control border border-line/15 bg-mist/60 px-3 py-2 text-label text-heading sm:w-56"
             >
               <option value="all">All wilayat</option>
               {WILAYATS.map((w) => (
@@ -375,7 +375,7 @@ export default function Population() {
             <button
               type="button"
               onClick={exportTable}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-line/15 px-2.5 py-1.5 text-xs font-semibold text-heading transition-colors hover:bg-tint/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azure/60"
+              className="inline-flex items-center gap-1.5 rounded-control border border-line/15 px-2.5 py-1.5 text-label text-heading transition-colors hover:bg-tint/10"
             >
               <Download className="h-3.5 w-3.5" />
               Export CSV

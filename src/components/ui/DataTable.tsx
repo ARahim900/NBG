@@ -35,13 +35,13 @@ export default function DataTable({
   const pad = dense ? 'px-3 py-2' : 'px-3.5 py-2.5'
   return (
     <div className="-mx-1 overflow-x-auto">
-      <table className="w-full border-collapse text-sm">
+      <table className="w-full border-collapse text-body">
         <thead>
           <tr className="border-b border-glow/20">
             {columns.map((c, i) => (
               <th
                 key={i}
-                className={`${pad} ${alignClass(c.align)} font-display text-xs font-bold uppercase tracking-[0.08em] text-heading/75 ${i === 0 ? STICKY_FIRST : ''} ${c.className ?? ''}`}
+                className={`${pad} ${alignClass(c.align)} text-eyebrow uppercase text-heading/75 ${i === 0 ? STICKY_FIRST : ''} ${c.className ?? ''}`}
               >
                 {c.label}
               </th>

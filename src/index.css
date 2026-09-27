@@ -37,8 +37,34 @@
 
   html {
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     scroll-behavior: smooth;
+    /* Inter: optical sizes pick the tighter display cut for large headings;
+       cv05 = lowercase l with a tail, so l / I / 1 never get confused in data. */
+  }
+
+  /* Headings sit slightly tight (Muscat Bay: semibold, tracking-tight). */
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.01em;
+  }
+
+  /* One focus style everywhere: 2px ring in the accent, offset 2px. */
+  :focus-visible {
+    outline: 2px solid #2884c6;
+    outline-offset: 2px;
+  }
+  .dark :focus-visible {
+    outline-color: #5eead4;
+  }
+
+  /* Figures line up in tables, KPI tiles and charts, and counters don't jitter. */
+  table,
+  svg text,
+  .recharts-wrapper {
+    font-variant-numeric: tabular-nums;
   }
 
   body {
@@ -113,7 +139,7 @@
         already composes from `.card`, so this single class re-skins the
         entire app. ── */
   .card {
-    @apply relative rounded-2xl;
+    @apply relative rounded-card;
     background:
       linear-gradient(
         160deg,
@@ -123,14 +149,15 @@
     -webkit-backdrop-filter: blur(14px);
     backdrop-filter: blur(14px);
     border: 1px solid rgb(var(--line) / 0.12);
+    /* Muscat Bay: two subtle layers at rest, a little more on hover. */
     box-shadow:
-      0 1px 2px rgb(var(--shadow) / 0.05),
-      0 10px 30px -12px rgb(var(--shadow) / 0.18);
+      0 1px 2px rgb(var(--shadow) / 0.04),
+      0 2px 6px rgb(var(--shadow) / 0.06);
     transition:
-      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-      border-color 0.35s ease,
-      box-shadow 0.35s ease,
-      background-color 0.35s ease;
+      transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+      background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   /* Gradient hairline along the top edge — catches light like bevelled glass */
   .card::before {
@@ -164,34 +191,34 @@
   .card:hover {
     border-color: rgb(var(--line) / 0.22);
     box-shadow:
-      0 2px 6px rgb(var(--shadow) / 0.07),
-      0 24px 52px -18px rgb(var(--shadow) / 0.32);
+      0 2px 4px rgb(var(--shadow) / 0.06),
+      0 4px 12px rgb(var(--shadow) / 0.08);
   }
   .dark .card {
     box-shadow:
-      0 1px 2px rgb(0 0 0 / 0.45),
-      0 16px 38px -14px rgb(0 0 0 / 0.7);
+      0 4px 12px rgb(0 0 0 / 0.3),
+      0 2px 4px rgb(0 0 0 / 0.2);
   }
   .dark .card:hover {
     box-shadow:
-      0 2px 6px rgb(0 0 0 / 0.5),
-      0 26px 60px -18px rgb(0 0 0 / 0.8),
-      0 0 36px -14px rgba(94, 234, 212, 0.18);
+      0 4px 12px rgb(0 0 0 / 0.36),
+      0 2px 4px rgb(0 0 0 / 0.24),
+      0 0 28px -14px rgba(94, 234, 212, 0.16);
   }
 
   /* Interactive lift used by KPI tiles & link cards */
   .card-lift:hover {
-    transform: translateY(-4px);
+    transform: translateY(-1px);
   }
 
   .nav-link {
-    @apply relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-white/65 transition-all duration-200 hover:bg-white/[0.07] hover:text-white;
+    @apply relative flex items-center gap-3 rounded-control px-3 py-2.5 text-body font-medium text-white/65 transition-all duration-200 hover:bg-white/[0.07] hover:text-white;
   }
   .nav-link .nav-ico {
-    transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .nav-link:hover .nav-ico {
-    transform: translateX(2px) scale(1.12);
+    transform: translateX(2px);
   }
   .nav-link-active {
     @apply text-white;
@@ -356,19 +383,6 @@
     pointer-events: none;
   }
 
-  /* Page-transition curtain */
-  .page-curtain {
-    position: fixed;
-    inset: 0;
-    z-index: 70;
-    pointer-events: none;
-    visibility: hidden;
-    clip-path: inset(100% 0 0 0);
-    background:
-      radial-gradient(60% 50% at 50% 50%, rgba(94, 234, 212, 0.14), transparent 70%),
-      linear-gradient(160deg, #06101f, #0b2235 55%, #0d2741);
-  }
-
   /* Reduced motion: kill the decorative loops, keep content legible */
   @media (prefers-reduced-motion: reduce) {
     body::before,
@@ -402,7 +416,6 @@
   nav,
   canvas,
   footer,
-  .page-curtain,
   .scroll-progress,
   .cursor-dot,
   .cursor-ring,
@@ -429,5 +442,27 @@
   }
   .overflow-x-auto {
     overflow: visible !important;
+  }
+  /* Charts that have not yet drawn in on screen still print in full. */
+  .recharts-responsive-container {
+    clip-path: none !important;
+  }
+}
+
+/* ── Press feedback: buttons dip slightly while pressed (calm, no bounce) ── */
+button:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+/* ── Reduced motion: honour the OS setting everywhere, including CSS
+      transitions, keyframe animations and smooth scrolling. ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

@@ -128,7 +128,7 @@ export default function Sidebar({
                   collapsed ? 'lg:hidden' : ''
                 }`}
               >
-                <span className="font-display text-[0.66rem] font-bold uppercase tracking-[0.18em] text-glow/70">
+                <span className="text-eyebrow uppercase text-glow/70">
                   {g.label}
                 </span>
                 <span className="font-ar text-[0.78rem] font-medium text-white/35">

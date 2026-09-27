@@ -19,6 +19,7 @@ import type { PieLabelRenderProps } from 'recharts'
 import { useId } from 'react'
 import { C, SERIES } from '../../lib/theme'
 import { useThemeMode } from '../../lib/theme-mode'
+import { useNarrow } from '../../lib/useMediaQuery'
 
 export interface Series {
   key: string
@@ -75,6 +76,9 @@ function ChartTooltip({ active, label, payload, unit, formatter }: TipProps) {
 
 const legendStyle = { fontSize: 12, paddingTop: 8 }
 
+/** One calm animation for every chart: draws in, and morphs when data changes. */
+const MOTION = { animationDuration: 700, animationEasing: 'ease-out' } as const
+
 interface ChartTheme {
   axisTick: { fontSize: number; fill: string }
   cursorFill: string
@@ -96,7 +100,7 @@ const NAVY_ON_DARK = '#9bbfe8'
 function useChartTheme(): ChartTheme {
   const { isDark } = useThemeMode()
   return {
-    axisTick: { fontSize: 11, fill: isDark ? '#8fb3da' : '#6b7a88' },
+    axisTick: { fontSize: 12, fill: isDark ? '#8fb3da' : '#6b7a88' },
     cursorFill: isDark ? 'rgba(94,234,212,0.07)' : 'rgba(20,64,102,0.05)',
     sliceStroke: isDark ? '#0c1c30' : '#ffffff',
     axisLine: isDark ? '#1d3a5c' : '#dbe5ee',
@@ -187,6 +191,7 @@ export function TrendChart({
           {showLegend && series.length > 1 && <Legend wrapperStyle={legendStyle} />}
           {series.map((sdef) => (
             <Area
+              {...MOTION}
               key={sdef.key}
               type="monotone"
               dataKey={sdef.key}
@@ -217,6 +222,7 @@ export function TrendChart({
           {showLegend && series.length > 1 && <Legend wrapperStyle={legendStyle} />}
           {series.map((sdef) => (
             <Line
+              {...MOTION}
               key={sdef.key}
               type="monotone"
               dataKey={sdef.key}
@@ -272,9 +278,15 @@ export function ComparisonBars({
 }: BarsProps) {
   const vertical = layout === 'vertical'
   const { axisTick, axisLine, cursorFill, dataLabel, paint } = useChartTheme()
+  const narrow = useNarrow()
   // Grouped bars carry their figure at the bar tip and drop the numeric axis;
-  // stacked bars keep the axis (per-segment labels would collide).
-  const showValues = !stacked
+  // stacked bars keep the axis (per-segment labels would collide). On phones,
+  // side-by-side columns are too narrow for their labels, so those charts show
+  // a light axis instead and the tooltip gives exact values.
+  const crowded = narrow && !vertical && series.length > 1 && data.length > 3
+  const showValues = !stacked && !crowded
+  // Phones: angle the category labels so every one shows (none are skipped).
+  const tiltTicks = narrow && !vertical && data.length > 4
   const labelStyle = { fontSize: 10, fontWeight: 600, fill: dataLabel } as const
   return (
     <ResponsiveContainer width="100%" height={height}>
@@ -306,7 +318,15 @@ export function ComparisonBars({
           </>
         ) : (
           <>
-            <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: axisLine }} />
+            <XAxis
+              dataKey={xKey}
+              tick={axisTick}
+              tickLine={false}
+              axisLine={{ stroke: axisLine }}
+              {...(tiltTicks
+                ? { interval: 0, angle: -35, textAnchor: 'end', height: 58 }
+                : {})}
+            />
             <YAxis
               tick={axisTick}
               tickLine={false}
@@ -324,6 +344,7 @@ export function ComparisonBars({
         {showLegend && series.length > 1 && <Legend wrapperStyle={legendStyle} />}
         {series.map((sdef) => (
           <Bar
+              {...MOTION}
             key={sdef.key}
             dataKey={sdef.key}
             name={sdef.name}
@@ -408,6 +429,7 @@ export function PyramidChart({ data, bandKey, male, female, height = 440 }: Pyra
         <Legend wrapperStyle={legendStyle} />
         {[...male, ...female].map((sdef) => (
           <Bar
+              {...MOTION}
             key={sdef.key}
             dataKey={sdef.key}
             name={sdef.name}
@@ -485,6 +507,7 @@ export function DonutChart({
     <ResponsiveContainer width="100%" height={height}>
       <PieChart margin={{ top: 6, right: 6, bottom: 6, left: 6 }}>
         <Pie
+              {...MOTION}
           data={data}
           dataKey="value"
           nameKey="name"

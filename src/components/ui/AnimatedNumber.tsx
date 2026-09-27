@@ -39,17 +39,22 @@ function parse(value: ReactNode): Parsed | null {
 }
 
 /**
- * Counts a KPI value up from zero the first time it scrolls into view,
- * preserving the exact formatting it was given (separators, decimals, %…).
- * Falls back to a static render for non-numeric values or reduced motion.
+ * Counts a KPI value up from zero the first time it scrolls into view, then
+ * glides from the old figure to the new one whenever the value changes (e.g.
+ * a filter), preserving the exact formatting it was given (separators,
+ * decimals, %…). Static for non-numeric values or reduced motion.
  */
 export default function AnimatedNumber({
   value,
   className,
-  duration = 1.4,
+  duration = 1.2,
 }: AnimatedNumberProps) {
   const ref = useRef<HTMLSpanElement>(null)
   const parsed = parse(value)
+  /** True once the first count-up has finished (or been skipped for print). */
+  const shown = useRef(false)
+  /** The last numeric target, so a change can glide from it. */
+  const lastTarget = useRef<number | null>(null)
 
   useEffect(() => {
     const el = ref.current
@@ -64,29 +69,37 @@ export default function AnimatedNumber({
       }) +
       suffix
 
-    const proxy = { v: 0 }
-    el.textContent = fmt(0)
+    const glide = shown.current && lastTarget.current !== null
+    const proxy = { v: glide ? (lastTarget.current as number) : 0 }
+    lastTarget.current = target
+    el.textContent = fmt(proxy.v)
+
     const tween = gsap.to(proxy, {
       v: target,
-      duration,
-      ease: 'power3.out',
-      paused: true,
+      duration: glide ? 0.6 : duration,
+      ease: 'power2.out',
+      paused: !glide,
       onUpdate: () => {
         el.textContent = fmt(proxy.v)
       },
+      onComplete: () => {
+        shown.current = true
+      },
     })
-    const st = ScrollTrigger.create({
-      trigger: el,
-      start: 'top 96%',
-      once: true,
-      onEnter: () => tween.play(),
-    })
+    const st = glide
+      ? null
+      : ScrollTrigger.create({
+          trigger: el,
+          start: 'top 96%',
+          once: true,
+          onEnter: () => tween.play(),
+        })
     // Printing never scrolls, so jump every counter to its final value first.
     const finish = () => tween.progress(1)
     window.addEventListener('beforeprint', finish)
     return () => {
       window.removeEventListener('beforeprint', finish)
-      st.kill()
+      st?.kill()
       tween.kill()
       el.textContent = fmt(target)
     }
