@@ -29,8 +29,8 @@ const last = (a: YearPoint[]): number => a[a.length - 1]?.value ?? 0
 const prev = (a: YearPoint[]): number => a[a.length - 2]?.value ?? 0
 const yoy = (a: YearPoint[]): number | null => deltaPct(last(a), prev(a))
 
-/** Indicator dashboards (excludes Home, Overview and Population). */
-const DASHBOARD_COUNT = NAV.filter((d) => d.group !== 'general').length
+/** Indicator dashboards (women's and children's health sections). */
+const DASHBOARD_COUNT = NAV.filter((d) => d.group === 'women' || d.group === 'children').length
 
 const perinatal2025 =
   sn.summary2025.find((r) => r.metric.startsWith('Total perinatal'))?.value ?? 0

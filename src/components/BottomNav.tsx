@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Baby, Heart, type LucideIcon } from 'lucide-react'
+import { Baby, Heart, Map as MapIcon, type LucideIcon } from 'lucide-react'
 import {
   NAV,
   NAV_GROUPS,
@@ -13,17 +13,19 @@ interface BottomNavProps {
 }
 
 const GROUP_ICON: Record<Exclude<NavGroup, 'general'>, LucideIcon> = {
+  region: MapIcon,
   women: Heart,
   children: Baby,
 }
 const GROUP_SHORT: Record<Exclude<NavGroup, 'general'>, string> = {
+  region: 'Governorate',
   women: 'Women',
   children: 'Children',
 }
 
 /**
  * Mobile-only bottom navigation bar (hidden on lg+, where the sidebar shows).
- * General items (Home, Overview, Population) navigate directly; each health section opens
+ * General items (Home, Overview) navigate directly; each health section opens
  * an upward bottom sheet listing its dashboards — so all views stay reachable.
  */
 export default function BottomNav({ active, onSelect }: BottomNavProps) {

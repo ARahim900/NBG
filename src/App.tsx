@@ -33,6 +33,7 @@ const LOADERS: Record<ViewId, () => Promise<{ default: ComponentType<ViewProps> 
   about: () => import('./views/About'),
   overview: () => import('./views/Overview'),
   pop: () => import('./views/Population'),
+  map: () => import('./views/HealthMap'),
   asd: () => import('./views/Asd'),
   ds: () => import('./views/DownSyndrome'),
   md: () => import('./views/MaternalDeaths'),

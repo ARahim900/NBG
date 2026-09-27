@@ -29,8 +29,19 @@ import {
   targetGroups,
   type Nationality,
 } from '../data/population'
-import { fp, mc, sumBy } from '../data/nbg'
 import { anaemia } from '../data/nutrition'
+import {
+  FLAG_BELOW,
+  ancGov,
+  ancRateGov,
+  bsRateGov,
+  cohortGov,
+  flaggedNames,
+  flaggedNew,
+  services,
+  share,
+  targetPctGov,
+} from '../data/services'
 import { C } from '../lib/theme'
 import { int, pct } from '../lib/format'
 import { downloadCsv } from '../lib/csv'
@@ -42,52 +53,12 @@ const NAT_OPTIONS: { value: Nationality; label: string }[] = [
 ]
 
 const r = Math.round
-const share = (part: number, whole: number): number => (whole ? (part / whole) * 100 : 0)
 
 /**
  * The workbook's own target-group sheet applies this flat governorate share of
  * Omanis aged 0–4 to every catchment (source value, sheet "فئات", cell D6).
  */
 const RATIO_SHEET_UNDER5 = 10.95
-
-// ---- Services relative to population (2025, Omani denominators) ----------
-/** A wilayat is flagged when a ratio falls this far below the governorate. */
-const FLAG_BELOW = 0.75
-
-const ancGov = sumBy(mc.byWilayat2025, (w) => w.newAnc)
-const bsGov = sumBy(fp.contraceptive2025, (w) => w.birthSpacing)
-const cohortGov = govOmani.under5 / 5
-const ancRateGov = (ancGov / govOmani.women15to49) * 1000
-const bsRateGov = (bsGov / govOmani.women15to49) * 1000
-const targetPctGov = share(anaemia.gov.t9, cohortGov)
-
-const services = byWilayat.map((w) => {
-  const anc = mc.byWilayat2025.find((x) => x.wilayat === w.wilayat)
-  const bs = fp.contraceptive2025.find((x) => x.wilayat === w.wilayat)
-  const an = anaemia.byWilayat.find((x) => x.wilayat === w.wilayat)
-  const cohort = w.om.under5 / 5
-  const wra = w.om.women15to49
-  const targetPct = an ? share(an.t9, cohort) : null
-  const ancRate = anc ? (anc.newAnc / wra) * 1000 : null
-  const flagged =
-    (targetPct !== null && targetPct < 100 * FLAG_BELOW) ||
-    (ancRate !== null && ancRate < ancRateGov * FLAG_BELOW)
-  return {
-    wilayat: w.wilayat,
-    under5: w.om.under5,
-    cohort,
-    target9: an?.t9 ?? null,
-    targetPct,
-    wra,
-    anc: anc?.newAnc ?? null,
-    ancRate,
-    bsRate: bs ? (bs.birthSpacing / wra) * 1000 : null,
-    flagged,
-  }
-})
-const flaggedNames = services.filter((s) => s.flagged).map((s) => s.wilayat)
-/** New catchments inside a flagged wilayat — a likely cause of an inflated denominator. */
-const flaggedNew = notInSummary.filter((i) => flaggedNames.includes(i.wilayat))
 
 const opt = (v: number | null, f: (n: number) => string): string =>
   v === null ? '—' : f(v)

@@ -7,6 +7,7 @@ import {
   Home,
   HeartPulse,
   LayoutDashboard,
+  Map as MapIcon,
   PieChart,
   Microscope,
   ShieldAlert,
@@ -20,6 +21,7 @@ export type ViewId =
   | 'about'
   | 'overview'
   | 'pop'
+  | 'map'
   | 'asd'
   | 'ds'
   | 'md'
@@ -33,7 +35,7 @@ export type ViewId =
   | 'an'
 
 /** Top-level grouping used to segregate the sidebar into care domains. */
-export type NavGroup = 'general' | 'women' | 'children'
+export type NavGroup = 'general' | 'region' | 'women' | 'children'
 
 export interface ViewProps {
   onNavigate: (id: ViewId) => void
@@ -59,6 +61,7 @@ export interface NavGroupMeta {
 
 /** Rendered as labelled sections in the sidebar, in this order. */
 export const NAV_GROUPS: NavGroupMeta[] = [
+  { id: 'region', label: 'Governorate', labelAr: 'المحافظة' },
   { id: 'women', label: "Women's Health", labelAr: 'صحة المرأة' },
   { id: 'children', label: "Children's Health", labelAr: 'صحة الطفل' },
 ]
@@ -82,14 +85,23 @@ export const NAV: NavItem[] = [
     icon: LayoutDashboard,
     group: 'general',
   },
+
+  // ── Governorate (population & geography) ──
+  {
+    id: 'map',
+    code: 'MAP',
+    name: 'Health Centre Map',
+    blurb: 'Map of wilayat and health centres with population heat layer',
+    icon: MapIcon,
+    group: 'region',
+  },
   {
     id: 'pop',
     code: 'POP',
     name: 'Population 2025',
-    short: 'Population',
     blurb: 'Catchment populations, age pyramid & coverage denominators',
     icon: PieChart,
-    group: 'general',
+    group: 'region',
   },
 
   // ── Women's Health ──

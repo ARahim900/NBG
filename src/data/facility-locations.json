@@ -1,0 +1,213 @@
+{
+  "_readme": [
+    "Exact position of each health institution, in WGS84 decimal degrees (e.g. lat 24.3478, lon 56.7302).",
+    "Leave lat/lon as null until the position is verified; the map shows a pin only for entries with both values.",
+    "Record where each position came from in 'source' (e.g. 'MOH facility register 2026' or 'Google Maps pin checked by <name>, <date>').",
+    "Names must match src/data/population.json exactly."
+  ],
+  "facilities": [
+    {
+      "en": "Sohar EHC",
+      "wilayat": "Sohar",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Al Multaqa HC",
+      "wilayat": "Sohar",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Wadi Hibi Hospital",
+      "wilayat": "Sohar",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Wadi Ahin HC",
+      "wilayat": "Sohar",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Al Uwainat HC",
+      "wilayat": "Sohar",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Falaj Al Qabail HC",
+      "wilayat": "Sohar",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Al Traif HC",
+      "wilayat": "Sohar",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Saham EHC",
+      "wilayat": "Saham",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Wadi Bani Umar HC",
+      "wilayat": "Saham",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Hafeet HC",
+      "wilayat": "Saham",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Al Ghwaisah HC",
+      "wilayat": "Saham",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "As Suwayq EHC",
+      "wilayat": "As Suwayq",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Al Bidayah HC",
+      "wilayat": "As Suwayq",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Al Khadra HC",
+      "wilayat": "As Suwayq",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Wadi Al Jahawir HC",
+      "wilayat": "As Suwayq",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Al Mashaiq HC",
+      "wilayat": "As Suwayq",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Al Shreesah HC",
+      "wilayat": "As Suwayq",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Al Tharmed HC",
+      "wilayat": "As Suwayq",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Al Khabourah EHC",
+      "wilayat": "Al Khabourah",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Wadi Shafan HC",
+      "wilayat": "Al Khabourah",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Wadi As Sarami Hospital",
+      "wilayat": "Al Khabourah",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Wadi Al Hawasinah Hospital",
+      "wilayat": "Al Khabourah",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Al Qasabiyah HC",
+      "wilayat": "Al Khabourah",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Shinas EHC",
+      "wilayat": "Shinas",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Abu Baqra HC",
+      "wilayat": "Shinas",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Sur Al Balush HC (new)",
+      "wilayat": "Shinas",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Liwa HC",
+      "wilayat": "Liwa",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Nabur HC",
+      "wilayat": "Liwa",
+      "lat": null,
+      "lon": null,
+      "source": null
+    },
+    {
+      "en": "Rahab HC",
+      "wilayat": "Liwa",
+      "lat": null,
+      "lon": null,
+      "source": null
+    }
+  ]
+}
