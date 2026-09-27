@@ -7,6 +7,7 @@ import {
   Home,
   HeartPulse,
   LayoutDashboard,
+  PieChart,
   Microscope,
   ShieldAlert,
   Stethoscope,
@@ -18,6 +19,7 @@ import {
 export type ViewId =
   | 'about'
   | 'overview'
+  | 'pop'
   | 'asd'
   | 'ds'
   | 'md'
@@ -43,6 +45,8 @@ export interface NavItem {
   name: string
   /** Short blurb shown on the overview cards. */
   blurb: string
+  /** Label for the narrow mobile bottom bar, when `name` is too long. */
+  short?: string
   icon: LucideIcon
   group: NavGroup
 }
@@ -65,6 +69,7 @@ export const NAV: NavItem[] = [
     id: 'about',
     code: '',
     name: 'Home · الرئيسية',
+    short: 'Home',
     blurb: 'Vision, mission & department sections',
     icon: Home,
     group: 'general',
@@ -75,6 +80,15 @@ export const NAV: NavItem[] = [
     name: 'Overview',
     blurb: 'Governorate-wide headline indicators',
     icon: LayoutDashboard,
+    group: 'general',
+  },
+  {
+    id: 'pop',
+    code: 'POP',
+    name: 'Population 2025',
+    short: 'Population',
+    blurb: 'Catchment populations, age pyramid & coverage denominators',
+    icon: PieChart,
     group: 'general',
   },
 

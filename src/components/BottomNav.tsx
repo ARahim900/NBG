@@ -23,7 +23,7 @@ const GROUP_SHORT: Record<Exclude<NavGroup, 'general'>, string> = {
 
 /**
  * Mobile-only bottom navigation bar (hidden on lg+, where the sidebar shows).
- * General items (Home, Overview) navigate directly; each health section opens
+ * General items (Home, Overview, Population) navigate directly; each health section opens
  * an upward bottom sheet listing its dashboards — so all views stay reachable.
  */
 export default function BottomNav({ active, onSelect }: BottomNavProps) {
@@ -101,7 +101,7 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
               className={tabClass(isActive)}
             >
               <item.icon className="h-5 w-5" />
-              <span>{item.id === 'about' ? 'Home' : item.name}</span>
+              <span>{item.short ?? item.name}</span>
             </button>
           )
         })}

@@ -238,6 +238,8 @@ interface BarsProps {
   layout?: 'horizontal' | 'vertical'
   valueFormatter?: (v: number) => string
   showLegend?: boolean
+  /** Width reserved for category labels in vertical layout (long names need more). */
+  categoryWidth?: number
 }
 
 export function ComparisonBars({
@@ -250,6 +252,7 @@ export function ComparisonBars({
   layout = 'horizontal',
   valueFormatter,
   showLegend = true,
+  categoryWidth = 92,
 }: BarsProps) {
   const vertical = layout === 'vertical'
   const { axisTick, axisLine, cursorFill, dataLabel } = useChartTheme()
@@ -281,7 +284,7 @@ export function ComparisonBars({
               tick={axisTick}
               tickLine={false}
               axisLine={{ stroke: axisLine }}
-              width={92}
+              width={categoryWidth}
             />
           </>
         ) : (
@@ -315,6 +318,83 @@ export function ComparisonBars({
               />
             )}
           </Bar>
+        ))}
+      </BarChart>
+    </ResponsiveContainer>
+  )
+}
+
+// ---- Population pyramid --------------------------------------------------
+interface PyramidProps {
+  /** One row per age band, youngest first. Male series are plotted leftwards. */
+  data: Datum[]
+  bandKey: string
+  male: Series[]
+  female: Series[]
+  height?: number
+}
+
+const compact = (v: number): string => {
+  const a = Math.abs(v)
+  return a >= 1000 ? `${(a / 1000).toFixed(a % 1000 === 0 ? 0 : 1)}k` : `${Math.round(a)}`
+}
+
+/**
+ * Horizontal back-to-back bars: males to the left of the axis, females to the
+ * right, each side optionally stacked by nationality. Values are passed as
+ * positive numbers; the component negates the male side itself.
+ */
+export function PyramidChart({ data, bandKey, male, female, height = 440 }: PyramidProps) {
+  const { axisTick, axisLine, cursorFill } = useChartTheme()
+  const maleKeys = new Set(male.map((s) => s.key))
+  // Oldest band on top, as in a conventional pyramid.
+  const rows = [...data].reverse().map((d) => {
+    const r: Record<string, number | string> = { ...(d as Record<string, number | string>) }
+    maleKeys.forEach((k) => {
+      r[k] = -Number(r[k] ?? 0)
+    })
+    return r
+  })
+  return (
+    <ResponsiveContainer width="100%" height={height}>
+      <BarChart
+        data={rows}
+        layout="vertical"
+        stackOffset="sign"
+        barCategoryGap="12%"
+        margin={{ top: 4, right: 12, left: 0, bottom: 0 }}
+      >
+        <XAxis
+          type="number"
+          tick={axisTick}
+          tickLine={false}
+          axisLine={{ stroke: axisLine }}
+          tickFormatter={compact}
+        />
+        <YAxis
+          type="category"
+          dataKey={bandKey}
+          tick={axisTick}
+          tickLine={false}
+          axisLine={false}
+          width={44}
+        />
+        <Tooltip
+          cursor={{ fill: cursorFill }}
+          content={
+            <ChartTooltip formatter={(v) => Math.round(Math.abs(v)).toLocaleString('en-US')} />
+          }
+        />
+        <Legend wrapperStyle={legendStyle} />
+        {[...male, ...female].map((sdef) => (
+          <Bar
+            key={sdef.key}
+            dataKey={sdef.key}
+            name={sdef.name}
+            fill={sdef.color}
+            stackId="pyramid"
+            maxBarSize={18}
+          />
         ))}
       </BarChart>
     </ResponsiveContainer>

@@ -16,6 +16,7 @@ import { animateViewIn, gsap, motionOK } from './lib/motion'
 import type { ViewId } from './lib/dashboards'
 import About from './views/About'
 import Overview from './views/Overview'
+import Population from './views/Population'
 import Asd from './views/Asd'
 import DownSyndrome from './views/DownSyndrome'
 import MaternalDeaths from './views/MaternalDeaths'
@@ -34,6 +35,7 @@ const AuroraField = lazy(() => import('./components/three/AuroraField'))
 const VIEWS: Record<ViewId, (props: { onNavigate: (id: ViewId) => void }) => JSX.Element> = {
   about: About,
   overview: Overview,
+  pop: Population,
   asd: Asd,
   ds: DownSyndrome,
   md: MaternalDeaths,

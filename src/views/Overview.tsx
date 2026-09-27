@@ -29,6 +29,9 @@ const last = (a: YearPoint[]): number => a[a.length - 1]?.value ?? 0
 const prev = (a: YearPoint[]): number => a[a.length - 2]?.value ?? 0
 const yoy = (a: YearPoint[]): number | null => deltaPct(last(a), prev(a))
 
+/** Indicator dashboards (excludes Home, Overview and Population). */
+const DASHBOARD_COUNT = NAV.filter((d) => d.group !== 'general').length
+
 const perinatal2025 =
   sn.summary2025.find((r) => r.metric.startsWith('Total perinatal'))?.value ?? 0
 
@@ -55,7 +58,7 @@ export default function Overview({ onNavigate }: ViewProps) {
               <span className="text-aurora">North Batinah Governorate</span>
             </h1>
             <p className="mt-2 text-sm leading-relaxed text-white/70">
-              A consolidated view of eight monitoring dashboards across{' '}
+              A consolidated view of {DASHBOARD_COUNT} monitoring dashboards across{' '}
               {meta.wilayats.length} wilayat, covering screening, maternal care,
               perinatal outcomes and family-planning indicators for{' '}
               <span className="font-semibold text-white">2023, 2024 &amp; 2025</span>.
@@ -63,7 +66,7 @@ export default function Overview({ onNavigate }: ViewProps) {
           </div>
           <div className="grid grid-cols-3 gap-3 text-center">
             {[
-              { v: '8', l: 'Dashboards' },
+              { v: String(DASHBOARD_COUNT), l: 'Dashboards' },
               { v: String(meta.wilayats.length), l: 'Wilayat' },
               { v: '3', l: 'Years' },
             ].map((s) => (
