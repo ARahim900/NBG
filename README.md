@@ -2,70 +2,104 @@
 
 An interactive dashboard for the **Health Monitoring Dashboards of North Batinah
 Governorate (NBG)** — Women & Child Health Department, Ministry of Health, Oman.
-It visualises eight indicator areas across **2023, 2024 and 2025**.
+It covers eleven indicator dashboards across **2023, 2024 and 2025**, plus the
+2025 population estimates and a governorate map.
 
 Colours follow the Ministry of Health Oman eHealth-portal palette (navy
 `#144066` · azure `#2884c6` · teal `#7cb6bc`).
 
 ## Pages
 
-- **Home (الرئيسية)** — bilingual department landing page: vision (الرؤية), mission
-  (الرسالة), the seven institutional values (القيم), the three department sections
-  (مهام الأقسام: صحة المرأة، الصحة الإنجابية، صحة الطفل) with their 2026–2030 strategic
-  objectives, and the six wilayat of North Batinah. Content extracted verbatim from
-  the official department documents.
-- **Overview** — governorate-wide headline KPIs and trends.
+Every page has its own link (for example `…/#/map`), so a page can be
+bookmarked, shared, refreshed or reached with the Back button.
 
-## Dashboards
+| Link | Page | What it shows |
+|------|------|---------------|
+| `#/about` | **Home (الرئيسية)** | Vision, mission, values, department sections and 2026–2030 objectives |
+| `#/overview` | **Overview** | Governorate headline KPIs and multi-year trends |
+| `#/map` | **Health Centre Map** | North Batinah map: population heat layer, wilayat circles with totals and centre counts, every health centre's catchment |
+| `#/pop` | **Population 2025** | Age–sex pyramid, catchment populations, target groups (under-5, women 15–49, 60+), service-to-population ratios, CSV export |
 
-| Code | Dashboard | Highlights |
-|------|-----------|------------|
-| ASD | ASD Early Screening | 18 & 24-month M-CHAT/R coverage, monthly 2025, risk detection |
-| DS  | Down Syndrome | Registry by centre, morbidities, nutrition, 2025 governorate registry |
-| MD  | Maternal Deaths | 10-year surveillance, causes, recent records |
-| CM  | Child Maltreatment | Notifications by wilayat & type, 2019–2025 trend |
-| CA  | Congenital Anomalies | By facility & sector, MOH-vs-private split |
-| SN  | Stillbirth & Neonatal | Monthly perinatal mortality, ICD-PM coding, 2025 summary |
-| MC  | Maternal Care | Antenatal/screening/delivery indicators, 2025 by wilayat |
-| FP  | Family Planning | Contraception, premarital & newborn screening |
-| CN  | Child Nutrition | Malnutrition categories, by wilayat, infant-feeding (EB) curve |
-| AN  | Child Anaemia | 9 & 18-month screening coverage and anaemia prevalence by wilayat |
+### Indicator dashboards
+
+| Code | Link | Dashboard | Highlights |
+|------|------|-----------|------------|
+| MC  | `#/mc`  | Maternal Care | Antenatal, screening and delivery indicators; 2025 by wilayat |
+| MD  | `#/md`  | Maternal Deaths | 10-year surveillance, causes, recent records |
+| FP  | `#/fp`  | Family Planning | Contraception and premarital screening |
+| ASD | `#/asd` | ASD Early Screening | 18 & 24-month M-CHAT/R coverage, monthly 2025, risk detection |
+| DS  | `#/ds`  | Down Syndrome | Registry by centre, morbidities, nutrition, 2025 registry |
+| CA  | `#/ca`  | Congenital Anomalies | By facility and sector, MOH-vs-private split |
+| SN  | `#/sn`  | Stillbirth & Neonatal | Monthly perinatal mortality, ICD-PM coding, 2025 summary |
+| NS  | `#/ns`  | Newborn Screening | TSH, hearing, 3 & 4-year developmental visits |
+| CM  | `#/mt`  | Child Maltreatment | Notifications by wilayat and type, 2019–2025 trend |
+| CN  | `#/cn`  | Child Nutrition | Malnutrition categories, infant feeding curve |
+| AN  | `#/an`  | Child Anaemia | 9 & 18-month screening coverage and prevalence, treatment follow-up |
 
 ## Tech stack
 
-- **React + TypeScript + Vite**
-- **Tailwind CSS** for styling
-- **Recharts** for charts · **lucide-react** for icons
-- All data is bundled (no backend) from `src/data/nbg.json`
+- **React 18 + TypeScript + Vite**, **Tailwind CSS**
+- **Recharts** (charts), **lucide-react** (icons), **GSAP** (motion), **three.js** (decorative 3D)
+- Installable **PWA** with offline caching (`public/sw.js`)
+- No backend: all data is bundled from `src/data/*.json`
+
+Each page loads on demand, so the Home page does not download the charting
+library. The 3D background is optional: if a computer has WebGL disabled the app
+still works, and if one page fails the rest of the app keeps running.
 
 ## Run locally
 
 ```bash
 npm install      # first time only
 npm run dev      # start dev server → http://localhost:5173
+npm run build    # type-check and build to dist/
+npm run preview  # preview the production build
 ```
 
-## Build for production
+## Updating data
 
-```bash
-npm run build    # outputs static files to dist/
-npm run preview  # preview the production build locally
+| Data | Source file | How to rebuild |
+|------|-------------|----------------|
+| Indicator dashboards | `src/data/nbg.json`, `src/data/nutrition.json` | Edited from the source workbooks |
+| Population 2025 | `src/data/population.json` | `npm run build:population -- path/to/workbook.xlsx` (needs `pip install openpyxl`) |
+| Base map | `src/data/map-base.json` | `npm run build:map` |
+| Health-centre locations | `src/data/facility-locations.json` | Edit by hand (see below) |
+
+`scripts/build_population.py` refuses to write the file if any institution's age
+bands do not add up to its total row, so a malformed workbook cannot reach the app.
+
+### Adding health-centre locations
+
+The map pins a health centre only when its position has been verified. To add
+one, open `src/data/facility-locations.json`, find the centre, and fill in:
+
+```json
+{ "en": "Sohar EHC", "wilayat": "Sohar", "lat": 24.3478, "lon": 56.7302, "source": "MOH facility register 2026" }
 ```
+
+- `lat` / `lon`: decimal degrees (WGS84), e.g. from the facility register or a
+  checked Google Maps pin (right-click → the first line is `lat, lon`).
+- `source`: where the position came from, so it can be audited.
+- Leave `null` until verified — the app never estimates a position.
+
+The pin, the heat layer and the "Located" column update automatically.
 
 ## Deploy to Netlify
 
-The repo includes `netlify.toml` and `public/_redirects`, so deployment is
-zero-config:
+`netlify.toml` and `public/_redirects` make deployment zero-config:
 
-1. **Drag-and-drop:** run `npm run build`, then drag the `dist/` folder onto
+1. **Drag-and-drop:** run `npm run build`, then drag `dist/` onto
    <https://app.netlify.com/drop>.
 2. **Git / CLI:** connect the repo (build command `npm run build`, publish
-   directory `dist`) — the settings are already in `netlify.toml`.
+   directory `dist`).
 
 ## Data sources & accuracy
 
-Figures are extracted from the original NBG web app (2023–2024 granular detail)
-and three 2025 source workbooks (ASD, MCH statistics, WCH KPIs). Honest data
-caveats — e.g. Maternal Deaths has no 2025 count in the sources, and some 2025
-figures are governorate-level only — are flagged in-app on the **Overview** page
-and within each dashboard.
+Figures come from the original NBG web app (2023–2024 detail), the 2025 source
+workbooks (ASD, MCH statistics, WCH KPIs) and the MOH 2025 population-estimates
+workbook. Known caveats are shown in the app: on the **Overview** page, inside
+each dashboard, and on the Population page, which also covers the reconciliation
+of the population workbook's summary and detail sheets.
+
+Map geography: coastline and borders from Natural Earth (public domain); wilayat
+seat towns from GeoNames (CC BY 4.0).
