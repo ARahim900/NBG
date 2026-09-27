@@ -130,42 +130,62 @@ export default function About({ onNavigate }: ViewProps) {
 
   return (
     <div className="space-y-12">
-      {/* ===== Hero — layered light and a staged reveal; no moving scene ===== */}
+      {/* ===== Hero — the MOH template cover: flat navy panel, MOH-blue
+            angled panel with the faint emblem, serif title, accent tab ===== */}
       <section
         ref={heroRef}
-        className="relative -mt-1 overflow-hidden rounded-3xl bg-[#071527] text-white shadow-card ring-1 ring-white/10"
+        className="relative -mt-1 overflow-hidden rounded-[4px] bg-navy text-white dark:bg-[#0b2235]"
         data-reveal
       >
-        <div className="relative px-6 py-12 sm:px-10 sm:py-16 lg:py-20">
-          <span className="chip bg-white/10 text-glow ring-1 ring-glow/30" data-hero>
-            <Sparkles className="h-3.5 w-3.5" />
-            الخطة الخمسية الحادية عشرة · 2026–2030
-          </span>
+        <div
+          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[36%] bg-azure lg:block"
+          style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 20% 100%, 0 80%)' }}
+          aria-hidden="true"
+        >
+          <img
+            src="/moh-emblem-watermark.webp"
+            alt=""
+            className="absolute right-[6%] top-1/2 h-[82%] w-auto -translate-y-1/2 object-contain"
+          />
+        </div>
+
+        <div className="relative px-6 py-10 sm:px-10 sm:py-12 lg:max-w-[64%] lg:py-14">
+          <img
+            src="/moh-logo-white.png"
+            alt="Ministry of Health, Oman"
+            className="h-10 w-auto object-contain sm:h-11"
+            data-hero
+          />
+
+          <p
+            className="mt-8 text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-glow sm:text-[0.72rem]"
+            data-hero
+          >
+            Ministry of Health, Oman · DGHS — North Al Batinah
+          </p>
 
           <h1
             dir="rtl"
-            className="mt-6 max-w-3xl font-ar text-4xl font-extrabold leading-tight sm:text-6xl"
+            lang="ar"
+            className="mt-4 text-left font-ar text-4xl font-bold leading-tight sm:text-5xl"
             data-hero
           >
             {department.nameAr}
           </h1>
-          <p
-            className="mt-3 font-display text-xl font-bold text-glow sm:text-3xl"
-            data-hero
-          >
+          <p className="mt-2 font-serif text-2xl font-normal leading-snug sm:text-[2.1rem]" data-hero>
             {department.nameEn}
           </p>
 
-          <div
-            className="mt-5 h-1 w-28 rounded-full bg-glow"
-            data-hero
-            aria-hidden="true"
-          />
+          <span className="accent-tab mt-6 w-14 bg-glow" data-hero aria-hidden="true" />
 
           <div
-            className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-white/75"
+            className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-white/80"
             data-hero
           >
+            <span dir="rtl" lang="ar" className="flex items-center gap-2 font-ar">
+              <Sparkles className="h-4 w-4 text-glow" />
+              الخطة الخمسية الحادية عشرة · 2026–2030
+            </span>
             <span dir="rtl" className="flex items-center gap-2 font-ar">
               <MapPin className="h-4 w-4 text-glow" />
               {department.governorateAr}
@@ -393,7 +413,7 @@ export default function About({ onNavigate }: ViewProps) {
 
       {/* ===== CTA finale ===== */}
       <section
-        className="relative overflow-hidden rounded-3xl bg-[#071527] p-8 text-center text-white shadow-card ring-1 ring-white/10 sm:p-10"
+        className="relative overflow-hidden rounded-[4px] bg-navy p-8 text-center text-white dark:bg-[#0b2235] sm:p-10"
         data-reveal
       >
         <div className="relative">

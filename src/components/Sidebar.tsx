@@ -67,7 +67,7 @@ export default function Sidebar({
       />
 
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-r border-white/[0.07] bg-[#06121f]/90 backdrop-blur-2xl transition-[transform,width,visibility] duration-300 lg:visible lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-l-4 border-azure bg-navy transition-[transform,width,visibility] duration-300 dark:bg-[#0b2235] lg:visible lg:translate-x-0 ${
           collapsed ? 'lg:w-20' : 'lg:w-72'
         } ${mobileOpen ? 'translate-x-0' : 'invisible -translate-x-full'}`}
       >
@@ -77,9 +77,20 @@ export default function Sidebar({
             collapsed ? 'lg:gap-0 lg:px-0' : ''
           }`}
         >
+          {/* Official MOH lockup; the emblem alone when the rail is collapsed. */}
+          <div className={`min-w-0 ${collapsed ? 'lg:hidden' : ''}`}>
+            <img
+              src="/moh-logo-white.png"
+              alt="Ministry of Health, Oman"
+              className="h-11 w-auto object-contain"
+            />
+            <p className="mt-2 text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-glow">
+              DGHS · North Al Batinah
+            </p>
+          </div>
           <div
-            className={`flex h-11 w-11 shrink-0 items-center justify-center ${
-              collapsed ? 'lg:mx-auto' : ''
+            className={`hidden h-11 w-11 shrink-0 items-center justify-center ${
+              collapsed ? 'lg:mx-auto lg:flex' : ''
             }`}
           >
             <img
@@ -87,12 +98,6 @@ export default function Sidebar({
               alt="Ministry of Health, Oman"
               className="h-full w-full object-contain"
             />
-          </div>
-          <div className={`leading-tight ${collapsed ? 'lg:hidden' : ''}`}>
-            <p className="font-display text-sm font-bold text-white">NBG Health</p>
-            <p className="text-[0.7rem] font-medium text-glow/90">
-              Women &amp; Child Health
-            </p>
           </div>
           <button
             onClick={onClose}

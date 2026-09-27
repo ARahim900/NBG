@@ -7,6 +7,8 @@ import { ThemeProvider } from './lib/theme-mode'
 // are downloaded, and both work offline in the installed app.
 import '@fontsource-variable/dm-sans'
 import '@fontsource-variable/cairo'
+// Georgia fallback for the MOH template's serif titles (loads only if needed).
+import '@fontsource-variable/gelasio'
 import './index.css'
 
 const rootEl = document.getElementById('root')

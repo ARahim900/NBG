@@ -40,18 +40,18 @@ export default function Overview({ onNavigate }: ViewProps) {
     <div className="space-y-8">
       {/* Hero */}
       <section
-        className="relative overflow-hidden rounded-3xl bg-[#071527] p-6 text-white shadow-card ring-1 ring-white/10 sm:p-8"
+        className="relative overflow-hidden rounded-[4px] border-l-4 border-azure bg-navy p-6 text-white dark:bg-[#0b2235] sm:p-8"
         data-reveal
       >
         <div className="relative flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <span className="chip bg-white/10 text-glow ring-1 ring-glow/30">
+            <p className="text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-glow sm:text-[0.72rem]">
               Tenth Five-Year Health Development Plan
-            </span>
-            <h1 className="mt-3 font-display text-2xl font-bold leading-tight sm:text-3xl">
-              Women &amp; Child Health —{' '}
-              <span className="text-glow">North Batinah Governorate</span>
+            </p>
+            <h1 className="mt-3 font-serif text-2xl font-normal leading-tight sm:text-[2rem]">
+              Women &amp; Child Health — North Batinah Governorate
             </h1>
+            <span className="accent-tab mt-4 w-14 bg-glow" aria-hidden="true" />
             <p className="mt-2 text-sm leading-relaxed text-white/70">
               A consolidated view of {DASHBOARD_COUNT} monitoring dashboards across{' '}
               {meta.wilayats.length} wilayat, covering screening, maternal care,
@@ -67,7 +67,7 @@ export default function Overview({ onNavigate }: ViewProps) {
             ].map((s) => (
               <div
                 key={s.l}
-                className="min-w-0 rounded-xl bg-white/[0.07] px-2 py-3 ring-1 ring-white/10 backdrop-blur transition-colors hover:ring-glow/40 sm:px-4"
+                className="min-w-0 rounded-[4px] border border-white/15 px-2 py-3 transition-colors hover:border-glow/60 sm:px-4"
               >
                 <AnimatedNumber
                   value={s.v}

@@ -5,7 +5,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        // ── Ministry of Health Oman — brand fills (fixed in both themes) ──
+        // ── Ministry of Health Oman — brand colours from the MOH branded
+        //    template (DS Conf – MOH Branded). Flat fills only. ──
         navy: {
           DEFAULT: '#144066',
           50: '#eef3f8',
@@ -15,21 +16,28 @@ export default {
           800: '#0f3049',
           900: '#0b2235',
         },
+        /** MOH blue — the template's accent (rail, tabs, cover panel). */
         azure: {
-          DEFAULT: '#2884c6',
-          600: '#1f6fab',
-          700: '#0f6faf',
+          DEFAULT: '#0089dd',
+          600: '#0077c2',
+          700: '#0a6aa8',
         },
         teal: {
-          DEFAULT: '#7cb6bc',
-          600: '#4f969e',
-          700: '#3a7a82',
+          DEFAULT: '#4fa8b2',
+          600: '#3e929c',
+          700: '#2d7f88',
+        },
+        /** Template light blue: card borders and highlight boxes. */
+        sky: {
+          DEFAULT: '#d7eaf9',
+          50: '#eff6fc',
         },
         good: '#2e8b6f',
         warn: '#c08a1e',
-        alert: '#bf4d4a',
-        /** Accent on dark surfaces — the MoH soft teal (formerly a neon mint). */
-        glow: '#7cb6bc',
+        /** MOH red (emblem colour). */
+        alert: '#d91c45',
+        /** Accent on navy surfaces — the template's cover-slide light teal. */
+        glow: '#88cad2',
 
         // ── Theme-aware semantic tokens (flip via CSS variables) ──
         // Channel triples live in index.css → :root / .dark
@@ -46,6 +54,9 @@ export default {
         sans: ['"DM Sans Variable"', '"DM Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         // Alias kept so existing `font-display` headings stay valid.
         display: ['"DM Sans Variable"', '"DM Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        // MOH template titles are set in Georgia; Gelasio is its metric-compatible
+        // open-source twin, downloaded only where Georgia is not installed.
+        serif: ['Georgia', '"Gelasio Variable"', 'Gelasio', '"Times New Roman"', 'serif'],
         ar: ['"Cairo Variable"', 'Cairo', 'Tajawal', '"Segoe UI"', 'sans-serif'],
       },
       // Weights 400 / 500 / 600 / 700 only — 800 does not exist in the system.

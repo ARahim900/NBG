@@ -167,7 +167,7 @@ export function TrendChart({
       {variant === 'area' ? (
         <AreaChart data={data} margin={{ top: 18, right: 12, left: -8, bottom: 0 }}>
           <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: axisLine }} />
-          <YAxis tick={axisTick} tickLine={false} axisLine={false} domain={yDomain} width={44} />
+          <YAxis tick={axisTick} tickLine={false} axisLine={false} domain={yDomain} width={44} tickFormatter={compactTick} />
           <Tooltip content={<ChartTooltip unit={unit} formatter={valueFormatter} />} />
           {showLegend && series.length > 1 && <Legend wrapperStyle={legendStyle} />}
           {series.map((sdef) => (
@@ -199,7 +199,7 @@ export function TrendChart({
       ) : (
         <LineChart data={data} margin={{ top: 18, right: 12, left: -8, bottom: 0 }}>
           <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: axisLine }} />
-          <YAxis tick={axisTick} tickLine={false} axisLine={false} domain={yDomain} width={44} />
+          <YAxis tick={axisTick} tickLine={false} axisLine={false} domain={yDomain} width={44} tickFormatter={compactTick} />
           <Tooltip content={<ChartTooltip unit={unit} formatter={valueFormatter} />} />
           {showLegend && series.length > 1 && <Legend wrapperStyle={legendStyle} />}
           {series.map((sdef) => (

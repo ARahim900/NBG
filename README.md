@@ -5,13 +5,16 @@ Governorate (NBG)** — Women & Child Health Department, Ministry of Health, Oma
 It covers eleven indicator dashboards across **2023, 2024 and 2025**, plus the
 2025 population estimates and a governorate map.
 
-Colours follow the Ministry of Health Oman eHealth-portal palette (navy
-`#144066` · azure `#2884c6` · teal `#7cb6bc`), used flat: no gradients, glows
-or animated backgrounds anywhere. Typography, shape and motion follow
-the Muscat Bay design system (v2): **DM Sans** (400–700) on a seven-step type
-scale, 10.5 px card corners, 6 px controls, two-layer soft shadows and calm
-200 ms `cubic-bezier(.4,0,.2,1)` motion with no bounces. Arabic text uses Cairo.
-Both fonts are self-hosted, so they load with no external request and work offline.
+The visual design follows the **Ministry of Health Oman branded template**
+(*DS Conf – MOH Branded*): navy `#144066`, MOH blue `#0089DD`, teal `#4FA8B2`,
+light-blue hairlines `#D7EAF9`, slate body text `#36465A`; serif (Georgia)
+titles with the template's slanted accent tab; flat white cards with a thin
+light-blue border and the cut top-right corner; the official MOH logo; and the
+template's header, footer and cover layouts. Everything is flat — no gradients,
+glows or animated backgrounds. Body text and figures use **DM Sans** (Muscat Bay
+design system) and Arabic uses **Cairo**; all fonts are self-hosted, so they load
+with no external request and work offline. Motion is calm (200 ms,
+`cubic-bezier(.4,0,.2,1)`, no bounces).
 
 ## Pages
 
@@ -45,7 +48,7 @@ bookmarked, shared, refreshed or reached with the Back button.
 
 - **React 18 + TypeScript + Vite**, **Tailwind CSS**
 - **Recharts** (charts), **lucide-react** (icons), **GSAP** (motion)
-- **DM Sans** and **Cairo** via `@fontsource-variable` (self-hosted)
+- **DM Sans**, **Cairo** and **Gelasio** (Georgia fallback) via `@fontsource-variable` (self-hosted)
 - Motion respects the operating system's "reduce motion" setting throughout
 - Installable **PWA** with offline caching (`public/sw.js`)
 - No backend: all data is bundled from `src/data/*.json`

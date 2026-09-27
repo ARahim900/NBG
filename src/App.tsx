@@ -275,9 +275,15 @@ export default function App() {
             </Suspense>
           </ErrorBoundary>
         </main>
-        <footer className="relative border-t border-line/10 bg-surface/40 px-4 py-5 text-center text-xs text-ink/45 backdrop-blur transition-colors duration-300 sm:px-6 lg:px-8">
-          Health Monitoring Dashboards · North Batinah Governorate · Women &amp; Child
-          Health Department · Ministry of Health, Oman · Data 2023–2025
+        {/* MOH template footer: ministry · document · directorate + page. */}
+        <footer className="mx-4 flex flex-col items-center gap-1 border-t border-sky py-4 text-center text-[0.7rem] text-[#7c8ba0] dark:border-[rgb(var(--card-border))] dark:text-ink/55 sm:mx-6 sm:flex-row sm:justify-between sm:gap-4 sm:text-left lg:mx-8">
+          <span>Ministry of Health — Sultanate of Oman</span>
+          <span className="hidden md:inline">
+            Women &amp; Child Health Department · Health Monitoring Dashboards 2023–2025
+          </span>
+          <span className="italic">
+            DGHS · North Al Batinah · {NAV_BY_ID[active].short ?? NAV_BY_ID[active].name}
+          </span>
         </footer>
       </div>
 

@@ -1,30 +1,24 @@
 import type { LucideIcon } from 'lucide-react'
 
 interface SectionTitleProps {
-  icon: LucideIcon
+  /** Kept for API compatibility; the MOH template titles carry no icon. */
+  icon?: LucideIcon
   title: string
   subtitle?: string
 }
 
-/** Divider heading used between groups of cards within a dashboard view. */
-export default function SectionTitle({
-  icon: Icon,
-  title,
-  subtitle,
-}: SectionTitleProps) {
+/**
+ * Section heading in the MOH template style: a serif navy title with the
+ * short MOH-blue accent tab beneath it, and an optional caption.
+ */
+export default function SectionTitle({ title, subtitle }: SectionTitleProps) {
   return (
-    <div className="mb-4 mt-2 flex items-center gap-3" data-reveal>
-      <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-control bg-navy text-glow">
-        <Icon className="h-4 w-4" />
-      </span>
-      <div className="min-w-0">
-        <h2 className="text-eyebrow uppercase text-heading/80">{title}</h2>
-        {subtitle && <p className="mt-0.5 text-caption text-ink/60">{subtitle}</p>}
-      </div>
-      <div
-        className="ml-2 hidden h-px flex-1 bg-line/15 sm:block"
-        aria-hidden="true"
-      />
+    <div className="mb-4 mt-2" data-reveal>
+      <h2 className="font-serif text-xl font-normal leading-tight text-heading sm:text-[1.4rem]">
+        {title}
+      </h2>
+      <span className="accent-tab mt-2 bg-azure" aria-hidden="true" />
+      {subtitle && <p className="mt-2 text-caption text-ink/65">{subtitle}</p>}
     </div>
   )
 }

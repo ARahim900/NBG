@@ -3,30 +3,33 @@
 @tailwind utilities;
 
 @layer base {
-  /* ── Light theme — calm, flat surfaces in the MoH palette ── */
+  /* ── Light theme — MOH branded template: white surfaces, light-blue
+        hairlines, navy titles, slate body text. Flat colours only. ── */
   :root {
     color-scheme: light;
-    --canvas: 233 241 248; /* #e9f1f8 page background */
+    --canvas: 244 248 252; /* #f4f8fc page background */
     --surface: 255 255 255; /* cards, header, footer */
-    --mist: 230 239 247; /* subtle panels & inset wells */
-    --ink: 26 39 51; /* #1a2733 body text */
-    --heading: 16 52 84; /* #103454 headings */
+    --mist: 239 246 252; /* #eff6fc template highlight box */
+    --ink: 54 70 90; /* #36465a template body text */
+    --heading: 20 64 102; /* #144066 MOH navy */
     --line: 20 64 102; /* borders (used at low opacity) */
     --tint: 20 64 102; /* soft accent washes */
     --shadow: 16 48 73; /* navy-tinted shadow */
+    --card-border: 215 234 249; /* #d7eaf9 template card border */
   }
 
-  /* ── Dark theme — deep navy, flat surfaces ── */
+  /* ── Dark theme — deep MOH navy, flat surfaces ── */
   .dark {
     color-scheme: dark;
-    --canvas: 4 12 24; /* #040c18 near-void navy */
-    --surface: 12 28 48; /* #0c1c30 elevated panels */
-    --mist: 9 22 39; /* inset wells */
-    --ink: 199 215 234; /* body text */
+    --canvas: 6 17 31; /* #06111f */
+    --surface: 13 31 52; /* #0d1f34 */
+    --mist: 10 25 43; /* inset wells */
+    --ink: 199 213 229; /* body text */
     --heading: 235 243 253; /* headings */
     --line: 116 158 206; /* blue hairlines */
     --tint: 125 165 212; /* soft washes */
     --shadow: 0 0 0; /* black shadow */
+    --card-border: 33 62 94; /* #213e5e */
   }
 
   html {
@@ -34,8 +37,6 @@
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     scroll-behavior: smooth;
-    /* Inter: optical sizes pick the tighter display cut for large headings;
-       cv05 = lowercase l with a tail, so l / I / 1 never get confused in data. */
   }
 
   /* Headings sit slightly tight (Muscat Bay: semibold, tracking-tight). */
@@ -47,11 +48,11 @@
 
   /* One focus style everywhere: 2px ring in the accent, offset 2px. */
   :focus-visible {
-    outline: 2px solid #2884c6;
+    outline: 2px solid #0089dd;
     outline-offset: 2px;
   }
   .dark :focus-visible {
-    outline-color: #7cb6bc;
+    outline-color: #88cad2;
   }
 
   /* Figures line up in tables, KPI tiles and charts, and counters don't jitter. */
@@ -82,7 +83,7 @@
   }
 
   ::selection {
-    background: rgba(40, 132, 198, 0.35);
+    background: rgba(0, 137, 221, 0.25);
   }
 }
 
@@ -90,37 +91,53 @@
   /* ── Glass card: the core surface of the redesign. Every dashboard view
         already composes from `.card`, so this single class re-skins the
         entire app. ── */
-  /* ── Card: the core surface. Flat, single colour, soft two-layer shadow
-        (Muscat Bay). Every dashboard view composes from `.card`. ── */
+  /* ── Card: the MOH template card — flat white, a light-blue hairline and
+        the template's cut top-right corner. Every view composes from `.card`,
+        so this one rule styles the whole app. ── */
   .card {
-    @apply relative rounded-card;
+    @apply relative rounded-[4px];
+    --cut: 14px;
     background-color: rgb(var(--surface));
-    border: 1px solid rgb(var(--line) / 0.12);
-    /* Muscat Bay: two subtle layers at rest, a little more on hover. */
-    box-shadow:
-      0 1px 2px rgb(var(--shadow) / 0.04),
-      0 2px 6px rgb(var(--shadow) / 0.06);
+    border: 1px solid rgb(var(--card-border));
+    clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% 100%, 0 100%);
     transition:
       transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
       border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
-      box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
       background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
+  /* The hairline continues along the cut corner. */
+  .card::after {
+    content: '';
+    position: absolute;
+    /* Positioned in border-box coordinates (the padding box starts 1px in). */
+    top: -1px;
+    left: calc(100% + 1px - var(--cut));
+    width: calc(var(--cut) * 1.4142);
+    height: 1px;
+    background-color: rgb(var(--card-border));
+    transform-origin: 0 0;
+    transform: rotate(45deg);
+    pointer-events: none;
+    transition: background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
   .card:hover {
-    border-color: rgb(var(--line) / 0.22);
-    box-shadow:
-      0 2px 4px rgb(var(--shadow) / 0.06),
-      0 4px 12px rgb(var(--shadow) / 0.08);
+    border-color: rgb(var(--card-border-hover, 185 214 239));
   }
-  .dark .card {
-    box-shadow:
-      0 4px 12px rgb(0 0 0 / 0.3),
-      0 2px 4px rgb(0 0 0 / 0.2);
+  .card:hover::after {
+    background-color: rgb(var(--card-border-hover, 185 214 239));
   }
-  .dark .card:hover {
-    box-shadow:
-      0 4px 12px rgb(0 0 0 / 0.36),
-      0 2px 4px rgb(0 0 0 / 0.24);
+  .dark .card:hover,
+  .dark .card:hover::after {
+    --card-border-hover: 52 92 136;
+  }
+
+  /* Template accent tab: a short bar with a slanted end, in a flat colour.
+     Sits under titles and at the top of stat cards. */
+  .accent-tab {
+    display: block;
+    width: 2.5rem;
+    height: 5px;
+    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 100%, 0 100%);
   }
 
   /* Interactive lift used by KPI tiles & link cards */
@@ -139,8 +156,7 @@
   }
   .nav-link-active {
     @apply text-white;
-    background-color: rgba(124, 182, 188, 0.14);
-    box-shadow: inset 0 0 0 1px rgba(124, 182, 188, 0.22);
+    background-color: rgba(255, 255, 255, 0.1);
   }
   .nav-link-active::before {
     content: '';
@@ -150,7 +166,7 @@
     height: 55%;
     width: 3px;
     border-radius: 9999px;
-    background-color: #7cb6bc;
+    background-color: #88cad2;
     transform: translateY(-50%);
   }
 
@@ -161,15 +177,14 @@
   /* Primary CTA — solid teal button */
   .btn-glow {
     @apply relative inline-flex items-center justify-center gap-2 rounded-control px-6 py-3 text-sm font-semibold text-navy-900;
-    /* One solid, soft colour — the MoH teal. No gradient, no shine. */
-    background-color: #7cb6bc;
-    box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+    /* One solid colour: the MOH template's light teal. No gradient, no shine. */
+    background-color: #88cad2;
     transition:
       transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
       background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   .btn-glow:hover {
-    background-color: #8ec3c8;
+    background-color: #9dd4db;
     transform: translateY(-1px);
   }
 
@@ -229,7 +244,7 @@
     z-index: 80;
     transform-origin: 0 50%;
     transform: scaleX(0);
-    background-color: #2884c6;
+    background-color: #0089dd;
     pointer-events: none;
   }
 
