@@ -64,7 +64,7 @@ export default function Overview({ onNavigate }: ViewProps) {
               <span className="font-semibold text-white">2023, 2024 &amp; 2025</span>.
             </p>
           </div>
-          <div className="grid grid-cols-3 gap-3 text-center">
+          <div className="grid shrink-0 grid-cols-3 gap-2 text-center sm:gap-3 lg:min-w-[20rem]">
             {[
               { v: String(DASHBOARD_COUNT), l: 'Dashboards' },
               { v: String(meta.wilayats.length), l: 'Wilayat' },
@@ -72,13 +72,13 @@ export default function Overview({ onNavigate }: ViewProps) {
             ].map((s) => (
               <div
                 key={s.l}
-                className="rounded-xl bg-white/[0.07] px-4 py-3 ring-1 ring-white/10 backdrop-blur transition-colors hover:ring-glow/40"
+                className="min-w-0 rounded-xl bg-white/[0.07] px-2 py-3 ring-1 ring-white/10 backdrop-blur transition-colors hover:ring-glow/40 sm:px-4"
               >
                 <AnimatedNumber
                   value={s.v}
                   className="font-display text-2xl font-bold text-glow"
                 />
-                <p className="text-[0.7rem] font-medium uppercase tracking-wide text-white/60">
+                <p className="text-[0.62rem] font-medium uppercase text-white/60 sm:text-[0.7rem] sm:tracking-wide">
                   {s.l}
                 </p>
               </div>

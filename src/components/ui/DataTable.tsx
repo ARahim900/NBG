@@ -20,6 +20,10 @@ interface DataTableProps {
 const alignClass = (a: Column['align']): string =>
   a === 'right' ? 'text-right' : a === 'center' ? 'text-center' : 'text-left'
 
+/** On phones the row label stays pinned while the figures scroll sideways. */
+const STICKY_FIRST =
+  'max-sm:sticky max-sm:left-0 max-sm:z-[1] max-sm:bg-surface max-sm:shadow-[6px_0_8px_-6px_rgb(var(--shadow)/0.3)]'
+
 /** Presentation-only table: views pass pre-formatted cells. */
 export default function DataTable({
   columns,
@@ -37,7 +41,7 @@ export default function DataTable({
             {columns.map((c, i) => (
               <th
                 key={i}
-                className={`${pad} ${alignClass(c.align)} font-display text-xs font-bold uppercase tracking-[0.08em] text-heading/75 ${c.className ?? ''}`}
+                className={`${pad} ${alignClass(c.align)} font-display text-xs font-bold uppercase tracking-[0.08em] text-heading/75 ${i === 0 ? STICKY_FIRST : ''} ${c.className ?? ''}`}
               >
                 {c.label}
               </th>
@@ -56,7 +60,7 @@ export default function DataTable({
                 <td
                   key={ci}
                   className={`${pad} ${alignClass(columns[ci]?.align)} ${
-                    ci === 0 ? 'font-medium text-ink' : 'text-ink/80'
+                    ci === 0 ? `font-medium text-ink ${STICKY_FIRST}` : 'text-ink/80'
                   } ${columns[ci]?.className ?? ''}`}
                 >
                   {cellValue}
@@ -71,7 +75,9 @@ export default function DataTable({
               {total.map((cellValue, ci) => (
                 <td
                   key={ci}
-                  className={`${pad} ${alignClass(columns[ci]?.align)} text-[0.84rem] font-bold text-heading`}
+                  className={`${pad} ${alignClass(columns[ci]?.align)} text-[0.84rem] font-bold text-heading ${
+                    ci === 0 ? STICKY_FIRST : ''
+                  }`}
                 >
                   {cellValue}
                 </td>

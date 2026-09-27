@@ -14,7 +14,7 @@ export default function SectionTitle({
 }: SectionTitleProps) {
   return (
     <div className="mb-4 mt-2 flex items-center gap-3" data-reveal>
-      <span className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-navy to-navy-700 text-glow ring-1 ring-glow/25">
+      <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-navy to-navy-700 text-glow ring-1 ring-glow/25">
         <Icon className="h-4 w-4" />
       </span>
       <div className="min-w-0">
