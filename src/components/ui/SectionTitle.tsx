@@ -14,7 +14,7 @@ export default function SectionTitle({
 }: SectionTitleProps) {
   return (
     <div className="mb-4 mt-2 flex items-center gap-3" data-reveal>
-      <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-control bg-gradient-to-br from-navy to-navy-700 text-glow ring-1 ring-glow/25">
+      <span className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-control bg-navy text-glow">
         <Icon className="h-4 w-4" />
       </span>
       <div className="min-w-0">
@@ -22,7 +22,7 @@ export default function SectionTitle({
         {subtitle && <p className="mt-0.5 text-caption text-ink/60">{subtitle}</p>}
       </div>
       <div
-        className="ml-2 hidden h-px flex-1 bg-gradient-to-r from-line/25 to-transparent sm:block"
+        className="ml-2 hidden h-px flex-1 bg-line/15 sm:block"
         aria-hidden="true"
       />
     </div>

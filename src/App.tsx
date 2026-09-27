@@ -17,12 +17,8 @@ import BottomNav from './components/BottomNav'
 import InstallPrompt from './components/InstallPrompt'
 import Cursor from './components/Cursor'
 import ErrorBoundary from './components/ErrorBoundary'
-import { useThemeMode } from './lib/theme-mode'
 import { animateViewIn, gsap, motionOK } from './lib/motion'
 import { NAV_BY_ID, type ViewId, type ViewProps } from './lib/dashboards'
-
-/** WebGL constellation loads in its own chunk after first paint. */
-const AuroraField = lazy(() => import('./components/three/AuroraField'))
 
 /**
  * Every dashboard is its own chunk, so the landing page does not download the
@@ -139,10 +135,8 @@ function ViewError({ onHome }: { onHome: () => void }) {
 }
 
 export default function App() {
-  const { isDark } = useThemeMode()
   const [active, setActive] = useState<ViewId>(viewFromHash)
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [webgl, setWebgl] = useState(false)
   const [collapsed, setCollapsed] = useState<boolean>(() => {
     try {
       return localStorage.getItem('nbg-sidebar-collapsed') === '1'
@@ -163,10 +157,6 @@ export default function App() {
       /* storage unavailable — collapse still applies for this session */
     }
   }, [collapsed])
-
-  // Defer the WebGL layer until the browser is idle so it never competes
-  // with first paint or data rendering.
-  useEffect(() => onIdle(() => setWebgl(true), 1200), [])
 
   // Prefetch every dashboard chunk in the background after first load.
   useEffect(
@@ -258,17 +248,10 @@ export default function App() {
 
   return (
     <div
-      className={`grain min-h-screen transition-[padding] duration-300 ${
+      className={`min-h-screen transition-[padding] duration-300 ${
         collapsed ? 'lg:pl-20' : 'lg:pl-72'
       }`}
     >
-      {webgl && (
-        <ErrorBoundary fallback={null}>
-          <Suspense fallback={null}>
-            <AuroraField isDark={isDark} />
-          </Suspense>
-        </ErrorBoundary>
-      )}
       <Cursor />
 
       <Sidebar
@@ -293,10 +276,6 @@ export default function App() {
           </ErrorBoundary>
         </main>
         <footer className="relative border-t border-line/10 bg-surface/40 px-4 py-5 text-center text-xs text-ink/45 backdrop-blur transition-colors duration-300 sm:px-6 lg:px-8">
-          <span
-            className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-glow/25 to-transparent"
-            aria-hidden="true"
-          />
           Health Monitoring Dashboards · North Batinah Governorate · Women &amp; Child
           Health Department · Ministry of Health, Oman · Data 2023–2025
         </footer>

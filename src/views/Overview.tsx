@@ -43,11 +43,6 @@ export default function Overview({ onNavigate }: ViewProps) {
         className="relative overflow-hidden rounded-3xl bg-[#071527] p-6 text-white shadow-card ring-1 ring-white/10 sm:p-8"
         data-reveal
       >
-        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-          <div className="absolute -left-20 -top-20 h-72 w-72 rounded-full bg-azure/20 blur-3xl" />
-          <div className="absolute -bottom-24 right-0 h-72 w-72 rounded-full bg-glow/10 blur-3xl" />
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-glow/40 to-transparent" />
-        </div>
         <div className="relative flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
             <span className="chip bg-white/10 text-glow ring-1 ring-glow/30">
@@ -55,7 +50,7 @@ export default function Overview({ onNavigate }: ViewProps) {
             </span>
             <h1 className="mt-3 font-display text-2xl font-bold leading-tight sm:text-3xl">
               Women &amp; Child Health —{' '}
-              <span className="text-aurora">North Batinah Governorate</span>
+              <span className="text-glow">North Batinah Governorate</span>
             </h1>
             <p className="mt-2 text-sm leading-relaxed text-white/70">
               A consolidated view of {DASHBOARD_COUNT} monitoring dashboards across{' '}
@@ -241,9 +236,9 @@ export default function Overview({ onNavigate }: ViewProps) {
             <button
               key={d.id}
               onClick={() => onNavigate(d.id)}
-              className="card card-lift sheen group flex items-start gap-3.5 p-4 text-left"
+              className="card card-lift group flex items-start gap-3.5 p-4 text-left"
             >
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-tint/5 text-heading ring-1 ring-line/10 transition-all duration-300 group-hover:bg-navy group-hover:text-glow group-hover:shadow-glow-teal">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-tint/5 text-heading ring-1 ring-line/10 transition-all duration-300 group-hover:bg-navy group-hover:text-glow">
                 <d.icon className="h-[1.35rem] w-[1.35rem]" />
               </span>
               <span className="min-w-0 flex-1">

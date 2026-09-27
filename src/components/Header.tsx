@@ -40,11 +40,6 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
     <>
       <div ref={progressRef} className="scroll-progress" aria-hidden="true" />
       <header className="sticky top-0 z-20 border-b border-line/10 bg-surface/60 backdrop-blur-xl transition-colors duration-300">
-        {/* hairline beam under the header */}
-        <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-glow/30 to-transparent"
-          aria-hidden="true"
-        />
         <div className="flex items-center gap-3 px-4 py-3.5 sm:px-6 lg:px-8">
           {onOpenMenu && (
             <button
@@ -96,7 +91,7 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
                 className="flex items-center gap-1.5 font-display text-xs font-semibold text-ink/70"
               >
                 <span
-                  className="inline-block h-2.5 w-2.5 rounded-full shadow-[0_0_8px_currentColor]"
+                  className="inline-block h-2.5 w-2.5 rounded-full"
                   style={{ backgroundColor: color, color }}
                 />
                 {year}

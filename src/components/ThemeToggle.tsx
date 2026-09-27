@@ -3,7 +3,7 @@ import { useThemeMode } from '../lib/theme-mode'
 
 /**
  * Elegant sliding sun/moon switch. The track shows the inactive icon dimmed;
- * the gradient knob carries the active icon and slides between the two ends.
+ * the knob carries the active icon and slides between the two ends.
  */
 export default function ThemeToggle(): JSX.Element {
   const { isDark, toggle } = useThemeMode()
@@ -34,10 +34,8 @@ export default function ThemeToggle(): JSX.Element {
 
       {/* Sliding knob with the active icon */}
       <span
-        className={`relative z-10 flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br shadow-md ring-1 transition-transform duration-300 ease-out ${
-          isDark
-            ? 'translate-x-[2rem] from-navy-600 to-navy-900 ring-white/10'
-            : 'translate-x-0 from-white to-mist ring-line/10'
+        className={`relative z-10 flex h-7 w-7 items-center justify-center rounded-full shadow-sm ring-1 transition-transform duration-300 ease-out ${
+          isDark ? 'translate-x-[2rem] bg-navy-800 ring-white/10' : 'translate-x-0 bg-white ring-line/10'
         }`}
       >
         {isDark ? (

@@ -26,7 +26,7 @@ export default function ChartCard({
           {/* Titles wrap rather than truncate: on phones they are the key label. */}
           <h3 className="flex items-start gap-2 text-title text-heading">
             <span
-              className="mt-1 h-3.5 w-1 shrink-0 rounded-full bg-gradient-to-b from-glow to-azure shadow-glow-teal"
+              className="mt-1 h-3.5 w-1 shrink-0 rounded-full bg-teal"
               aria-hidden="true"
             />
             <span className="min-w-0 [overflow-wrap:anywhere]">{title}</span>

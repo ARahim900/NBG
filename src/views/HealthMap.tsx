@@ -117,7 +117,10 @@ const divT = (v: number, benchmark: number) =>
 
 /** Muscat Bay motion curve — smooth, no overshoot. */
 const EASE = 'cubic-bezier(0.4, 0, 0.2, 1)'
-const STOP_EASE = { transition: `stop-color 500ms ${EASE}` }
+/** Heat bands: three flat concentric circles per point (outer → inner). */
+const HEAT_BANDS = [1, 0.62, 0.3]
+/** Discrete legend swatches along the sequential ramp. */
+const LEGEND_STEPS = [0.25, 0.44, 0.62, 0.81, 1]
 
 const compact = (v: number): string =>
   v >= 1000 ? `${(v / 1000).toFixed(v >= 100000 ? 0 : 1)}k` : `${Math.round(v)}`
@@ -226,8 +229,8 @@ export default function HealthMap() {
   const govOmani = byWilayat.reduce((a, w) => a + w.omani, 0)
 
   const theme = isDark
-    ? { sea: '#071a2e', sea2: '#0a2340', land: '#10243b', uae: '#0c1c2f', coast: '#3d6d9c', text: '#ebf3fd', sub: '#9fb8d3', ring: '#0c1c30' }
-    : { sea: '#e4f0fa', sea2: '#cfe3f3', land: '#ffffff', uae: '#eef1f4', coast: '#7fa6c9', text: '#103454', sub: '#51667a', ring: '#ffffff' }
+    ? { sea: '#081d33', land: '#10243b', uae: '#0c1c2f', coast: '#3d6d9c', text: '#ebf3fd', sub: '#9fb8d3', ring: '#0c1c30' }
+    : { sea: '#dcebf6', land: '#ffffff', uae: '#eef1f4', coast: '#7fa6c9', text: '#103454', sub: '#51667a', ring: '#ffffff' }
 
   return (
     <div className="space-y-8">
@@ -272,47 +275,38 @@ export default function HealthMap() {
               aria-label={`Map: ${metric.long}, by wilayat`}
             >
               <defs>
-                <linearGradient id="nbg-sea" x1="1" y1="0" x2="0.3" y2="1">
-                  <stop offset="0%" stopColor={theme.sea2} />
-                  <stop offset="100%" stopColor={theme.sea} />
-                </linearGradient>
                 <clipPath id="nbg-land">
                   <path d={MAP.oman.fill} />
                 </clipPath>
-                {heat.map((h, i) => {
-                  const c = ramp(seq, 0.35 + 0.65 * (h.v / heatMax))
-                  return (
-                    <radialGradient key={i} id={`nbg-heat-${i}`}>
-                      <stop offset="0%" stopOpacity={isDark ? 0.75 : 0.62} style={{ stopColor: c, ...STOP_EASE }} />
-                      <stop offset="45%" stopOpacity={isDark ? 0.34 : 0.26} style={{ stopColor: c, ...STOP_EASE }} />
-                      <stop offset="100%" stopOpacity={0} style={{ stopColor: c }} />
-                    </radialGradient>
-                  )
-                })}
               </defs>
 
-              <rect width={MAP_W} height={MAP_H} fill="url(#nbg-sea)" />
+              <rect width={MAP_W} height={MAP_H} fill={theme.sea} />
               <path d={MAP.uae.fill} fill={theme.uae} />
               <path d={MAP.oman.fill} fill={theme.land} />
 
-              {/* Heat layer — clipped to land, where people actually live */}
+              {/* Heat layer — soft, flat bands (no gradient) clipped to land,
+                  where people actually live. Denser areas overlap more. */}
               <g
                 clipPath="url(#nbg-land)"
-                style={{
-                  mixBlendMode: isDark ? 'screen' : 'multiply',
-                  opacity: metric.kind === 'count' ? 1 : 0,
-                  transition: `opacity 400ms ${EASE}`,
-                }}
+                style={{ opacity: metric.kind === 'count' ? 1 : 0, transition: `opacity 400ms ${EASE}` }}
               >
-                {heat.map((h, i) => (
-                  <circle
-                    key={i}
-                    cx={h.x}
-                    cy={h.y}
-                    style={{ r: 70 + 190 * Math.sqrt(h.v / heatMax), transition: `r 600ms ${EASE}` }}
-                    fill={`url(#nbg-heat-${i})`}
-                  />
-                ))}
+                {heat.map((h, i) => {
+                  const r = 70 + 190 * Math.sqrt(h.v / heatMax)
+                  const c = ramp(seq, 0.35 + 0.65 * (h.v / heatMax))
+                  return (
+                    <g key={i}>
+                      {HEAT_BANDS.map((k) => (
+                        <circle
+                          key={k}
+                          cx={h.x}
+                          cy={h.y}
+                          fillOpacity={isDark ? 0.16 : 0.12}
+                          style={{ r: r * k, fill: c, transition: `r 600ms ${EASE}, fill 500ms ${EASE}` }}
+                        />
+                      ))}
+                    </g>
+                  )
+                })}
               </g>
 
               <path d={MAP.uae.edge} fill="none" stroke={theme.coast} strokeWidth={1.5} strokeDasharray="6 5" />
@@ -425,25 +419,27 @@ export default function HealthMap() {
               <p className="font-semibold text-heading">{metric.label}</p>
               {metric.kind === 'count' ? (
                 <>
-                  <div
-                    className="mt-1.5 h-2.5 rounded-full"
-                    style={{ background: `linear-gradient(90deg, ${ramp(seq, 0.25)}, ${ramp(seq, 1)})` }}
-                  />
+                  <div className="mt-1.5 flex gap-0.5">
+                    {LEGEND_STEPS.map((t) => (
+                      <span key={t} className="h-2.5 flex-1 first:rounded-l-full last:rounded-r-full" style={{ backgroundColor: ramp(seq, t) }} />
+                    ))}
+                  </div>
                   <div className="mt-1 flex justify-between text-[0.7rem] text-ink/65">
                     <span>{compact(Math.min(...values.map((v) => v.value)))}</span>
                     <span>{compact(max)}</span>
                   </div>
                   <p className="mt-1.5 text-[0.7rem] text-ink/65">
-                    Circle size and colour show the wilayat total; the glow shows where
-                    that population sits.
+                    Circle size and colour show the wilayat total; the shaded bands show
+                    where that population sits.
                   </p>
                 </>
               ) : (
                 <>
-                  <div
-                    className="mt-1.5 h-2.5 rounded-full"
-                    style={{ background: `linear-gradient(90deg, ${div.below}, ${div.mid}, ${div.above})` }}
-                  />
+                  <div className="mt-1.5 flex gap-0.5">
+                    {[div.below, div.mid, div.above].map((c) => (
+                      <span key={c} className="h-2.5 flex-1 first:rounded-l-full last:rounded-r-full" style={{ backgroundColor: c }} />
+                    ))}
+                  </div>
                   <div className="mt-1 flex justify-between text-[0.7rem] text-ink/65">
                     <span>Below</span>
                     <span>Gov. {ancRateGov.toFixed(1)}</span>

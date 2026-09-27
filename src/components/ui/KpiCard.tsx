@@ -15,32 +15,13 @@ interface KpiCardProps {
   accent?: 'navy' | 'azure' | 'teal' | 'gold' | 'good'
 }
 
-const ACCENTS: Record<string, { icon: string; beam: string; glow: string }> = {
-  navy: {
-    icon: 'from-navy to-navy-600 text-white',
-    beam: 'from-navy/0 via-azure/60 to-navy/0',
-    glow: 'bg-azure/25',
-  },
-  azure: {
-    icon: 'from-azure to-azure-600 text-white',
-    beam: 'from-azure/0 via-azure/70 to-azure/0',
-    glow: 'bg-azure/25',
-  },
-  teal: {
-    icon: 'from-teal-600 to-teal-700 text-white',
-    beam: 'from-teal/0 via-glow/70 to-teal/0',
-    glow: 'bg-glow/20',
-  },
-  gold: {
-    icon: 'from-warn to-[#a8761a] text-white',
-    beam: 'from-warn/0 via-warn/70 to-warn/0',
-    glow: 'bg-warn/20',
-  },
-  good: {
-    icon: 'from-good to-[#256f59] text-white',
-    beam: 'from-good/0 via-good/70 to-good/0',
-    glow: 'bg-good/20',
-  },
+/** Flat, single-colour icon tiles in the app's own palette. */
+const ACCENTS: Record<string, string> = {
+  navy: 'bg-navy text-white',
+  azure: 'bg-azure text-white',
+  teal: 'bg-teal-700 text-white',
+  gold: 'bg-warn text-white',
+  good: 'bg-good text-white',
 }
 
 /**
@@ -58,24 +39,11 @@ export default function KpiCard({
   invertDelta,
   accent = 'navy',
 }: KpiCardProps) {
-  const a = ACCENTS[accent]
-
   return (
-    <div className="card card-lift sheen group p-4 sm:p-5">
-      {/* Corner aura that fades in on hover */}
-      <div
-        className={`pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full blur-2xl transition-opacity duration-300 ${a.glow} opacity-0 group-hover:opacity-100`}
-        aria-hidden="true"
-      />
-      {/* Accent beam along the top edge */}
-      <div
-        className={`pointer-events-none absolute inset-x-5 top-0 h-px bg-gradient-to-r ${a.beam}`}
-        aria-hidden="true"
-      />
-
+    <div className="card card-lift p-4 sm:p-5">
       <div className="relative flex items-start justify-between gap-3">
         <div
-          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-control bg-gradient-to-br shadow-sm ${a.icon}`}
+          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-control ${ACCENTS[accent]}`}
         >
           <Icon className="h-5 w-5" />
         </div>

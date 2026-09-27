@@ -16,7 +16,6 @@ import {
   YAxis,
 } from 'recharts'
 import type { PieLabelRenderProps } from 'recharts'
-import { useId } from 'react'
 import { C, SERIES } from '../../lib/theme'
 import { useThemeMode } from '../../lib/theme-mode'
 import { useNarrow } from '../../lib/useMediaQuery'
@@ -101,7 +100,7 @@ function useChartTheme(): ChartTheme {
   const { isDark } = useThemeMode()
   return {
     axisTick: { fontSize: 12, fill: isDark ? '#8fb3da' : '#6b7a88' },
-    cursorFill: isDark ? 'rgba(94,234,212,0.07)' : 'rgba(20,64,102,0.05)',
+    cursorFill: isDark ? 'rgba(124,182,188,0.08)' : 'rgba(20,64,102,0.05)',
     sliceStroke: isDark ? '#0c1c30' : '#ffffff',
     axisLine: isDark ? '#1d3a5c' : '#dbe5ee',
     dataLabel: isDark ? '#c7d7ea' : '#41617d',
@@ -159,9 +158,6 @@ export function TrendChart({
   showLegend = true,
 }: TrendProps) {
   const { axisTick, axisLine, dataLabel, paint } = useChartTheme()
-  // Gradient ids must be unique per chart: several charts on one page share
-  // series keys like "value", and SVG ids are global to the document.
-  const uid = useId().replace(/:/g, '')
   // Single-series trends get a tidy value sat above each point; multi-series
   // stays label-free (rely on the tooltip) to avoid overlapping figures.
   const showValues = series.length === 1
@@ -170,21 +166,6 @@ export function TrendChart({
     <ResponsiveContainer width="100%" height={height}>
       {variant === 'area' ? (
         <AreaChart data={data} margin={{ top: 18, right: 12, left: -8, bottom: 0 }}>
-          <defs>
-            {series.map((sdef) => (
-              <linearGradient
-                key={sdef.key}
-                id={`grad-${uid}-${sdef.key}`}
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="1"
-              >
-                <stop offset="0%" stopColor={paint(sdef.color)} stopOpacity={0.32} />
-                <stop offset="100%" stopColor={paint(sdef.color)} stopOpacity={0.02} />
-              </linearGradient>
-            ))}
-          </defs>
           <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: axisLine }} />
           <YAxis tick={axisTick} tickLine={false} axisLine={false} domain={yDomain} width={44} />
           <Tooltip content={<ChartTooltip unit={unit} formatter={valueFormatter} />} />
@@ -198,7 +179,8 @@ export function TrendChart({
               name={sdef.name}
               stroke={paint(sdef.color)}
               strokeWidth={2.5}
-              fill={`url(#grad-${uid}-${sdef.key})`}
+              fill={paint(sdef.color)}
+              fillOpacity={0.12}
               dot={{ r: 2.5, strokeWidth: 0, fill: paint(sdef.color) }}
               activeDot={{ r: 4.5 }}
             >

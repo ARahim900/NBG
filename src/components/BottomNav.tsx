@@ -45,7 +45,7 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
 
   const tabClass = (on: boolean) =>
     `flex flex-1 flex-col items-center justify-center gap-1 py-2 text-[0.62rem] font-semibold transition-colors duration-200 ${
-      on ? 'text-glow drop-shadow-[0_0_8px_rgba(94,234,212,0.6)]' : 'text-white/70'
+      on ? 'text-glow' : 'text-white/70'
     }`
 
   return (
@@ -105,7 +105,7 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
             className="pointer-events-none absolute left-0 top-0 flex justify-center transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
             style={{ width: `${100 / tabCount}%`, transform: `translateX(${tabIdx * 100}%)` }}
           >
-            <span className="h-[3px] w-8 rounded-b-full bg-glow shadow-[0_0_10px_rgba(94,234,212,0.7)]" />
+            <span className="h-[3px] w-8 rounded-b-full bg-glow" />
           </span>
         )}
         {general.map((item) => {

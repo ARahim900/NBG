@@ -6,7 +6,8 @@ It covers eleven indicator dashboards across **2023, 2024 and 2025**, plus the
 2025 population estimates and a governorate map.
 
 Colours follow the Ministry of Health Oman eHealth-portal palette (navy
-`#144066` · azure `#2884c6` · teal `#7cb6bc`). Typography, shape and motion follow
+`#144066` · azure `#2884c6` · teal `#7cb6bc`), used flat: no gradients, glows
+or animated backgrounds anywhere. Typography, shape and motion follow
 the Muscat Bay design system (v2): **DM Sans** (400–700) on a seven-step type
 scale, 10.5 px card corners, 6 px controls, two-layer soft shadows and calm
 200 ms `cubic-bezier(.4,0,.2,1)` motion with no bounces. Arabic text uses Cairo.
@@ -43,15 +44,14 @@ bookmarked, shared, refreshed or reached with the Back button.
 ## Tech stack
 
 - **React 18 + TypeScript + Vite**, **Tailwind CSS**
-- **Recharts** (charts), **lucide-react** (icons), **GSAP** (motion), **three.js** (decorative 3D)
+- **Recharts** (charts), **lucide-react** (icons), **GSAP** (motion)
 - **DM Sans** and **Cairo** via `@fontsource-variable` (self-hosted)
 - Motion respects the operating system's "reduce motion" setting throughout
 - Installable **PWA** with offline caching (`public/sw.js`)
 - No backend: all data is bundled from `src/data/*.json`
 
 Each page loads on demand, so the Home page does not download the charting
-library. The 3D background is optional: if a computer has WebGL disabled the app
-still works, and if one page fails the rest of the app keeps running.
+library. If one page fails, the rest of the app keeps running.
 
 ## Run locally
 

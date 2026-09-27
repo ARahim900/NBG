@@ -56,9 +56,9 @@ const SECTION_ICONS: Record<string, LucideIcon> = {
   child: Baby,
 }
 const SECTION_BAR: Record<Section['accent'], string> = {
-  navy: 'before:bg-gradient-to-b before:from-azure before:to-navy',
-  azure: 'before:bg-gradient-to-b before:from-glow before:to-azure',
-  teal: 'before:bg-gradient-to-b before:from-teal before:to-teal-700',
+  navy: 'before:bg-navy',
+  azure: 'before:bg-azure',
+  teal: 'before:bg-teal-700',
 }
 const SECTION_ICONBG: Record<Section['accent'], string> = {
   navy: 'bg-tint/10 text-heading ring-1 ring-azure/25',
@@ -73,8 +73,8 @@ const ancFor = (key: string): number =>
 function ValueCard({ v }: { v: (typeof values)[number] }) {
   const Icon = VALUE_ICONS[v.iconKey]
   return (
-    <article className="card card-lift sheen group p-4">
-      <span className="flex h-10 w-10 items-center justify-center rounded-control bg-gradient-to-br from-navy to-navy-600 text-glow shadow-md">
+    <article className="card card-lift group p-4">
+      <span className="flex h-10 w-10 items-center justify-center rounded-control bg-navy text-glow">
         <Icon className="h-5 w-5" />
       </span>
       <h3 dir="rtl" className="mt-3 font-ar text-lg font-bold text-heading">
@@ -94,7 +94,7 @@ function ValueCard({ v }: { v: (typeof values)[number] }) {
 function WilayatCard({ w }: { w: (typeof wilayats)[number] }) {
   return (
     <article className="card card-lift group p-4 text-center">
-      <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-mist text-heading ring-1 ring-glow/25 transition-all duration-300 group-hover:text-glow group-hover:shadow-glow-teal">
+      <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-mist text-heading ring-1 ring-glow/25 transition-all duration-300 group-hover:text-glow">
         <MapPin className="h-5 w-5" />
       </span>
       <h3 dir="rtl" className="mt-3 font-ar text-lg font-extrabold text-heading">
@@ -136,14 +136,6 @@ export default function About({ onNavigate }: ViewProps) {
         className="relative -mt-1 overflow-hidden rounded-3xl bg-[#071527] text-white shadow-card ring-1 ring-white/10"
         data-reveal
       >
-        {/* Light field & legibility gradients */}
-        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-          <div className="absolute -left-24 -top-24 h-80 w-80 rounded-full bg-azure/20 blur-3xl" />
-          <div className="absolute -bottom-32 right-1/4 h-96 w-96 rounded-full bg-glow/10 blur-3xl" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#071527] via-[#071527]/80 to-transparent lg:via-[#071527]/55" />
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-glow/50 to-transparent" />
-        </div>
-
         <div className="relative px-6 py-12 sm:px-10 sm:py-16 lg:py-20">
           <span className="chip bg-white/10 text-glow ring-1 ring-glow/30" data-hero>
             <Sparkles className="h-3.5 w-3.5" />
@@ -158,14 +150,14 @@ export default function About({ onNavigate }: ViewProps) {
             {department.nameAr}
           </h1>
           <p
-            className="text-aurora mt-3 font-display text-xl font-bold sm:text-3xl"
+            className="mt-3 font-display text-xl font-bold text-glow sm:text-3xl"
             data-hero
           >
             {department.nameEn}
           </p>
 
           <div
-            className="mt-5 h-1 w-28 rounded-full bg-gradient-to-r from-glow via-azure to-warn shadow-glow-teal"
+            className="mt-5 h-1 w-28 rounded-full bg-glow"
             data-hero
             aria-hidden="true"
           />
@@ -404,17 +396,12 @@ export default function About({ onNavigate }: ViewProps) {
         className="relative overflow-hidden rounded-3xl bg-[#071527] p-8 text-center text-white shadow-card ring-1 ring-white/10 sm:p-10"
         data-reveal
       >
-        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-          <div className="absolute -left-20 top-0 h-64 w-64 rounded-full bg-glow/10 blur-3xl" />
-          <div className="absolute -right-16 bottom-0 h-64 w-64 rounded-full bg-azure/20 blur-3xl" />
-          <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-glow/40 to-transparent" />
-        </div>
         <div className="relative">
           <h2 dir="rtl" className="font-ar text-2xl font-extrabold">
             المؤشرات الصحية للأعوام 2023 و2024 و2025
           </h2>
           <p className="mx-auto mt-2 max-w-xl text-sm text-white/65">
-            Explore eight monitoring dashboards — screening, maternal care, perinatal
+            Explore the monitoring dashboards — screening, maternal care, perinatal
             outcomes and family planning — across the six wilayat of North Batinah.
           </p>
           <button

@@ -44,7 +44,7 @@ export default function Sidebar({
           <span
             className={`rounded-md px-1.5 py-0.5 font-display text-[0.62rem] font-bold transition-colors ${
               isActive
-                ? 'bg-glow/15 text-glow shadow-glow-teal'
+                ? 'bg-glow/15 text-glow'
                 : 'bg-white/5 text-white/45'
             } ${collapsed ? 'lg:hidden' : ''}`}
           >
@@ -71,16 +71,6 @@ export default function Sidebar({
           collapsed ? 'lg:w-20' : 'lg:w-72'
         } ${mobileOpen ? 'translate-x-0' : 'invisible -translate-x-full'}`}
       >
-        {/* Aurora edge glow inside the panel */}
-        <div
-          className="pointer-events-none absolute inset-0 overflow-hidden"
-          aria-hidden="true"
-        >
-          <div className="absolute -left-24 top-[-10%] h-72 w-72 rounded-full bg-azure/15 blur-3xl" />
-          <div className="absolute -right-28 bottom-[-6%] h-80 w-80 rounded-full bg-glow/[0.07] blur-3xl" />
-          <div className="absolute inset-y-0 right-0 w-px bg-gradient-to-b from-transparent via-glow/25 to-transparent" />
-        </div>
-
         {/* Brand */}
         <div
           className={`relative flex items-center gap-3 px-5 pb-5 pt-6 ${
@@ -95,7 +85,7 @@ export default function Sidebar({
             <img
               src="/moh-emblem-white.png"
               alt="Ministry of Health, Oman"
-              className="h-full w-full object-contain drop-shadow-[0_0_12px_rgba(94,234,212,0.25)]"
+              className="h-full w-full object-contain"
             />
           </div>
           <div className={`leading-tight ${collapsed ? 'lg:hidden' : ''}`}>

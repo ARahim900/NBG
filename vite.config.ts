@@ -9,8 +9,6 @@ import react from '@vitejs/plugin-react'
 const VENDOR_CHUNKS: [RegExp, string][] = [
   [/[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/, 'react'],
   [/[\\/]node_modules[\\/](recharts|recharts-scale|react-smooth|victory-vendor|d3-[^\\/]+|lodash|decimal\.js-light|eventemitter3)[\\/]/, 'charts'],
-  [/[\\/]node_modules[\\/](leaflet)[\\/]/, 'map'],
-  [/[\\/]node_modules[\\/]three[\\/]/, 'three'],
   [/[\\/]node_modules[\\/]gsap[\\/]/, 'motion'],
   [/[\\/]node_modules[\\/]lucide-react[\\/]/, 'icons'],
 ]
@@ -20,8 +18,9 @@ export default defineConfig({
   plugins: [react()],
   base: './',
   build: {
-    // three.js is ~500 kB on its own and only loads lazily after first paint.
-    chunkSizeWarningLimit: 600,
+    // Recharts is the largest chunk (~415 kB, ~110 kB gzip) and loads only
+    // with the dashboards that draw charts.
+    chunkSizeWarningLimit: 500,
     rollupOptions: {
       output: {
         manualChunks(id) {
