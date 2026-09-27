@@ -36,7 +36,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-    scroll-behavior: smooth;
   }
 
   /* Headings sit slightly tight (Muscat Bay: semibold, tracking-tight). */
@@ -228,11 +227,27 @@
     pointer-events: none;
   }
 
+  /* Health map: a square map sized to the screen so the whole card (metric
+     switch, map, footnote) fits without scrolling; the ranked list fills the
+     rest of the row on wide screens. Never smaller than 22rem. */
+  .map-layout {
+    --map-size: min(40rem, max(22rem, calc(100svh - 17rem)));
+  }
+  .map-card {
+    width: 100%;
+    max-width: var(--map-size);
+    margin-inline: auto;
+  }
+  @media (min-width: 1280px) {
+    .map-layout {
+      grid-template-columns: var(--map-size) minmax(0, 1fr);
+    }
+  }
 }
 
 /* ── Print / Save as PDF: a clean, light, paper-friendly report ──
-      Scroll-reveal animations hide below-the-fold cards until they scroll into
-      view; without these overrides a printed dashboard comes out blank. */
+      Figures and charts never animate, so a printout always shows final
+      values; these rules also cancel a page fade caught mid-way. */
 @media print {
   @page {
     margin: 12mm;
@@ -255,9 +270,12 @@
     position: static !important;
     backdrop-filter: none !important;
   }
+  main,
+  main > div,
   .card,
   [data-reveal] {
     opacity: 1 !important;
+    visibility: visible !important;
     transform: none !important;
     filter: none !important;
     backdrop-filter: none !important;
@@ -274,10 +292,6 @@
   .overflow-x-auto {
     overflow: visible !important;
   }
-  /* Charts that have not yet drawn in on screen still print in full. */
-  .recharts-responsive-container {
-    clip-path: none !important;
-  }
 }
 
 /* ── Press feedback: buttons dip slightly while pressed (calm, no bounce) ── */
@@ -286,7 +300,7 @@ button:not(:disabled):active {
 }
 
 /* ── Reduced motion: honour the OS setting everywhere, including CSS
-      transitions, keyframe animations and smooth scrolling. ── */
+      transitions and keyframe animations. ── */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

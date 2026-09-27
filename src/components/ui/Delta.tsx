@@ -1,15 +1,23 @@
 import { ArrowDownRight, ArrowUpRight, Minus } from 'lucide-react'
 
+/**
+ * Which direction of change is good:
+ * - 'up'      higher is better (coverage, early booking) — rise shows green
+ * - 'down'    lower is better (anaemia, deaths) — fall shows green
+ * - 'neutral' neither: a count that reflects reporting as much as incidence
+ *             (notifications) — shown in a neutral colour, never green or red
+ */
+export type DeltaTone = 'up' | 'down' | 'neutral'
+
 interface DeltaProps {
   /** Percentage change (already computed). Null/undefined renders a dash. */
   value: number | null | undefined
-  /** When true, a decrease is the "good" direction (e.g. anaemia, deaths). */
-  invert?: boolean
+  tone?: DeltaTone
   suffix?: string
 }
 
-/** Small coloured pill showing a year-over-year change with direction arrow. */
-export default function Delta({ value, invert = false, suffix = '%' }: DeltaProps) {
+/** Small pill showing a year-over-year change with its direction arrow. */
+export default function Delta({ value, tone = 'up', suffix = '%' }: DeltaProps) {
   if (value == null || Number.isNaN(value)) {
     return (
       <span className="chip bg-tint/5 text-ink/50">
@@ -20,20 +28,22 @@ export default function Delta({ value, invert = false, suffix = '%' }: DeltaProp
 
   const flat = Math.abs(value) < 0.05
   const positive = value > 0
-  const isGood = flat ? null : invert ? !positive : positive
-  const tone = flat
-    ? 'bg-tint/5 text-ink/55'
-    : isGood
-      ? 'bg-good/10 text-good'
-      : 'bg-alert/10 text-alert'
+  const colour =
+    flat || tone === 'neutral'
+      ? 'bg-tint/10 text-heading/75'
+      : (tone === 'down' ? !positive : positive)
+        ? 'bg-good/10 text-good'
+        : 'bg-alert/10 text-alert'
   const Icon = flat ? Minus : positive ? ArrowUpRight : ArrowDownRight
+  const label = `${value > 0 ? '+' : ''}${value.toFixed(1)}${suffix}`
 
   return (
-    <span className={`chip ${tone}`}>
-      <Icon className="h-3 w-3" />
-      {value > 0 ? '+' : ''}
-      {value.toFixed(1)}
-      {suffix}
+    <span
+      className={`chip ${colour}`}
+      title={tone === 'neutral' ? 'Change vs previous year (neither direction is better)' : 'Change vs previous year'}
+    >
+      <Icon className="h-3 w-3" aria-hidden="true" />
+      {label}
     </span>
   )
 }

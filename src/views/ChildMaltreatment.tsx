@@ -31,6 +31,7 @@ export default function ChildMaltreatment() {
           icon={ShieldAlert}
           accent="navy"
           delta={deltaPct(n2025, n2024)}
+          deltaTone="neutral"
           hint="vs 195 in 2024"
         />
         <KpiCard
@@ -39,6 +40,7 @@ export default function ChildMaltreatment() {
           icon={TrendingUp}
           accent="azure"
           delta={deltaPct(n2024, n2023)}
+          deltaTone="neutral"
           hint="vs 92 in 2023"
         />
         <KpiCard

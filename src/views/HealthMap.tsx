@@ -1,10 +1,11 @@
 import { useMemo, useState, type KeyboardEvent } from 'react'
 import {
+  Baby,
   Building2,
-  Crosshair,
   Map as MapIcon,
   MapPin,
   MapPinOff,
+  Stethoscope,
   Table2,
   Users,
   X,
@@ -24,7 +25,7 @@ import {
   targetGroups,
 } from '../data/population'
 import { ancRateGov, services } from '../data/services'
-import { MAP, MAP_H, MAP_W, PINNED, SEATS, pinnedNames } from '../data/map'
+import { MAP, PINNED, SEATS, pinnedNames } from '../data/map'
 import { useThemeMode } from '../lib/theme-mode'
 import { useNarrow } from '../lib/useMediaQuery'
 import { int, pct } from '../lib/format'
@@ -35,13 +36,11 @@ type MetricId = 'pop' | 'u5' | 'wra' | 'anc'
 interface Metric {
   label: string
   long: string
-  /** 'count' → sequential heat + sized circles; 'rate' → diverging vs benchmark. */
+  /** 'count' → sized circles on a sequential ramp; 'rate' → diverging vs benchmark. */
   kind: 'count' | 'rate'
   wilayat: (w: string) => number | null
-  institution?: (en: string) => number
 }
 
-const inst = (en: string) => INSTITUTIONS.find((i) => i.en === en)
 const wil = (w: string) => byWilayat.find((x) => x.wilayat === w)
 
 const METRICS: Record<MetricId, Metric> = {
@@ -53,30 +52,18 @@ const METRICS: Record<MetricId, Metric> = {
       const x = wil(w)
       return x ? x.omani + x.expat : null
     },
-    institution: (en) => {
-      const i = inst(en)
-      return i ? targetGroups(aggregate([i], 'all')).total : 0
-    },
   },
   u5: {
     label: 'Under 5',
     long: 'Omani children aged 0–4 (2025 estimate)',
     kind: 'count',
     wilayat: (w) => wil(w)?.om.under5 ?? null,
-    institution: (en) => {
-      const i = inst(en)
-      return i ? targetGroups(aggregate([i], 'omani')).under5 : 0
-    },
   },
   wra: {
     label: 'Women 15–49',
     long: 'Omani women aged 15–49 (2025 estimate)',
     kind: 'count',
     wilayat: (w) => wil(w)?.om.women15to49 ?? null,
-    institution: (en) => {
-      const i = inst(en)
-      return i ? targetGroups(aggregate([i], 'omani')).women15to49 : 0
-    },
   },
   anc: {
     label: 'ANC per 1,000',
@@ -115,10 +102,9 @@ const ramp = (stops: string[], t: number): string => {
 const divT = (v: number, benchmark: number) =>
   Math.max(-1, Math.min(1, (v / benchmark - 1) / 0.4))
 
-/** Muscat Bay motion curve — smooth, no overshoot. */
+/** Calm motion curve — smooth, no overshoot. Used only when the metric changes,
+ *  so the eye can follow each circle from the old value to the new one. */
 const EASE = 'cubic-bezier(0.4, 0, 0.2, 1)'
-/** Heat bands: three flat concentric circles per point (outer → inner). */
-const HEAT_BANDS = [1, 0.62, 0.3]
 /** Discrete legend swatches along the sequential ramp. */
 const LEGEND_STEPS = [0.25, 0.44, 0.62, 0.81, 1]
 
@@ -133,8 +119,9 @@ const centresIn = (w: string) => institutionsIn(w).length
 /** Map units per kilometre (1° latitude ≈ 111.32 km). */
 const UNITS_PER_KM = MAP.projection.k / 111.32
 
-/** Phones get a tighter crop of the same map so labels stay legible. */
-const VIEW_FULL = [0, 0, MAP_W, MAP_H] as const
+/** The coastal strip where the six seats sit; phones get a tighter crop so
+ *  labels stay legible. Both are square, matching the map frame. */
+const VIEW_FULL = [100, 30, 900, 900] as const
 const VIEW_COMPACT = [120, 60, 880, 880] as const
 
 /** Label to the right of a circle, or centred below it when it would run off the map. */
@@ -151,6 +138,8 @@ export default function HealthMap() {
   const narrow = useNarrow()
   const [vx, vy, vw, vh] = narrow ? VIEW_COMPACT : VIEW_FULL
   const [metricId, setMetricId] = useState<MetricId>('pop')
+  // Clicking a wilayat opens its details; hovering (map, ranked list or table)
+  // only highlights it everywhere, so the panel never changes under the pointer.
   const [selected, setSelected] = useState<string | null>(null)
   const [hovered, setHovered] = useState<string | null>(null)
   const metric = METRICS[metricId]
@@ -173,30 +162,6 @@ export default function HealthMap() {
     return t < 0 ? mix(div.mid, div.below, -t) : mix(div.mid, div.above, t)
   }
 
-  // Heat points: verified facility pins carry their own catchment; anything
-  // not yet pinned is pooled at the wilayat seat so totals are never lost.
-  // Rate metrics have no density, so the glow keeps the residents layout and
-  // fades out — the same elements persist, which lets every change animate.
-  const heatMetric = metric.kind === 'count' ? metric : METRICS.pop
-  const heat = useMemo(() => {
-    const m = heatMetric
-    if (!m.institution) return []
-    const pts: { x: number; y: number; v: number }[] = []
-    for (const w of WILAYATS) {
-      const seat = seatOf(w.en)
-      if (!seat) continue
-      let rest = m.wilayat(w.en) ?? 0
-      for (const p of PINNED.filter((f) => f.wilayat === w.en)) {
-        const v = m.institution(p.en)
-        pts.push({ x: p.x, y: p.y, v })
-        rest -= v
-      }
-      if (rest > 0.5) pts.push({ x: seat.x, y: seat.y, v: rest })
-    }
-    return pts
-  }, [heatMetric])
-  const heatMax = Math.max(1, ...heat.map((h) => h.v))
-
   const radius = (v: number) =>
     metric.kind === 'count' ? 16 + 44 * Math.sqrt(v / max) : 30
 
@@ -211,10 +176,10 @@ export default function HealthMap() {
     }
   }
 
-  // ---- side panel data ----
-  const focusW = focus ? wil(focus) : null
-  const focusCentres = focus
-    ? institutionsIn(focus)
+  // ---- side panel data (selected wilayat only) ----
+  const focusW = selected ? wil(selected) : null
+  const focusCentres = selected
+    ? institutionsIn(selected)
         .map((i) => ({
           en: i.en,
           ar: i.ar,
@@ -227,6 +192,10 @@ export default function HealthMap() {
   const ranked = [...values].sort((a, b) => b.value - a.value)
   const govTotal = byWilayat.reduce((a, w) => a + w.omani + w.expat, 0)
   const govOmani = byWilayat.reduce((a, w) => a + w.omani, 0)
+  const govUnder5 = byWilayat.reduce((a, w) => a + w.om.under5, 0)
+  const mapSummary = `Map of North Al Batinah: ${metric.long}, by wilayat. ${ranked
+    .map((v) => `${v.wilayat} ${metric.kind === 'rate' ? v.value.toFixed(1) : int(r0(v.value))}`)
+    .join(', ')}. ${PINNED.length} of ${INSTITUTIONS.length} health centres have a verified position.`
 
   const theme = isDark
     ? { sea: '#081d33', land: '#10243b', uae: '#0c1c2f', coast: '#3d6d9c', text: '#ebf3fd', sub: '#9fb8d3', ring: '#0c1c30' }
@@ -243,71 +212,35 @@ export default function HealthMap() {
       <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
         <KpiCard label="Health institutions" value={int(INSTITUTIONS.length)} icon={Building2} accent="navy" hint="Catchments in the 2025 estimates" />
         <KpiCard label="Residents served" value={int(r0(govTotal))} icon={Users} accent="azure" hint={`${pct((govOmani / govTotal) * 100)} Omani`} />
+        <KpiCard label="Omani under 5" value={int(r0(govUnder5))} icon={Baby} accent="teal" hint="Children aged 0–4 (2025 estimate)" />
         <KpiCard
-          label="Average catchment"
-          value={int(r0(govTotal / INSTITUTIONS.length))}
-          icon={Crosshair}
-          accent="teal"
-          hint="Residents per institution"
-        />
-        <KpiCard
-          label="Centres with verified location"
-          value={`${PINNED.length} / ${INSTITUTIONS.length}`}
-          icon={MapPin}
+          label="ANC per 1,000"
+          value={ancRateGov.toFixed(1)}
+          icon={Stethoscope}
           accent="gold"
-          hint={PINNED.length ? 'Pinned on the map' : 'Awaiting coordinates'}
+          hint="New ANC 2025 per 1,000 Omani women 15–49"
         />
       </div>
 
-      <div className="card flex flex-col gap-3 p-4 sm:flex-row sm:items-end sm:justify-between">
-        <Segmented label="Show on map" options={METRIC_OPTIONS} value={metricId} onChange={setMetricId} />
-        <p className="max-w-md text-xs text-ink/65">{metric.long}</p>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-5">
+      {/* Map and ranked list side by side; the map is sized so the whole
+          card fits on one screen (see .map-layout in index.css). */}
+      <div className="map-layout grid gap-4">
         {/* ===== Map ===== */}
-        <section className="card overflow-hidden p-0 xl:col-span-3" aria-label="Map of North Batinah">
+        <section className="map-card card flex flex-col overflow-hidden p-0" aria-label="Map of North Batinah">
+          <div className="border-b border-sky px-4 py-3 dark:border-[rgb(var(--card-border))]">
+            <Segmented label="Show on map" options={METRIC_OPTIONS} value={metricId} onChange={setMetricId} />
+          </div>
           <div className="relative">
             <svg
               viewBox={`${vx} ${vy} ${vw} ${vh}`}
               className="block h-auto w-full select-none"
               role="group"
-              aria-label={`Map: ${metric.long}, by wilayat`}
+              aria-label={mapSummary}
             >
-              <defs>
-                <clipPath id="nbg-land">
-                  <path d={MAP.oman.fill} />
-                </clipPath>
-              </defs>
-
-              <rect width={MAP_W} height={MAP_H} fill={theme.sea} />
+              <title>{`North Al Batinah — ${metric.label} by wilayat`}</title>
+              <rect x={vx} y={vy} width={vw} height={vh} fill={theme.sea} />
               <path d={MAP.uae.fill} fill={theme.uae} />
               <path d={MAP.oman.fill} fill={theme.land} />
-
-              {/* Heat layer — soft, flat bands (no gradient) clipped to land,
-                  where people actually live. Denser areas overlap more. */}
-              <g
-                clipPath="url(#nbg-land)"
-                style={{ opacity: metric.kind === 'count' ? 1 : 0, transition: `opacity 400ms ${EASE}` }}
-              >
-                {heat.map((h, i) => {
-                  const r = 70 + 190 * Math.sqrt(h.v / heatMax)
-                  const c = ramp(seq, 0.35 + 0.65 * (h.v / heatMax))
-                  return (
-                    <g key={i}>
-                      {HEAT_BANDS.map((k) => (
-                        <circle
-                          key={k}
-                          cx={h.x}
-                          cy={h.y}
-                          fillOpacity={isDark ? 0.16 : 0.12}
-                          style={{ r: r * k, fill: c, transition: `r 600ms ${EASE}, fill 500ms ${EASE}` }}
-                        />
-                      ))}
-                    </g>
-                  )
-                })}
-              </g>
 
               <path d={MAP.uae.edge} fill="none" stroke={theme.coast} strokeWidth={1.5} strokeDasharray="6 5" />
               <path d={MAP.oman.edge} fill="none" stroke={theme.coast} strokeWidth={2} />
@@ -417,6 +350,7 @@ export default function HealthMap() {
             {/* Legend — floats over the sea on wider screens */}
             <div className="border-t border-line/10 p-3 text-xs sm:absolute sm:right-3 sm:top-3 sm:w-56 sm:rounded-[4px] sm:border sm:border-[rgb(var(--card-border))] sm:bg-surface sm:shadow-card">
               <p className="font-semibold text-heading">{metric.label}</p>
+              <p className="mt-0.5 text-[0.7rem] leading-snug text-ink/65">{metric.long}</p>
               {metric.kind === 'count' ? (
                 <>
                   <div className="mt-1.5 flex gap-0.5">
@@ -429,8 +363,7 @@ export default function HealthMap() {
                     <span>{compact(max)}</span>
                   </div>
                   <p className="mt-1.5 text-[0.7rem] text-ink/65">
-                    Circle size and colour show the wilayat total; the shaded bands show
-                    where that population sits.
+                    Circle size and colour show the wilayat total.
                   </p>
                 </>
               ) : (
@@ -450,32 +383,32 @@ export default function HealthMap() {
               <p className="mt-2 flex items-center gap-1.5 text-[0.7rem] text-ink/65">
                 {PINNED.length ? (
                   <>
-                    <span className="inline-block h-2.5 w-2.5 rounded-full border-2 border-surface bg-heading" />
-                    Health centre (verified position)
+                    <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full border-2 border-surface bg-heading" />
+                    Health centre (verified position) · {PINNED.length} of {INSTITUTIONS.length} located
                   </>
                 ) : (
                   <>
-                    <MapPinOff className="h-3.5 w-3.5" />
-                    Centre pins appear once coordinates are verified
+                    <MapPinOff className="h-3.5 w-3.5 shrink-0" />
+                    {PINNED.length} of {INSTITUTIONS.length} centres located · pins appear once
+                    coordinates are verified
                   </>
                 )}
               </p>
             </div>
           </div>
-          <p className="border-t border-line/10 px-4 py-2 text-[0.68rem] text-ink/60">
-            Circles sit at each wilayat's seat town, not at a boundary centre. Coastline:
-            Natural Earth (public domain) · Town positions: GeoNames (CC BY 4.0).
+          <p className="mt-auto border-t border-line/10 px-4 py-2 text-[0.68rem] text-ink/60">
+            Circles sit at wilayat seat towns · Coastline: Natural Earth · Towns: GeoNames (CC BY 4.0)
           </p>
         </section>
 
-        {/* ===== Details panel ===== */}
-        <section className="card flex flex-col p-5 xl:col-span-2" aria-live="polite">
-          <div key={focus ?? 'all'} className="flex animate-fade-in flex-col">
-          {focus && focusW ? (
+        {/* ===== Details panel: ranked list, or the selected wilayat ===== */}
+        <section className="card flex flex-col p-5" aria-live="polite">
+          <div key={selected ?? 'all'} className="flex animate-fade-in flex-col">
+          {selected && focusW ? (
             <>
               <header className="flex items-start justify-between gap-3">
                 <div>
-                  <h3 className="text-title text-heading">{focus}</h3>
+                  <h3 className="text-title text-heading">{selected}</h3>
                   <p lang="ar" dir="rtl" className="font-ar text-sm text-ink/60">
                     {focusW.wilayatAr}
                   </p>
@@ -483,7 +416,10 @@ export default function HealthMap() {
                 {selected && (
                   <button
                     type="button"
-                    onClick={() => setSelected(null)}
+                    onClick={() => {
+                      setSelected(null)
+                      setHovered(null)
+                    }}
                     className="inline-flex items-center gap-1 rounded-control border border-line/15 px-2 py-1 text-label text-heading hover:bg-tint/10"
                   >
                     <X className="h-3.5 w-3.5" /> All wilayat
@@ -495,7 +431,7 @@ export default function HealthMap() {
                   ['Residents', int(r0(focusW.omani + focusW.expat))],
                   ['Omani', pct((focusW.omani / (focusW.omani + focusW.expat)) * 100)],
                   ['Health institutions', String(focusCentres.length)],
-                  [metric.label, fmt(metric.wilayat(focus) ?? 0)],
+                  [metric.label, fmt(metric.wilayat(selected) ?? 0)],
                 ].map(([k, v]) => (
                   <div key={k} className="rounded-control bg-mist/60 px-3 py-2">
                     <dt className="text-eyebrow uppercase text-ink/60">{k}</dt>
@@ -534,17 +470,25 @@ export default function HealthMap() {
             <>
               <h3 className="text-title text-heading">All wilayat</h3>
               <p className="text-xs text-ink/60">
-                Ranked by {metric.label.toLowerCase()} · select a wilayat for its health centres
+                Ranked by {metric.label.toLowerCase()} · hover to find it on the map, select for its
+                health centres
               </p>
               <ul className="mt-4 space-y-1.5">
                 {ranked.map((v) => (
                   <li key={v.wilayat}>
                     <button
                       type="button"
-                      onClick={() => setSelected(v.wilayat)}
+                      onClick={() => {
+                        setSelected(v.wilayat)
+                        setHovered(null)
+                      }}
                       onMouseEnter={() => setHovered(v.wilayat)}
                       onMouseLeave={() => setHovered(null)}
-                      className="w-full rounded-control px-2.5 py-2 text-left transition-colors hover:bg-tint/[0.07]"
+                      onFocus={() => setHovered(v.wilayat)}
+                      onBlur={() => setHovered(null)}
+                      className={`w-full rounded-control px-2.5 py-2 text-left transition-colors duration-150 hover:bg-tint/[0.07] ${
+                        focus === v.wilayat ? 'bg-tint/[0.07]' : ''
+                      }`}
                     >
                       <span className="flex items-center justify-between gap-2 text-sm">
                         <span className="font-semibold text-ink">
@@ -579,6 +523,8 @@ export default function HealthMap() {
         <ChartCard title="Health Institutions & Population by Wilayat (2025)" subtitle="Sorted north to south along the coast">
           <DataTable
             dense
+            highlightRows={focus ? [SEATS.findIndex((s) => s.wilayat === focus)] : []}
+            onRowHover={(i) => setHovered(i === null ? null : SEATS[i].wilayat)}
             columns={[
               { label: 'Wilayat' },
               { label: 'Institutions', align: 'right' },

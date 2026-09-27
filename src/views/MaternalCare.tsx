@@ -80,7 +80,7 @@ export default function MaternalCare() {
           value={pct(anaemia2025)}
           icon={Droplets}
           accent="good"
-          invertDelta
+          deltaTone="down"
           delta={deltaPct(anaemia2025, prevV(mc.anaemiaTrend))}
           hint="Lower is better"
         />
@@ -89,7 +89,7 @@ export default function MaternalCare() {
           value={pct(gdm2025)}
           icon={Baby}
           accent="gold"
-          invertDelta
+          deltaTone="down"
           delta={deltaPct(gdm2025, prevV(mc.gdmTrend))}
           hint="GDM prevalence"
         />
@@ -117,7 +117,6 @@ export default function MaternalCare() {
             data={mc.bookingTrend}
             xKey="year"
             variant="area"
-            yDomain={[70, 100]}
             unit="%"
             series={[{ key: 'value', name: '1st trimester', color: C.azure }]}
           />

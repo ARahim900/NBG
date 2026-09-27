@@ -41,6 +41,7 @@ export default function CongenitalAnomalies() {
           icon={Microscope}
           accent="navy"
           delta={deltaPct(n2025, n2024)}
+          deltaTone="neutral"
           hint="vs 93 in 2024"
         />
         <KpiCard
@@ -49,6 +50,7 @@ export default function CongenitalAnomalies() {
           icon={Microscope}
           accent="azure"
           delta={deltaPct(n2024, n2023)}
+          deltaTone="neutral"
           hint="vs 82 in 2023"
         />
         <KpiCard

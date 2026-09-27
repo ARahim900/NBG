@@ -13,7 +13,7 @@
  */
 
 // Bump this version string on any SW logic change to retire old caches on deploy.
-const CACHE = 'nbg-static-v2'
+const CACHE = 'nbg-static-v3'
 
 // Minimal app shell pre-cached so the app can cold-start while fully offline.
 const APP_SHELL = ['/', '/index.html', '/manifest.json', '/logo.png', '/favicon.png']

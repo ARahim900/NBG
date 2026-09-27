@@ -16,7 +16,7 @@ import Sidebar from './components/Sidebar'
 import BottomNav from './components/BottomNav'
 import InstallPrompt from './components/InstallPrompt'
 import ErrorBoundary from './components/ErrorBoundary'
-import { animateViewIn, gsap, motionOK } from './lib/motion'
+import { fadeIn, fadeOut } from './lib/motion'
 import { NAV_BY_ID, type ViewId, type ViewProps } from './lib/dashboards'
 
 /**
@@ -75,10 +75,11 @@ const onIdle = (fn: () => void, fallbackMs: number): (() => void) => {
   return () => window.clearTimeout(t)
 }
 
-/** Plays the entrance animation once the (lazily loaded) view has mounted. */
+/** Fades the page in (200 ms, opacity only) once the view has mounted. Nothing
+ *  waits for scrolling, so every card and chart is readable straight away. */
 function Reveal({ children }: { children: ReactNode }) {
   const ref = useRef<HTMLDivElement>(null)
-  useLayoutEffect(() => (ref.current ? animateViewIn(ref.current) : undefined), [])
+  useLayoutEffect(() => (ref.current ? fadeIn(ref.current) : undefined), [])
   return (
     <div ref={ref} className="mx-auto max-w-7xl">
       {children}
@@ -194,38 +195,35 @@ export default function App() {
   useEffect(() => {
     let busy = false
 
+    // Every page opens at the top: the browser must not restore a previous
+    // page's scroll position when the hash changes.
+    if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual'
+
     const swap = (id: ViewId) => {
       activeRef.current = id
       flushSync(() => setActive(id))
-      window.scrollTo({ top: 0, behavior: 'auto' })
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
     }
 
     /**
-     * Fade-through between views: the content area eases out (~0.2 s) while
-     * the next view's code is confirmed loaded, then the new view's cards rise
-     * in. Sidebar and header stay put. Instant under reduced motion.
+     * Page change: the content area fades out (~0.15 s) while the next view's
+     * code is confirmed loaded, the page jumps to the top, and the new view
+     * fades in (see Reveal). Sidebar and header stay put. Instant under
+     * reduced motion.
      */
     const show = async () => {
       const id = viewFromHash()
       if (id === activeRef.current || busy) return
       busy = true
       const main = mainRef.current
-      const animate = motionOK() && main !== null
+      let release = () => {}
       try {
         const ready = preload(id)
-        if (animate) {
-          await gsap.to(main, { autoAlpha: 0, y: -6, duration: 0.18, ease: 'power2.in' })
-        }
+        if (main) release = await fadeOut(main)
         await ready
         swap(id)
-        if (animate) {
-          gsap.fromTo(
-            main,
-            { autoAlpha: 0, y: 0 },
-            { autoAlpha: 1, duration: 0.22, ease: 'power2.out', clearProps: 'opacity,visibility,transform' },
-          )
-        }
       } finally {
+        release()
         busy = false
         // The user picked another view mid-transition: catch up with the URL.
         if (viewFromHash() !== activeRef.current) void show()

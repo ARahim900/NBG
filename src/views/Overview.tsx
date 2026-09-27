@@ -14,7 +14,6 @@ import {
 import KpiCard from '../components/ui/KpiCard'
 import ChartCard from '../components/ui/ChartCard'
 import SectionTitle from '../components/ui/SectionTitle'
-import AnimatedNumber from '../components/ui/AnimatedNumber'
 import { ComparisonBars, TrendChart } from '../components/charts/Charts'
 import { NAV, type ViewId } from '../lib/dashboards'
 import { asd, fp, mc, meta, mt, sn, type YearPoint } from '../data/nbg'
@@ -47,7 +46,7 @@ export default function Overview({ onNavigate }: ViewProps) {
         <div className="relative flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
             <p className="text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-glow sm:text-[0.72rem]">
-              Tenth Five-Year Health Development Plan
+              Tenth Five-Year Health Development Plan (2021–2025)
             </p>
             <h1 className="mt-3 font-serif text-2xl font-normal leading-tight sm:text-[2rem]">
               Women &amp; Child Health — North Batinah Governorate
@@ -72,10 +71,7 @@ export default function Overview({ onNavigate }: ViewProps) {
                 key={s.l}
                 className="min-w-0 rounded-[4px] border border-white/15 px-2 py-3 transition-colors hover:border-glow/60 sm:px-4"
               >
-                <AnimatedNumber
-                  value={s.v}
-                  className="font-display text-2xl font-bold text-glow"
-                />
+                <p className="font-display text-2xl font-bold tabular-nums text-glow">{s.v}</p>
                 <p className="text-[0.62rem] font-medium uppercase text-white/60 sm:text-[0.7rem] sm:tracking-wide">
                   {s.l}
                 </p>
@@ -114,7 +110,7 @@ export default function Overview({ onNavigate }: ViewProps) {
             value={pct(last(mc.anaemiaTrend))}
             icon={Droplets}
             delta={yoy(mc.anaemiaTrend)}
-            invertDelta
+            deltaTone="down"
             accent="good"
             hint="Lower is better"
           />
@@ -139,15 +135,16 @@ export default function Overview({ onNavigate }: ViewProps) {
             value={int(last(mt.totalTrend))}
             icon={ShieldAlert}
             delta={yoy(mt.totalTrend)}
+            deltaTone="neutral"
             accent="navy"
-            hint="Reported cases"
+            hint="Reported cases · a rise can mean better reporting"
           />
           <KpiCard
             label="Perinatal Deaths"
             value={int(perinatal2025)}
             icon={HeartPulse}
             delta={deltaPct(perinatal2025, 117)}
-            invertDelta
+            deltaTone="down"
             accent="good"
             hint="Stillbirth + neonatal (vs 117 prior)"
           />
@@ -179,7 +176,6 @@ export default function Overview({ onNavigate }: ViewProps) {
               data={asd.cov18Trend}
               xKey="year"
               variant="area"
-              yDomain={[70, 100]}
               unit="%"
               series={[{ key: 'value', name: 'Coverage', color: C.azure }]}
             />

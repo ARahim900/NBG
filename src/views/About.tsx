@@ -1,4 +1,3 @@
-import { useLayoutEffect, useRef } from 'react'
 import {
   ArrowDown,
   Award,
@@ -32,9 +31,6 @@ import {
 } from '../data/department'
 import { mc } from '../data/nbg'
 import { int } from '../lib/format'
-import { animateHero } from '../lib/motion'
-import AnimatedNumber from '../components/ui/AnimatedNumber'
-
 
 interface ViewProps {
   onNavigate: (id: ViewId) => void
@@ -104,10 +100,9 @@ function WilayatCard({ w }: { w: (typeof wilayats)[number] }) {
         {w.note}
       </p>
       <div className="mt-3 border-t border-line/10 pt-2">
-        <AnimatedNumber
-          value={int(ancFor(w.dataKey))}
-          className="font-display text-base font-bold text-azure"
-        />
+        <p className="font-display text-base font-bold tabular-nums text-azure">
+          {int(ancFor(w.dataKey))}
+        </p>
         <p className="text-[0.62rem] font-medium uppercase tracking-wide text-ink/45">
           ANC 2025
         </p>
@@ -117,19 +112,11 @@ function WilayatCard({ w }: { w: (typeof wilayats)[number] }) {
 }
 
 export default function About({ onNavigate }: ViewProps) {
-  const heroRef = useRef<HTMLElement>(null)
-
-  useLayoutEffect(() => {
-    if (!heroRef.current) return
-    return animateHero(heroRef.current)
-  }, [])
-
   return (
     <div className="space-y-12">
       {/* ===== Hero — the MOH template cover: flat navy panel, MOH-blue
             angled panel with the faint emblem, serif title, accent tab ===== */}
       <section
-        ref={heroRef}
         className="relative -mt-1 overflow-hidden rounded-[4px] bg-navy text-white dark:bg-[#0b2235]"
         data-reveal
       >
@@ -178,9 +165,12 @@ export default function About({ onNavigate }: ViewProps) {
             className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-white/80"
             data-hero
           >
-            <span dir="rtl" lang="ar" className="flex items-center gap-2 font-ar">
+            <span className="flex flex-wrap items-center gap-x-2">
               <Sparkles className="h-4 w-4 text-glow" />
-              الخطة الخمسية الحادية عشرة · 2026–2030
+              <span dir="rtl" lang="ar" className="whitespace-nowrap font-ar">
+                الخطة الخمسية الحادية عشرة
+              </span>
+              <span className="whitespace-nowrap text-white/60">11th Five-Year Plan, 2026–2030</span>
             </span>
             <span dir="rtl" className="flex items-center gap-2 font-ar">
               <MapPin className="h-4 w-4 text-glow" />
@@ -201,7 +191,7 @@ export default function About({ onNavigate }: ViewProps) {
             </button>
           </div>
 
-          {/* Quick stats — live counters */}
+          {/* Quick stats — final figures, shown as-is (never counted up) */}
           <div
             className="mt-12 grid max-w-2xl grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-4"
             data-hero
@@ -213,15 +203,14 @@ export default function About({ onNavigate }: ViewProps) {
               { v: `${demographics.birthRate2025}‰`, en: 'Crude Birth Rate', ar: 'معدل المواليد' },
             ].map((s) => (
               <div key={s.en}>
-                <AnimatedNumber
-                  value={s.v}
-                  className="font-display text-2xl font-bold text-white sm:text-[1.7rem]"
-                />
-                <p className="mt-0.5 text-[0.7rem] font-semibold uppercase tracking-wide text-white/55">
-                  {s.en}
+                <p className="font-display text-2xl font-bold tabular-nums text-white sm:text-[1.7rem]">
+                  {s.v}
                 </p>
-                <p dir="rtl" className="font-ar text-[0.72rem] text-glow/70">
+                <p dir="rtl" lang="ar" className="mt-0.5 text-left font-ar text-[0.78rem] font-semibold text-white/80">
                   {s.ar}
+                </p>
+                <p className="text-[0.66rem] font-semibold uppercase tracking-wide text-white/55">
+                  {s.en}
                 </p>
               </div>
             ))}
@@ -254,11 +243,7 @@ export default function About({ onNavigate }: ViewProps) {
 
       {/* ===== Vision & Mission ===== */}
       <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <article className="card relative overflow-hidden p-6">
-          <Eye
-            className="pointer-events-none absolute -bottom-7 -left-7 h-36 w-36 text-azure/[0.07]"
-            aria-hidden="true"
-          />
+        <article className="card p-6">
           <div className="flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-tint/10 text-heading ring-1 ring-azure/25">
               <Eye className="h-5 w-5" />
@@ -281,11 +266,7 @@ export default function About({ onNavigate }: ViewProps) {
           </p>
         </article>
 
-        <article className="card relative overflow-hidden p-6">
-          <Compass
-            className="pointer-events-none absolute -bottom-7 -left-7 h-36 w-36 text-teal/[0.1]"
-            aria-hidden="true"
-          />
+        <article className="card p-6">
           <div className="flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal/15 text-teal-700 ring-1 ring-teal/30 dark:text-teal">
               <Compass className="h-5 w-5" />

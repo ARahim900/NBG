@@ -16,6 +16,7 @@ import {
   YAxis,
 } from 'recharts'
 import type { PieLabelRenderProps } from 'recharts'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { C, SERIES } from '../../lib/theme'
 import { useThemeMode } from '../../lib/theme-mode'
 import { useNarrow } from '../../lib/useMediaQuery'
@@ -48,9 +49,7 @@ function ChartTooltip({ active, label, payload, unit, formatter }: TipProps) {
   if (!active || !payload || payload.length === 0) return null
   return (
     <div className="rounded-[4px] border border-[rgb(var(--card-border))] bg-surface px-3 py-2 shadow-card">
-      {label !== undefined && (
-        <p className="mb-1 text-xs font-bold text-heading">{label}</p>
-      )}
+      {label !== undefined && <p className="mb-1 text-xs font-bold text-heading">{label}</p>}
       <ul className="space-y-0.5">
         {payload.map((item, i) => {
           const v = typeof item.value === 'number' ? item.value : Number(item.value)
@@ -75,8 +74,118 @@ function ChartTooltip({ active, label, payload, unit, formatter }: TipProps) {
 
 const legendStyle = { fontSize: 12, paddingTop: 8 }
 
-/** One calm animation for every chart: draws in, and morphs when data changes. */
-const MOTION = { animationDuration: 700, animationEasing: 'ease-out' } as const
+/**
+ * Charts never animate: a bar growing from zero or a line drawing in shows
+ * values that are not the data, and a screenshot or printout taken mid-way
+ * would be wrong. They render at their final state immediately.
+ */
+const STATIC = { isAnimationActive: false } as const
+
+/** Tooltip follows the pointer quickly and never lingers. */
+const TIP = { animationDuration: 120 } as const
+
+// ---- frame: screen-reader summary + tooltip that always dismisses ---------
+/**
+ * Recharts can leave a tooltip on screen when the pointer leaves without a
+ * mouseleave (fast exits, scrolling, touch). The frame tracks whether the
+ * pointer is really over the chart and forces the tooltip off otherwise: it
+ * hides on pointer exit, on scroll, and on a tap anywhere else.
+ */
+function ChartFrame({
+  summary,
+  children,
+}: {
+  /** Plain-language description read by screen readers (the chart is an image to them). */
+  summary: string
+  children: (tooltipActive: false | undefined) => ReactNode
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [over, setOver] = useState(false)
+  useEffect(() => {
+    if (!over) return
+    const off = () => setOver(false)
+    const outside = (e: PointerEvent) => {
+      if (!ref.current?.contains(e.target as Node)) off()
+    }
+    window.addEventListener('scroll', off, { passive: true })
+    document.addEventListener('pointerdown', outside)
+    return () => {
+      window.removeEventListener('scroll', off)
+      document.removeEventListener('pointerdown', outside)
+    }
+  }, [over])
+  const enter = () => setOver(true)
+  return (
+    <div
+      ref={ref}
+      role="img"
+      aria-label={summary}
+      onPointerEnter={enter}
+      onPointerMove={enter}
+      onPointerDown={enter}
+      // A finger "leaves" as soon as it lifts; keep the tapped tooltip until
+      // the next scroll or tap elsewhere.
+      onPointerLeave={(e) => e.pointerType !== 'touch' && setOver(false)}
+    >
+      {children(over ? undefined : false)}
+    </div>
+  )
+}
+
+/** "2019 82.8%, 2020 85.1%, …" — the data itself, capped for very long series. */
+function describeSeries(
+  data: Datum[],
+  xKey: string,
+  s: Series,
+  fmt: (v: number) => string,
+  max = 24,
+): string {
+  const rows = data as Record<string, unknown>[]
+  const parts = rows
+    .filter((d) => typeof d[s.key] === 'number')
+    .map((d) => `${String(d[xKey])} ${fmt(d[s.key] as number)}`)
+  const shown = parts.slice(0, max).join(', ')
+  return `${s.name}: ${shown}${parts.length > max ? `, and ${parts.length - max} more` : ''}`
+}
+
+const plain = (unit?: string, valueFormatter?: (v: number) => string) => (v: number) =>
+  valueFormatter
+    ? valueFormatter(v)
+    : `${v.toLocaleString('en-US', { maximumFractionDigits: 1 })}${unit ?? ''}`
+
+// ---- even axis ticks --------------------------------------------------------
+/** Round a raw step up to 1, 2, 2.5 or 5 × 10ⁿ so ticks fall on even values. */
+function niceStep(raw: number): number {
+  if (!(raw > 0)) return 1
+  const p = 10 ** Math.floor(Math.log10(raw))
+  const f = raw / p
+  return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 2.5 ? 2.5 : f <= 5 ? 5 : 10) * p
+}
+
+/**
+ * Evenly spaced value axis covering [lo, hi] in about five steps, e.g.
+ * 0, 20, 40, 60, 80, 100 — never 70, 78, 86, 100.
+ */
+function evenAxis(lo: number, hi: number): { domain: [number, number]; ticks: number[] } {
+  const step = niceStep((hi - lo) / 5)
+  const start = Math.floor(lo / step) * step
+  const end = Math.max(Math.ceil(hi / step) * step, start + step)
+  const ticks: number[] = []
+  for (let t = start; t <= end + step / 1e6; t += step) ticks.push(Number(t.toFixed(6)))
+  return { domain: [start, end], ticks }
+}
+
+/** Every numeric value the listed series plot. */
+function seriesValues(data: Datum[], series: Series[]): number[] {
+  const out: number[] = []
+  for (const d of data as Record<string, unknown>[]) {
+    for (const s of series) {
+      const v = d[s.key]
+      if (typeof v === 'number' && Number.isFinite(v)) out.push(v)
+    }
+  }
+  return out
+}
 
 interface ChartTheme {
   axisTick: { fontSize: number; fill: string }
@@ -141,6 +250,11 @@ interface TrendProps {
   height?: number
   unit?: string
   variant?: 'line' | 'area'
+  /**
+   * Requested value range. Area charts always start at zero (a shaded area
+   * cut off above zero exaggerates change). A line chart may start higher to
+   * zoom in; the chart then says so under the plot.
+   */
   yDomain?: [number, number]
   valueFormatter?: (v: number) => string
   showLegend?: boolean
@@ -162,72 +276,123 @@ export function TrendChart({
   // stays label-free (rely on the tooltip) to avoid overlapping figures.
   const showValues = series.length === 1
   const labelStyle = { fontSize: 10, fontWeight: 600, fill: dataLabel } as const
+
+  const vals = seriesValues(data, series)
+  const dataMin = vals.length ? Math.min(...vals) : 0
+  const dataMax = vals.length ? Math.max(...vals) : 1
+  const floor = variant === 'area' ? 0 : Math.max(0, Math.min(yDomain?.[0] ?? 0, dataMin))
+  const axis = evenAxis(floor, Math.max(yDomain?.[1] ?? 0, dataMax))
+  const zoomed = axis.domain[0] > 0
+  const yAxisProps = {
+    tick: axisTick,
+    tickLine: false,
+    axisLine: false,
+    domain: axis.domain,
+    ticks: axis.ticks,
+    interval: 0 as const,
+    width: 44,
+    tickFormatter: compactTick,
+  }
+  const fmt = plain(unit, valueFormatter)
+  const summary = `${variant === 'area' ? 'Area' : 'Line'} chart. ${series
+    .map((s) => describeSeries(data, xKey, s, fmt))
+    .join('. ')}.${zoomed ? ` Value axis starts at ${fmt(axis.domain[0])}.` : ''}`
+
   return (
-    <ResponsiveContainer width="100%" height={height}>
-      {variant === 'area' ? (
-        <AreaChart data={data} margin={{ top: 18, right: 12, left: -8, bottom: 0 }}>
-          <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: axisLine }} />
-          <YAxis tick={axisTick} tickLine={false} axisLine={false} domain={yDomain} width={44} tickFormatter={compactTick} />
-          <Tooltip content={<ChartTooltip unit={unit} formatter={valueFormatter} />} />
-          {showLegend && series.length > 1 && <Legend wrapperStyle={legendStyle} />}
-          {series.map((sdef) => (
-            <Area
-              {...MOTION}
-              key={sdef.key}
-              type="monotone"
-              dataKey={sdef.key}
-              name={sdef.name}
-              stroke={paint(sdef.color)}
-              strokeWidth={2.5}
-              fill={paint(sdef.color)}
-              fillOpacity={0.12}
-              dot={{ r: 2.5, strokeWidth: 0, fill: paint(sdef.color) }}
-              activeDot={{ r: 4.5 }}
-            >
-              {showValues && (
-                <LabelList
-                  dataKey={sdef.key}
-                  position="top"
-                  offset={10}
-                  style={labelStyle}
-                  formatter={(v: number) => formatDataLabel(v, unit, valueFormatter)}
+    <>
+      <ChartFrame summary={summary}>
+        {(tooltipActive) => (
+          <ResponsiveContainer width="100%" height={height}>
+            {variant === 'area' ? (
+              <AreaChart data={data} margin={{ top: 18, right: 12, left: -8, bottom: 0 }}>
+                <XAxis
+                  dataKey={xKey}
+                  tick={axisTick}
+                  tickLine={false}
+                  axisLine={{ stroke: axisLine }}
                 />
-              )}
-            </Area>
-          ))}
-        </AreaChart>
-      ) : (
-        <LineChart data={data} margin={{ top: 18, right: 12, left: -8, bottom: 0 }}>
-          <XAxis dataKey={xKey} tick={axisTick} tickLine={false} axisLine={{ stroke: axisLine }} />
-          <YAxis tick={axisTick} tickLine={false} axisLine={false} domain={yDomain} width={44} tickFormatter={compactTick} />
-          <Tooltip content={<ChartTooltip unit={unit} formatter={valueFormatter} />} />
-          {showLegend && series.length > 1 && <Legend wrapperStyle={legendStyle} />}
-          {series.map((sdef) => (
-            <Line
-              {...MOTION}
-              key={sdef.key}
-              type="monotone"
-              dataKey={sdef.key}
-              name={sdef.name}
-              stroke={paint(sdef.color)}
-              strokeWidth={2.5}
-              dot={{ r: 2.5, strokeWidth: 0, fill: paint(sdef.color) }}
-              activeDot={{ r: 5 }}
-            >
-              {showValues && (
-                <LabelList
-                  dataKey={sdef.key}
-                  position="top"
-                  offset={10}
-                  style={labelStyle}
-                  formatter={(v: number) => formatDataLabel(v, unit, valueFormatter)}
+                <YAxis {...yAxisProps} />
+                <Tooltip
+                  {...TIP}
+                  active={tooltipActive}
+                  content={<ChartTooltip unit={unit} formatter={valueFormatter} />}
                 />
-              )}
-            </Line>
-          ))}
-        </LineChart>
+                {showLegend && series.length > 1 && <Legend wrapperStyle={legendStyle} />}
+                {series.map((sdef) => (
+                  <Area
+                    {...STATIC}
+                    key={sdef.key}
+                    type="monotone"
+                    dataKey={sdef.key}
+                    name={sdef.name}
+                    stroke={paint(sdef.color)}
+                    strokeWidth={2.5}
+                    fill={paint(sdef.color)}
+                    fillOpacity={0.12}
+                    dot={{ r: 2.5, strokeWidth: 0, fill: paint(sdef.color) }}
+                    activeDot={{ r: 4.5 }}
+                  >
+                    {showValues && (
+                      <LabelList
+                        dataKey={sdef.key}
+                        position="top"
+                        offset={10}
+                        style={labelStyle}
+                        formatter={(v: number) => formatDataLabel(v, unit, valueFormatter)}
+                      />
+                    )}
+                  </Area>
+                ))}
+              </AreaChart>
+            ) : (
+              <LineChart data={data} margin={{ top: 18, right: 12, left: -8, bottom: 0 }}>
+                <XAxis
+                  dataKey={xKey}
+                  tick={axisTick}
+                  tickLine={false}
+                  axisLine={{ stroke: axisLine }}
+                />
+                <YAxis {...yAxisProps} />
+                <Tooltip
+                  {...TIP}
+                  active={tooltipActive}
+                  content={<ChartTooltip unit={unit} formatter={valueFormatter} />}
+                />
+                {showLegend && series.length > 1 && <Legend wrapperStyle={legendStyle} />}
+                {series.map((sdef) => (
+                  <Line
+                    {...STATIC}
+                    key={sdef.key}
+                    type="monotone"
+                    dataKey={sdef.key}
+                    name={sdef.name}
+                    stroke={paint(sdef.color)}
+                    strokeWidth={2.5}
+                    dot={{ r: 2.5, strokeWidth: 0, fill: paint(sdef.color) }}
+                    activeDot={{ r: 5 }}
+                  >
+                    {showValues && (
+                      <LabelList
+                        dataKey={sdef.key}
+                        position="top"
+                        offset={10}
+                        style={labelStyle}
+                        formatter={(v: number) => formatDataLabel(v, unit, valueFormatter)}
+                      />
+                    )}
+                  </Line>
+                ))}
+              </LineChart>
+            )}
+          </ResponsiveContainer>
+        )}
+      </ChartFrame>
+      {zoomed && (
+        <p className="mt-1 text-caption text-ink/60">
+          Zoomed scale: the value axis starts at {fmt(axis.domain[0])}, not zero.
+        </p>
       )}
-    </ResponsiveContainer>
+    </>
   )
 }
 
@@ -270,84 +435,92 @@ export function ComparisonBars({
   // Phones: angle the category labels so every one shows (none are skipped).
   const tiltTicks = narrow && !vertical && data.length > 4
   const labelStyle = { fontSize: 10, fontWeight: 600, fill: dataLabel } as const
+  const fmt = plain(unit, valueFormatter)
+  const summary = `${stacked ? 'Stacked bar' : 'Bar'} chart. ${series
+    .map((s) => describeSeries(data, xKey, s, fmt))
+    .join('. ')}.`
   return (
-    <ResponsiveContainer width="100%" height={height}>
-      <BarChart
-        data={data}
-        layout={layout}
-        margin={{ top: 16, right: vertical ? 36 : 12, left: vertical ? 8 : -8, bottom: 0 }}
-        barGap={stacked ? 0 : 3}
-        barCategoryGap={vertical ? '22%' : '28%'}
-      >
-        {vertical ? (
-          <>
-            <XAxis
-              type="number"
-              tick={axisTick}
-              tickLine={false}
-              axisLine={false}
-              hide={showValues}
-              tickFormatter={compactTick}
-            />
-            <YAxis
-              type="category"
-              dataKey={xKey}
-              tick={axisTick}
-              tickLine={false}
-              axisLine={{ stroke: axisLine }}
-              width={categoryWidth}
-            />
-          </>
-        ) : (
-          <>
-            <XAxis
-              dataKey={xKey}
-              tick={axisTick}
-              tickLine={false}
-              axisLine={{ stroke: axisLine }}
-              {...(tiltTicks
-                ? { interval: 0, angle: -35, textAnchor: 'end', height: 58 }
-                : {})}
-            />
-            <YAxis
-              tick={axisTick}
-              tickLine={false}
-              axisLine={false}
-              width={44}
-              hide={showValues}
-              tickFormatter={compactTick}
-            />
-          </>
-        )}
-        <Tooltip
-          cursor={{ fill: cursorFill }}
-          content={<ChartTooltip unit={unit} formatter={valueFormatter} />}
-        />
-        {showLegend && series.length > 1 && <Legend wrapperStyle={legendStyle} />}
-        {series.map((sdef) => (
-          <Bar
-              {...MOTION}
-            key={sdef.key}
-            dataKey={sdef.key}
-            name={sdef.name}
-            fill={paint(sdef.color)}
-            stackId={stacked ? 'a' : undefined}
-            radius={stacked ? [0, 0, 0, 0] : vertical ? [0, 6, 6, 0] : [6, 6, 0, 0]}
-            maxBarSize={vertical ? 22 : 46}
+    <ChartFrame summary={summary}>
+      {(tooltipActive) => (
+        <ResponsiveContainer width="100%" height={height}>
+          <BarChart
+            data={data}
+            layout={layout}
+            margin={{ top: 16, right: vertical ? 36 : 12, left: vertical ? 8 : -8, bottom: 0 }}
+            barGap={stacked ? 0 : 3}
+            barCategoryGap={vertical ? '22%' : '28%'}
           >
-            {showValues && (
-              <LabelList
-                dataKey={sdef.key}
-                position={vertical ? 'right' : 'top'}
-                offset={6}
-                style={labelStyle}
-                formatter={(v: number) => formatDataLabel(v, unit, valueFormatter)}
-              />
+            {vertical ? (
+              <>
+                <XAxis
+                  type="number"
+                  tick={axisTick}
+                  tickLine={false}
+                  axisLine={false}
+                  hide={showValues}
+                  tickFormatter={compactTick}
+                />
+                <YAxis
+                  type="category"
+                  dataKey={xKey}
+                  tick={axisTick}
+                  tickLine={false}
+                  axisLine={{ stroke: axisLine }}
+                  width={categoryWidth}
+                />
+              </>
+            ) : (
+              <>
+                <XAxis
+                  dataKey={xKey}
+                  tick={axisTick}
+                  tickLine={false}
+                  axisLine={{ stroke: axisLine }}
+                  {...(tiltTicks ? { interval: 0, angle: -35, textAnchor: 'end', height: 58 } : {})}
+                />
+                <YAxis
+                  tick={axisTick}
+                  tickLine={false}
+                  axisLine={false}
+                  width={44}
+                  hide={showValues}
+                  tickFormatter={compactTick}
+                />
+              </>
             )}
-          </Bar>
-        ))}
-      </BarChart>
-    </ResponsiveContainer>
+            <Tooltip
+              {...TIP}
+              active={tooltipActive}
+              cursor={{ fill: cursorFill }}
+              content={<ChartTooltip unit={unit} formatter={valueFormatter} />}
+            />
+            {showLegend && series.length > 1 && <Legend wrapperStyle={legendStyle} />}
+            {series.map((sdef) => (
+              <Bar
+                {...STATIC}
+                key={sdef.key}
+                dataKey={sdef.key}
+                name={sdef.name}
+                fill={paint(sdef.color)}
+                stackId={stacked ? 'a' : undefined}
+                radius={stacked ? [0, 0, 0, 0] : vertical ? [0, 6, 6, 0] : [6, 6, 0, 0]}
+                maxBarSize={vertical ? 22 : 46}
+              >
+                {showValues && (
+                  <LabelList
+                    dataKey={sdef.key}
+                    position={vertical ? 'right' : 'top'}
+                    offset={6}
+                    style={labelStyle}
+                    formatter={(v: number) => formatDataLabel(v, unit, valueFormatter)}
+                  />
+                )}
+              </Bar>
+            ))}
+          </BarChart>
+        </ResponsiveContainer>
+      )}
+    </ChartFrame>
   )
 }
 
@@ -360,7 +533,6 @@ interface PyramidProps {
   female: Series[]
   height?: number
 }
-
 
 /**
  * Horizontal back-to-back bars: males to the left of the axis, females to the
@@ -378,50 +550,64 @@ export function PyramidChart({ data, bandKey, male, female, height = 440 }: Pyra
     })
     return r
   })
+  const total = (s: Series) =>
+    (data as Record<string, unknown>[]).reduce((a, d) => a + (Number(d[s.key]) || 0), 0)
+  const summary = `Population pyramid by age band, males left and females right. ${[
+    ...male,
+    ...female,
+  ]
+    .map((s) => `${s.name}: ${Math.round(total(s)).toLocaleString('en-US')}`)
+    .join(', ')}.`
   return (
-    <ResponsiveContainer width="100%" height={height}>
-      <BarChart
-        data={rows}
-        layout="vertical"
-        stackOffset="sign"
-        barCategoryGap="12%"
-        margin={{ top: 4, right: 12, left: 0, bottom: 0 }}
-      >
-        <XAxis
-          type="number"
-          tick={axisTick}
-          tickLine={false}
-          axisLine={{ stroke: axisLine }}
-          tickFormatter={(v: number) => compactTick(Math.abs(v))}
-        />
-        <YAxis
-          type="category"
-          dataKey={bandKey}
-          tick={axisTick}
-          tickLine={false}
-          axisLine={false}
-          width={44}
-        />
-        <Tooltip
-          cursor={{ fill: cursorFill }}
-          content={
-            <ChartTooltip formatter={(v) => Math.round(Math.abs(v)).toLocaleString('en-US')} />
-          }
-        />
-        <Legend wrapperStyle={legendStyle} />
-        {[...male, ...female].map((sdef) => (
-          <Bar
-              {...MOTION}
-            key={sdef.key}
-            dataKey={sdef.key}
-            name={sdef.name}
-            fill={paint(sdef.color)}
-            stackId="pyramid"
-            maxBarSize={18}
-          />
-        ))}
-      </BarChart>
-    </ResponsiveContainer>
+    <ChartFrame summary={summary}>
+      {(tooltipActive) => (
+        <ResponsiveContainer width="100%" height={height}>
+          <BarChart
+            data={rows}
+            layout="vertical"
+            stackOffset="sign"
+            barCategoryGap="12%"
+            margin={{ top: 4, right: 12, left: 0, bottom: 0 }}
+          >
+            <XAxis
+              type="number"
+              tick={axisTick}
+              tickLine={false}
+              axisLine={{ stroke: axisLine }}
+              tickFormatter={(v: number) => compactTick(Math.abs(v))}
+            />
+            <YAxis
+              type="category"
+              dataKey={bandKey}
+              tick={axisTick}
+              tickLine={false}
+              axisLine={false}
+              width={44}
+            />
+            <Tooltip
+              {...TIP}
+              active={tooltipActive}
+              cursor={{ fill: cursorFill }}
+              content={
+                <ChartTooltip formatter={(v) => Math.round(Math.abs(v)).toLocaleString('en-US')} />
+              }
+            />
+            <Legend wrapperStyle={legendStyle} />
+            {[...male, ...female].map((sdef) => (
+              <Bar
+                {...STATIC}
+                key={sdef.key}
+                dataKey={sdef.key}
+                name={sdef.name}
+                fill={paint(sdef.color)}
+                stackId="pyramid"
+                maxBarSize={18}
+              />
+            ))}
+          </BarChart>
+        </ResponsiveContainer>
+      )}
+    </ChartFrame>
   )
 }
 
@@ -485,39 +671,50 @@ export function DonutChart({
     )
   }
 
+  const sum = data.reduce((a, d) => a + d.value, 0) || 1
+  const fmt = plain(unit, valueFormatter)
+  const summary = `Donut chart. ${data
+    .map((d) => `${d.name}: ${fmt(d.value)} (${Math.round((d.value / sum) * 100)}%)`)
+    .join(', ')}.`
   return (
-    <ResponsiveContainer width="100%" height={height}>
-      <PieChart margin={{ top: 6, right: 6, bottom: 6, left: 6 }}>
-        <Pie
-              {...MOTION}
-          data={data}
-          dataKey="value"
-          nameKey="name"
-          cx="50%"
-          cy="50%"
-          innerRadius={inner}
-          outerRadius={outer}
-          paddingAngle={1.5}
-          stroke={sliceStroke}
-          strokeWidth={2}
-          minAngle={4}
-          labelLine={false}
-          label={renderLabel}
-        >
-          {data.map((slice, i) => (
-            <Cell key={i} fill={paint(slice.color ?? SERIES[i % SERIES.length])} />
-          ))}
-        </Pie>
-        <Tooltip content={<ChartTooltip unit={unit} formatter={valueFormatter} />} />
-        <Legend
-          iconType="circle"
-          iconSize={9}
-          wrapperStyle={legendStyle}
-          formatter={(value) => (
-            <span style={{ color: donutName, fontSize: 12 }}>{value}</span>
-          )}
-        />
-      </PieChart>
-    </ResponsiveContainer>
+    <ChartFrame summary={summary}>
+      {(tooltipActive) => (
+        <ResponsiveContainer width="100%" height={height}>
+          <PieChart margin={{ top: 6, right: 6, bottom: 6, left: 6 }}>
+            <Pie
+              {...STATIC}
+              data={data}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              innerRadius={inner}
+              outerRadius={outer}
+              paddingAngle={1.5}
+              stroke={sliceStroke}
+              strokeWidth={2}
+              minAngle={4}
+              labelLine={false}
+              label={renderLabel}
+            >
+              {data.map((slice, i) => (
+                <Cell key={i} fill={paint(slice.color ?? SERIES[i % SERIES.length])} />
+              ))}
+            </Pie>
+            <Tooltip
+              {...TIP}
+              active={tooltipActive}
+              content={<ChartTooltip unit={unit} formatter={valueFormatter} />}
+            />
+            <Legend
+              iconType="circle"
+              iconSize={9}
+              wrapperStyle={legendStyle}
+              formatter={(value) => <span style={{ color: donutName, fontSize: 12 }}>{value}</span>}
+            />
+          </PieChart>
+        </ResponsiveContainer>
+      )}
+    </ChartFrame>
   )
 }

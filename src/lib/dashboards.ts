@@ -91,7 +91,7 @@ export const NAV: NavItem[] = [
     id: 'map',
     code: 'MAP',
     name: 'Health Centre Map',
-    blurb: 'Map of wilayat and health centres with population heat layer',
+    blurb: 'Map of the six wilayat: population, under-5s, women 15–49 and ANC rate',
     icon: MapIcon,
     group: 'region',
   },

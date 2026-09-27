@@ -1,9 +1,10 @@
 import { useEffect, useRef } from 'react'
-import { CalendarDays, Map, Menu, Printer } from 'lucide-react'
+import { Map, Menu, Printer } from 'lucide-react'
 import { NAV_BY_ID, NAV_GROUPS, type ViewId } from '../lib/dashboards'
 import { meta } from '../data/nbg'
-import { YEAR_COLORS } from '../lib/theme'
-import { attachScrollProgress, gsap, motionOK } from '../lib/motion'
+import { C, YEAR_COLORS } from '../lib/theme'
+import { useThemeMode } from '../lib/theme-mode'
+import { attachScrollProgress, fadeIn } from '../lib/motion'
 import ThemeToggle from './ThemeToggle'
 
 interface HeaderProps {
@@ -17,19 +18,10 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
   const item = NAV_BY_ID[active]
   const titleRef = useRef<HTMLHeadingElement>(null)
   const progressRef = useRef<HTMLDivElement>(null)
+  const { isDark } = useThemeMode()
 
-  // Title glides in whenever the view changes.
-  useEffect(() => {
-    if (!titleRef.current || !motionOK()) return
-    const tween = gsap.fromTo(
-      titleRef.current,
-      { y: 6, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.4, ease: 'power2.out' },
-    )
-    return () => {
-      tween.kill()
-    }
-  }, [active])
+  // Title fades in with the page whenever the view changes.
+  useEffect(() => (titleRef.current ? fadeIn(titleRef.current) : undefined), [active])
 
   useEffect(() => {
     if (!progressRef.current) return
@@ -37,12 +29,17 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
   }, [])
 
   const group = NAV_GROUPS.find((g) => g.id === item.group)
+  // Phones get a shorter Home title so it never needs a third line.
   const title =
-    active === 'about'
-      ? 'Women & Child Health Department'
-      : active === 'overview'
-        ? 'North Batinah Governorate'
-        : item.name
+    active === 'about' ? (
+      <>
+        Women &amp; Child Health<span className="hidden sm:inline"> Department</span>
+      </>
+    ) : active === 'overview' ? (
+      'North Batinah Governorate'
+    ) : (
+      item.name
+    )
 
   return (
     <>
@@ -75,26 +72,36 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
           </span>
 
           <div className="min-w-0 flex-1 overflow-hidden">
-            <p className="truncate text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-[#7c8ba0] dark:text-ink/60">
+            {/* Section label (the page name itself is the title below). */}
+            <p className="text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-[#7c8ba0] dark:text-ink/60">
               <span className="hidden sm:inline">Ministry of Health · </span>
-              {group ? `${group.label} · ` : ''}
-              {item.name}
+              {group ? group.label : item.name}
             </p>
+            {/* Titles wrap to a second line on narrow screens — never cut off. */}
             <h1
               ref={titleRef}
-              className="mt-0.5 truncate font-serif text-xl font-normal leading-tight text-heading sm:text-[1.65rem]"
+              className="mt-0.5 line-clamp-2 font-serif text-lg font-normal leading-tight text-heading [text-wrap:balance] sm:text-[1.65rem]"
             >
               {title}
             </h1>
             <span className="accent-tab mt-2 bg-azure" aria-hidden="true" />
           </div>
 
-          {/* Year legend */}
-          <div className="hidden items-center gap-3 rounded-control border border-sky px-3 py-2 dark:border-[rgb(var(--card-border))] md:flex">
-            <CalendarDays className="h-4 w-4 text-heading/50" />
+          {/* Year colour key — a plain legend, not a control. */}
+          <div
+            className="hidden cursor-default select-none items-center gap-3 md:flex"
+            role="note"
+            aria-label="Chart colours by year: 2023 teal, 2024 blue, 2025 navy"
+          >
+            <span className="text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-ink/50">
+              Chart key
+            </span>
             {Object.entries(YEAR_COLORS).map(([year, color]) => (
-              <span key={year} className="flex items-center gap-1.5 text-xs font-semibold text-ink/75">
-                <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} />
+              <span key={year} className="flex items-center gap-1.5 text-xs font-medium text-ink/70">
+                <span
+                  className="inline-block h-2.5 w-2.5 rounded-full"
+                  style={{ backgroundColor: isDark && color === C.navy ? '#9bbfe8' : color }}
+                />
                 {year}
               </span>
             ))}

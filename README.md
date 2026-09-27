@@ -13,8 +13,14 @@ light-blue border and the cut top-right corner; the official MOH logo; and the
 template's header, footer and cover layouts. Everything is flat — no gradients,
 glows or animated backgrounds. Body text and figures use **DM Sans** (Muscat Bay
 design system) and Arabic uses **Cairo**; all fonts are self-hosted, so they load
-with no external request and work offline. Motion is calm (200 ms,
-`cubic-bezier(.4,0,.2,1)`, no bounces).
+with no external request and work offline.
+
+**Figures are never animated.** KPI values render at their final figure (no
+count-ups) and charts draw without an entrance, so a screenshot or printout can
+never capture an interim number. Bar and shaded-area charts start at zero with
+evenly spaced ticks; a line chart that zooms in says so under the plot. The only
+motion is a 150–200 ms fade when the page changes, and none at all when the
+operating system asks for reduced motion.
 
 ## Pages
 
@@ -25,7 +31,7 @@ bookmarked, shared, refreshed or reached with the Back button.
 |------|------|---------------|
 | `#/about` | **Home (الرئيسية)** | Vision, mission, values, department sections and 2026–2030 objectives |
 | `#/overview` | **Overview** | Governorate headline KPIs and multi-year trends |
-| `#/map` | **Health Centre Map** | North Batinah map: population heat layer, wilayat circles with totals and centre counts, every health centre's catchment |
+| `#/map` | **Health Centre Map** | North Batinah map: wilayat circles sized and coloured by the chosen metric, a ranked list and table linked to the map on hover, every health centre's catchment |
 | `#/pop` | **Population 2025** | Age–sex pyramid, catchment populations, target groups (under-5, women 15–49, 60+), service-to-population ratios, CSV export |
 
 ### Indicator dashboards
@@ -47,9 +53,10 @@ bookmarked, shared, refreshed or reached with the Back button.
 ## Tech stack
 
 - **React 18 + TypeScript + Vite**, **Tailwind CSS**
-- **Recharts** (charts), **lucide-react** (icons), **GSAP** (motion)
+- **Recharts** (charts), **lucide-react** (icons); page fades use the browser's
+  built-in Web Animations API (no animation library)
 - **DM Sans**, **Cairo** and **Gelasio** (Georgia fallback) via `@fontsource-variable` (self-hosted)
-- Motion respects the operating system's "reduce motion" setting throughout
+- Every chart carries a plain-language data summary for screen readers
 - Installable **PWA** with offline caching (`public/sw.js`)
 - No backend: all data is bundled from `src/data/*.json`
 
@@ -91,7 +98,7 @@ one, open `src/data/facility-locations.json`, find the centre, and fill in:
 - `source`: where the position came from, so it can be audited.
 - Leave `null` until verified — the app never estimates a position.
 
-The pin, the heat layer and the "Located" column update automatically.
+The pin, the location count and the "Located" column update automatically.
 
 ## Deploy
 
@@ -99,6 +106,11 @@ The repository is connected to **Vercel** (a preview is built for every pull
 request). It also deploys to **Netlify** with no extra setup — `netlify.toml` and
 `public/_redirects` are included. Page links use `#/…`, so no server rewrite
 rules are needed on either host.
+
+**Link previews.** `index.html` carries Open Graph tags, and the build adds
+`og:url` / `og:image` (`public/og-image.jpg`, 1200 × 630) using the production
+address Vercel or Netlify provide. On another host, set `SITE_URL` (for example
+`https://dashboards.example.om`) before `npm run build`.
 
 Netlify by hand:
 

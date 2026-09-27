@@ -38,6 +38,8 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
   const tabIdx =
     generalIdx >= 0 ? generalIdx : general.length + NAV_GROUPS.findIndex((g) => g.id === activeGroup)
 
+  const sheetItems = sheet ? NAV.filter((i) => i.group === sheet) : []
+
   const go = (id: ViewId) => {
     onSelect(id)
     setSheet(null)
@@ -58,8 +60,10 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
             onClick={() => setSheet(null)}
             aria-hidden="true"
           />
+          {/* Phones: a sheet across the bottom. Tablets: a compact panel above
+              the bar, so short sections do not stretch across a wide screen. */}
           <div
-            className="fixed inset-x-0 bottom-0 z-50 animate-sheet-up rounded-t-3xl border-t border-glow/20 bg-navy px-3 pt-3 shadow-2xl dark:bg-[#0b2235]"
+            className="fixed inset-x-0 bottom-0 z-50 animate-sheet-up rounded-t-3xl border-t border-glow/20 bg-navy px-3 pt-3 shadow-2xl dark:bg-[#0b2235] sm:mx-auto sm:w-[26rem]"
             style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 4.75rem)' }}
             role="dialog"
             aria-label={`${GROUP_SHORT[sheet]} dashboards`}
@@ -68,8 +72,14 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
             <p className="px-2 pb-2 text-sm font-semibold text-white">
               {NAV_GROUPS.find((g) => g.id === sheet)?.label}
             </p>
-            <div className="grid max-h-[50vh] grid-cols-2 gap-1.5 overflow-y-auto pb-1">
-              {NAV.filter((i) => i.group === sheet).map((item) => {
+            {/* Even counts sit two per row; an odd count uses one column so no
+                row is left half-empty. */}
+            <div
+              className={`grid max-h-[50vh] gap-1.5 overflow-y-auto pb-1 ${
+                sheetItems.length % 2 === 0 ? 'grid-cols-2' : 'grid-cols-1'
+              }`}
+            >
+              {sheetItems.map((item) => {
                 const isActive = item.id === active
                 return (
                   <button

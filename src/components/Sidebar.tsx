@@ -162,7 +162,7 @@ export default function Sidebar({
               Ministry of Health · Oman
             </p>
             <p className="mt-0.5 text-[0.65rem] text-white/45">
-              Tenth Five-Year Health Plan · 2023–2025
+              Indicators 2023–2025 · 10th Five-Year Plan (2021–2025)
             </p>
           </div>
         </div>

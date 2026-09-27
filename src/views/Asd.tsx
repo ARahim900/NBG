@@ -105,7 +105,6 @@ export default function Asd() {
             data={asd.cov18Trend}
             xKey="year"
             variant="area"
-            yDomain={[70, 100]}
             unit="%"
             series={[{ key: 'value', name: 'Coverage', color: C.azure }]}
           />

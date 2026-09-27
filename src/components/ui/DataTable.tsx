@@ -14,6 +14,9 @@ interface DataTableProps {
   total?: ReactNode[]
   /** Highlight a row index (e.g. governorate total within the body). */
   highlightRows?: number[]
+  /** Pointer or keyboard focus entering (index) / leaving (null) a body row —
+   *  lets a view link the table to a chart or map. */
+  onRowHover?: (index: number | null) => void
   dense?: boolean
 }
 
@@ -30,6 +33,7 @@ export default function DataTable({
   rows,
   total,
   highlightRows = [],
+  onRowHover,
   dense = false,
 }: DataTableProps) {
   const pad = dense ? 'px-3 py-2' : 'px-3.5 py-2.5'
@@ -52,6 +56,8 @@ export default function DataTable({
           {rows.map((row, ri) => (
             <tr
               key={ri}
+              onMouseEnter={onRowHover && (() => onRowHover(ri))}
+              onMouseLeave={onRowHover && (() => onRowHover(null))}
               className={`border-b border-line/10 transition-colors duration-200 hover:bg-tint/[0.07] ${
                 highlightRows.includes(ri) ? 'bg-azure/[0.08] font-semibold' : ''
               }`}
