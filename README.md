@@ -84,9 +84,14 @@ one, open `src/data/facility-locations.json`, find the centre, and fill in:
 
 The pin, the heat layer and the "Located" column update automatically.
 
-## Deploy to Netlify
+## Deploy
 
-`netlify.toml` and `public/_redirects` make deployment zero-config:
+The repository is connected to **Vercel** (a preview is built for every pull
+request). It also deploys to **Netlify** with no extra setup — `netlify.toml` and
+`public/_redirects` are included. Page links use `#/…`, so no server rewrite
+rules are needed on either host.
+
+Netlify by hand:
 
 1. **Drag-and-drop:** run `npm run build`, then drag `dist/` onto
    <https://app.netlify.com/drop>.

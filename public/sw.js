@@ -4,7 +4,7 @@
  * changes no behavior while online — desktop users never see a difference.
  *
  * Deploy-safe by design (this is what keeps "zero behavioral shift" true):
- *   • HTML / navigations  → network-first  → a fresh Netlify deploy ALWAYS wins
+ *   • HTML / navigations  → network-first  → a fresh deploy ALWAYS wins
  *                                             when online; cache is the offline
  *                                             fallback only (no stale UI).
  *   • Hashed build assets → cache-first     → Vite fingerprints filenames, so a
