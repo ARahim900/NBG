@@ -54,9 +54,6 @@ export default {
         sans: ['"DM Sans Variable"', '"DM Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         // Alias kept so existing `font-display` headings stay valid.
         display: ['"DM Sans Variable"', '"DM Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        // MOH template titles are set in Georgia; Gelasio is its metric-compatible
-        // open-source twin, downloaded only where Georgia is not installed.
-        serif: ['Georgia', '"Gelasio Variable"', 'Gelasio', '"Times New Roman"', 'serif'],
         ar: ['"Cairo Variable"', 'Cairo', 'Tajawal', '"Segoe UI"', 'sans-serif'],
       },
       // Weights 400 / 500 / 600 / 700 only — 800 does not exist in the system.

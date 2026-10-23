@@ -44,7 +44,7 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
   return (
     <>
       <div ref={progressRef} className="scroll-progress" aria-hidden="true" />
-      {/* MOH template page header: logo, letter-spaced section label, serif
+      {/* MOH template page header: logo, letter-spaced section label, DM Sans
           title with the accent tab, thin light-blue rule. */}
       <header className="sticky top-0 z-20 border-b border-sky bg-surface transition-colors duration-300 dark:border-[rgb(var(--card-border))]">
         <div className="flex items-center gap-3 px-4 py-3 sm:px-6 lg:px-8">
@@ -80,7 +80,7 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
             {/* Titles wrap to a second line on narrow screens — never cut off. */}
             <h1
               ref={titleRef}
-              className="mt-0.5 line-clamp-2 font-serif text-lg font-normal leading-tight text-heading [text-wrap:balance] sm:text-[1.65rem]"
+              className="mt-0.5 line-clamp-2 font-sans text-lg font-normal leading-tight text-heading [text-wrap:balance] sm:text-[1.65rem]"
             >
               {title}
             </h1>

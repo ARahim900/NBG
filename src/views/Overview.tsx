@@ -48,7 +48,7 @@ export default function Overview({ onNavigate }: ViewProps) {
             <p className="text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-glow sm:text-[0.72rem]">
               Tenth Five-Year Health Development Plan (2021–2025)
             </p>
-            <h1 className="mt-3 font-serif text-2xl font-normal leading-tight sm:text-[2rem]">
+            <h1 className="mt-3 font-sans text-2xl font-normal leading-tight sm:text-[2rem]">
               Women &amp; Child Health — North Batinah Governorate
             </h1>
             <span className="accent-tab mt-4 w-14 bg-glow" aria-hidden="true" />

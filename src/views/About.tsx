@@ -115,7 +115,7 @@ export default function About({ onNavigate }: ViewProps) {
   return (
     <div className="space-y-12">
       {/* ===== Hero — the MOH template cover: flat navy panel, MOH-blue
-            angled panel with the faint emblem, serif title, accent tab ===== */}
+            angled panel with the faint emblem, DM Sans title, accent tab ===== */}
       <section
         className="relative -mt-1 overflow-hidden rounded-[4px] bg-navy text-white dark:bg-[#0b2235]"
         data-reveal
@@ -155,7 +155,7 @@ export default function About({ onNavigate }: ViewProps) {
           >
             {department.nameAr}
           </h1>
-          <p className="mt-2 font-serif text-2xl font-normal leading-snug sm:text-[2.1rem]" data-hero>
+          <p className="mt-2 font-sans text-2xl font-normal leading-snug sm:text-[2.1rem]" data-hero>
             {department.nameEn}
           </p>
 
@@ -303,7 +303,7 @@ export default function About({ onNavigate }: ViewProps) {
             <h2 lang="ar" className="font-ar text-2xl font-bold">
               القِيَم
             </h2>
-            <p className="mt-1 font-serif text-lg">Our Core Values</p>
+            <p className="mt-1 font-sans text-lg">Our Core Values</p>
             <span className="accent-tab mt-3 bg-glow" aria-hidden="true" />
             <p lang="ar" className="mt-3 font-ar text-[0.8rem] leading-relaxed text-white/75">
               القيم المؤسسية الموجِّهة للعمل
