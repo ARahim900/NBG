@@ -87,25 +87,27 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
             <span className="accent-tab mt-2 bg-azure" aria-hidden="true" />
           </div>
 
-          {/* Year colour key — a plain legend, not a control. */}
-          <div
-            className="hidden cursor-default select-none items-center gap-3 md:flex"
-            role="note"
-            aria-label="Chart colours by year: 2023 teal, 2024 blue, 2025 navy"
-          >
-            <span className="text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-ink/50">
-              Chart key
-            </span>
-            {Object.entries(YEAR_COLORS).map(([year, color]) => (
-              <span key={year} className="flex items-center gap-1.5 text-xs font-medium text-ink/70">
-                <span
-                  className="inline-block h-2.5 w-2.5 rounded-full"
-                  style={{ backgroundColor: isDark && color === C.navy ? '#9bbfe8' : color }}
-                />
-                {year}
+          {/* Population charts use nationality and sex legends within each chart. */}
+          {active !== 'pop' && (
+            <div
+              className="hidden cursor-default select-none items-center gap-3 md:flex"
+              role="note"
+              aria-label="Chart colours by year: 2023 teal, 2024 blue, 2025 navy"
+            >
+              <span className="text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-ink/50">
+                Chart key
               </span>
-            ))}
-          </div>
+              {Object.entries(YEAR_COLORS).map(([year, color]) => (
+                <span key={year} className="flex items-center gap-1.5 text-xs font-medium text-ink/70">
+                  <span
+                    className="inline-block h-2.5 w-2.5 rounded-full"
+                    style={{ backgroundColor: isDark && color === C.navy ? '#9bbfe8' : color }}
+                  />
+                  {year}
+                </span>
+              ))}
+            </div>
+          )}
 
           <button
             type="button"

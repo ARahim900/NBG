@@ -503,7 +503,7 @@ export function ComparisonBars({
                 name={sdef.name}
                 fill={paint(sdef.color)}
                 stackId={stacked ? 'a' : undefined}
-                radius={stacked ? [0, 0, 0, 0] : vertical ? [0, 6, 6, 0] : [6, 6, 0, 0]}
+                radius={0}
                 maxBarSize={vertical ? 22 : 46}
               >
                 {showValues && (

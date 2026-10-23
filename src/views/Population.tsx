@@ -1,20 +1,14 @@
 import { useMemo, useState } from 'react'
 import {
-  Baby,
   Download,
   Gauge,
-  HeartHandshake,
   MapPin,
   Table2,
-  UserRound,
-  Users,
 } from 'lucide-react'
-import KpiCard from '../components/ui/KpiCard'
 import ChartCard from '../components/ui/ChartCard'
 import SectionTitle from '../components/ui/SectionTitle'
 import DataTable from '../components/ui/DataTable'
 import Note from '../components/ui/Note'
-import Segmented from '../components/ui/Segmented'
 import { ComparisonBars, PyramidChart } from '../components/charts/Charts'
 import {
   AGE_BANDS,
@@ -148,78 +142,89 @@ export default function Population() {
   const summaryTotal = popMeta.summarySheet.omani + popMeta.summarySheet.expatriate
 
   return (
-    <div className="space-y-8">
-      <SectionTitle
-        icon={Users}
-        title="Population Estimates 2025"
-        subtitle={`End-year 2025 catchment populations for ${INSTITUTIONS.length} health institutions — the denominators behind coverage indicators`}
-      />
+    <div className="space-y-6 [&_.card]:rounded-xl [&_.card]:border [&_.card]:border-line/15 [&_.card]:bg-surface [&_.card]:[filter:none] [&_.card]:shadow-card [&_.card]:before:hidden [&_.card]:after:hidden [&_h3]:text-heading">
+      <section aria-labelledby="population-title" className="space-y-4">
+        <div>
+          <h2 id="population-title" className="text-2xl font-semibold tracking-tight text-heading sm:text-3xl">
+            Population estimates
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink/80">
+            End-year 2025 · {INSTITUTIONS.length} health-institution catchments across North Batinah.
+          </p>
+          <p lang="ar" dir="rtl" className="mt-1 text-left font-ar text-sm text-ink/80">
+            {popMeta.titleAr}
+          </p>
+        </div>
+        {notInSummary.length > 0 && (
+          <details className="rounded-xl border border-line/20 bg-surface px-4">
+            <summary className="min-h-11 cursor-pointer py-3 text-sm font-medium text-heading">
+              Population totals need reconciliation
+            </summary>
+            <p className="pb-4 text-sm leading-relaxed text-ink/80">
+              {notInSummary.map((i) => i.en).join(', ')} appears in the wilayat sheets but
+              not in the workbook’s summary. The governorate totals are {int(r(detailTotal))}
+              {' '}and {int(summaryTotal)} respectively. Confirm whether the new catchment
+              overlaps an existing one before using these figures to set targets.
+            </p>
+          </details>
+        )}
+      </section>
 
-      {/* Filters */}
-      <div className="card flex flex-col gap-4 p-4 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
-          <label className="block min-w-0">
-            <span className="mb-1.5 block text-eyebrow uppercase text-ink/60">
-              Wilayat
-            </span>
+      <section aria-label="Population filters" className="rounded-xl border border-line/15 bg-surface p-4 shadow-card sm:p-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end">
+          <label className="block min-w-0 sm:flex-1">
+            <span className="mb-2 block text-sm font-medium text-heading">Wilayat</span>
             <select
               value={wilayat}
               onChange={(e) => setWilayat(e.target.value)}
-              className="w-full rounded-control border border-line/15 bg-mist/60 px-3 py-2 text-label text-heading sm:w-56"
+              className="min-h-11 w-full rounded-lg border border-line/20 bg-surface px-3 text-sm text-heading"
             >
               <option value="all">All wilayat</option>
               {WILAYATS.map((w) => (
-                <option key={w.en} value={w.en}>
-                  {w.en} · {w.ar}
-                </option>
+                <option key={w.en} value={w.en}>{w.en} · {w.ar}</option>
               ))}
             </select>
           </label>
-          <Segmented label="Nationality" options={NAT_OPTIONS} value={nat} onChange={setNat} />
+          <fieldset className="min-w-0 sm:flex-1">
+            <legend className="mb-2 text-sm font-medium text-heading">Nationality</legend>
+            <div className="grid grid-cols-3 gap-1 rounded-lg border border-line/20 p-1">
+              {NAT_OPTIONS.map((option) => (
+                <label key={option.value} className={`flex min-h-11 cursor-pointer items-center justify-center rounded-md px-2 text-center text-sm transition-colors has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 ${nat === option.value ? 'bg-ink text-surface' : 'text-ink hover:bg-mist'}`}>
+                  <input type="radio" name="population-nationality" value={option.value}
+                    checked={nat === option.value} onChange={() => setNat(option.value)} className="sr-only" />
+                  {option.label}
+                </label>
+              ))}
+            </div>
+          </fieldset>
         </div>
-        <p className="text-xs text-ink/55">
-          <span lang="ar" dir="rtl" className="font-ar text-sm text-heading/80">
-            {popMeta.titleAr}
-          </span>
-          <span className="mx-2 text-ink/25">·</span>
-          {list.length} catchments shown
-        </p>
-      </div>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-line/10 pt-3">
+          <p role="status" className="text-sm text-ink/80">{place} · {natLabel} · {list.length} catchments</p>
+          {(wilayat !== 'all' || nat !== 'all') && (
+            <button type="button" onClick={() => { setWilayat('all'); setNat('all') }}
+              className="min-h-11 rounded-lg px-3 text-sm font-medium text-heading underline underline-offset-4 hover:bg-mist">
+              Reset filters
+            </button>
+          )}
+        </div>
+      </section>
 
-      <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
-        <KpiCard
-          label={`Population · ${place}`}
-          value={int(r(tg.total))}
-          icon={Users}
-          accent="navy"
-          hint={
-            nat === 'all'
-              ? `${pct(share(omTotal, omTotal + exTotal))} Omani · ${pct(share(exTotal, omTotal + exTotal))} expatriate`
-              : `${pct(share(tg.total, omTotal + exTotal))} of all residents`
-          }
-        />
-        <KpiCard
-          label="Children under 5"
-          value={int(r(tg.under5))}
-          icon={Baby}
-          accent="azure"
-          hint={`≈ ${int(r(tg.under5 / 5))} per annual birth cohort`}
-        />
-        <KpiCard
-          label="Women aged 15–49"
-          value={int(r(tg.women15to49))}
-          icon={HeartHandshake}
-          accent="teal"
-          hint={`${pct(share(tg.women15to49, tg.total))} of population · reproductive age`}
-        />
-        <KpiCard
-          label="Aged 60 and over"
-          value={int(r(tg.adults60plus))}
-          icon={UserRound}
-          accent="gold"
-          hint={`${pct(share(tg.adults60plus, tg.total))} of population`}
-        />
-      </div>
+      <dl className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {[
+          { label: `Population · ${place}`, value: int(r(tg.total)), hint: nat === 'all'
+            ? `${pct(share(omTotal, omTotal + exTotal))} Omani · ${pct(share(exTotal, omTotal + exTotal))} expatriate`
+            : `${pct(share(tg.total, omTotal + exTotal))} of all residents` },
+          { label: 'Children under 5', value: int(r(tg.under5)), hint: `≈ ${int(r(tg.under5 / 5))} per annual birth cohort` },
+          { label: 'Women aged 15–49', value: int(r(tg.women15to49)), hint: `${pct(share(tg.women15to49, tg.total))} of population · reproductive age` },
+          { label: 'Aged 60 and over', value: int(r(tg.adults60plus)), hint: `${pct(share(tg.adults60plus, tg.total))} of population` },
+        ].map((metric) => (
+          <div key={metric.label} className="rounded-xl border border-line/15 bg-surface p-4 shadow-card sm:p-6">
+            <dt className="text-sm font-medium leading-5 text-ink/80">{metric.label}</dt>
+            <dd className="mt-2 text-2xl font-semibold tracking-tight tabular-nums text-heading sm:text-3xl">{metric.value}</dd>
+            <dd className="mt-2 text-xs leading-5 text-ink/80">{metric.hint}</dd>
+          </div>
+        ))}
+      </dl>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-5">
         <ChartCard
@@ -296,6 +301,7 @@ export default function Population() {
             title="Service Ratios by Wilayat (2025)"
             subtitle={`"Check" marks a ratio more than ${r((1 - FLAG_BELOW) * 100)}% below the benchmark`}
           >
+            <p className="mb-3 text-xs text-ink/80 sm:hidden">Swipe the table sideways to see more columns.</p>
             <DataTable
               dense
               columns={[
@@ -375,13 +381,14 @@ export default function Population() {
             <button
               type="button"
               onClick={exportTable}
-              className="inline-flex items-center gap-1.5 rounded-control border border-line/15 px-2.5 py-1.5 text-label text-heading transition-colors hover:bg-tint/10"
+              className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-line/20 px-4 text-sm font-medium text-heading transition-colors hover:bg-mist"
             >
               <Download className="h-3.5 w-3.5" />
               Export CSV
             </button>
           }
         >
+          <p className="mb-3 text-xs text-ink/80 sm:hidden">Swipe the table sideways to see more columns.</p>
           <DataTable
             dense
             columns={[
@@ -427,23 +434,13 @@ export default function Population() {
       </div>
 
       {/* ===== Data notes ===== */}
-      <ChartCard title="About These Estimates" subtitle="Source, method and reconciliation">
+      <ChartCard title="About These Estimates" subtitle="Source and method">
         <div className="space-y-2">
           <Note title="Source:">
             {popMeta.source}. {popMeta.reference}. Figures are modelled estimates with
             decimals; they are rounded for display, so a column may differ from its total
             by 1.
           </Note>
-          {notInSummary.length > 0 && (
-            <Note tone="warn" title="Reconciliation:">
-              {notInSummary.map((i) => i.en).join(', ')} appears in the wilayat sheets but
-              not in the workbook's summary sheet. This dashboard uses the wilayat sheets, so
-              the governorate total is {int(r(detailTotal))} against {int(summaryTotal)} in
-              the summary ({popMeta.summarySheet.institutions} institutions). Confirm whether
-              the new catchment was carved out of an existing one; if it was, that population
-              is counted twice.
-            </Note>
-          )}
           <Note title="Target groups:">
             The workbook's ratio sheet applies one governorate share to every catchment
             ({RATIO_SHEET_UNDER5}% of Omanis aged 0–4) and its total row does not add up. This

@@ -7,7 +7,7 @@
         hairlines, navy titles, slate body text. Flat colours only. ── */
   :root {
     color-scheme: light;
-    --canvas: 244 248 252; /* #f4f8fc page background */
+    --canvas: 255 255 255; /* #ffffff page background */
     --surface: 255 255 255; /* cards, header, footer */
     --mist: 239 246 252; /* #eff6fc template highlight box */
     --ink: 54 70 90; /* #36465a template body text */
@@ -99,8 +99,8 @@
     @apply relative;
     --cut: 14px;
     isolation: isolate;
-    filter: drop-shadow(0 1px 1px rgb(var(--shadow) / 0.05))
-      drop-shadow(0 3px 8px rgb(var(--shadow) / 0.07));
+    filter: drop-shadow(0 2px 2px rgb(var(--shadow) / 0.06))
+      drop-shadow(0 5px 12px rgb(var(--shadow) / 0.10));
     transition:
       transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
       filter 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -154,8 +154,8 @@
   /* Interactive lift used by KPI tiles & link cards */
   .card-lift:hover {
     transform: translateY(-1px);
-    filter: drop-shadow(0 2px 2px rgb(var(--shadow) / 0.06))
-      drop-shadow(0 6px 14px rgb(var(--shadow) / 0.1));
+    filter: drop-shadow(0 2px 3px rgb(var(--shadow) / 0.08))
+      drop-shadow(0 7px 16px rgb(var(--shadow) / 0.12));
   }
 
   .nav-link {

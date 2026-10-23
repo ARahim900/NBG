@@ -72,7 +72,7 @@ export default {
       },
       boxShadow: {
         // Muscat Bay two-layer shadows, tinted with this app's own shadow hue.
-        card: '0 1px 2px rgb(var(--shadow) / 0.04), 0 2px 6px rgb(var(--shadow) / 0.06)',
+        card: '0 2px 4px rgb(var(--shadow) / 0.06), 0 6px 18px rgb(var(--shadow) / 0.09)',
         'card-hover': '0 2px 4px rgb(var(--shadow) / 0.06), 0 4px 12px rgb(var(--shadow) / 0.08)',
       },
       borderRadius: {

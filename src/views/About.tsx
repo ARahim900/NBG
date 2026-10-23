@@ -1,8 +1,6 @@
 import {
-  ArrowDown,
   Award,
   Baby,
-  Building2,
   CheckCircle2,
   Compass,
   Eye,
@@ -12,7 +10,6 @@ import {
   MapPin,
   Scale,
   ShieldCheck,
-  Sparkles,
   Star,
   Stethoscope,
   Users,
@@ -114,131 +111,65 @@ function WilayatCard({ w }: { w: (typeof wilayats)[number] }) {
 export default function About({ onNavigate }: ViewProps) {
   return (
     <div className="space-y-12">
-      {/* ===== Hero — the MOH template cover: flat navy panel, MOH-blue
-            angled panel with the faint emblem, DM Sans title, accent tab ===== */}
       <section
-        className="relative -mt-1 overflow-hidden rounded-[4px] bg-navy text-white dark:bg-[#0b2235]"
+        aria-labelledby="home-hero-title"
+        className="overflow-hidden rounded-xl border border-line/15"
         data-reveal
       >
-        <div
-          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[36%] bg-azure lg:block"
-          style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 20% 100%, 0 80%)' }}
-          aria-hidden="true"
-        >
+        <div className="bg-navy px-5 pb-8 pt-6 text-center text-white sm:px-10 sm:pb-10 sm:pt-8">
           <img
-            src="/moh-emblem-watermark.webp"
-            alt=""
-            className="absolute right-[6%] top-1/2 h-[82%] w-auto -translate-y-1/2 object-contain"
-          />
-        </div>
-
-        <div className="relative px-6 py-10 sm:px-10 sm:py-12 lg:max-w-[64%] lg:py-14">
-          <img
-            src="/moh-logo-white.png"
+            src="/moh-hero-logo.png"
             alt="Ministry of Health, Oman"
-            className="h-10 w-auto object-contain sm:h-11"
-            data-hero
+            width={284}
+            height={162}
+            className="mx-auto h-auto w-56 max-w-full object-contain"
           />
-
-          <p
-            className="mt-8 text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-glow sm:text-[0.72rem]"
-            data-hero
-          >
-            Ministry of Health, Oman · DGHS — North Al Batinah
+          <p className="mt-3 text-xs font-medium tracking-[0.12em] text-white/75">
+            DGHS · NORTH AL BATINAH
           </p>
-
           <h1
+            id="home-hero-title"
             dir="rtl"
             lang="ar"
-            className="mt-4 text-left font-ar text-4xl font-bold leading-tight sm:text-5xl"
-            data-hero
+            className="mx-auto mt-5 max-w-3xl font-ar text-3xl font-semibold leading-relaxed sm:text-4xl"
           >
             {department.nameAr}
           </h1>
-          <p className="mt-2 font-sans text-2xl font-normal leading-snug sm:text-[2.1rem]" data-hero>
+          <p className="mx-auto mt-2 max-w-2xl text-xl font-medium leading-snug sm:text-2xl">
             {department.nameEn}
           </p>
-
-          <span className="accent-tab mt-6 w-14 bg-glow" data-hero aria-hidden="true" />
-
-          <div
-            className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-white/80"
-            data-hero
-          >
-            <span className="flex flex-wrap items-center gap-x-2">
-              <Sparkles className="h-4 w-4 text-glow" />
-              <span dir="rtl" lang="ar" className="whitespace-nowrap font-ar">
-                الخطة الخمسية الحادية عشرة
-              </span>
-              <span className="whitespace-nowrap text-white/60">11th Five-Year Plan, 2026–2030</span>
-            </span>
-            <span dir="rtl" className="flex items-center gap-2 font-ar">
-              <MapPin className="h-4 w-4 text-glow" />
-              {department.governorateAr}
-            </span>
-            <span dir="rtl" className="flex items-center gap-2 font-ar">
-              <Building2 className="h-4 w-4 text-glow" />
-              {department.authorityAr}
-            </span>
+          <div className="mx-auto mt-5 flex max-w-xl flex-col items-center gap-1 text-sm leading-relaxed text-white/75">
+            <span lang="ar" dir="rtl" className="font-ar">الخطة الخمسية الحادية عشرة</span>
+            <span>11th Five-Year Plan, 2026–2030</span>
           </div>
-
-          <div className="mt-8 flex flex-wrap gap-4" data-hero>
-            <button onClick={() => onNavigate('overview')} className="btn-glow">
-              استعراض لوحات المؤشرات · View Dashboards
-            </button>
-            <button onClick={() => onNavigate('asd')} className="btn-ghost">
-              المؤشرات الصحية 2023–2025
-            </button>
-          </div>
-
-          {/* Quick stats — final figures, shown as-is (never counted up) */}
-          <div
-            className="mt-12 grid max-w-2xl grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-4"
-            data-hero
+          <button
+            type="button"
+            onClick={() => onNavigate('overview')}
+            className="mx-auto mt-7 flex min-h-12 w-full max-w-sm flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-lg bg-[#A4C5BB] px-5 py-3 text-sm font-semibold text-[#4E4456] transition-opacity hover:opacity-90 focus-visible:outline-white sm:w-auto"
           >
+            <span lang="ar" dir="rtl" className="font-ar">استعراض لوحات المؤشرات</span>
+            <span aria-hidden="true">·</span>
+            <span>View dashboards</span>
+          </button>
+        </div>
+
+        <div className="bg-surface px-5 py-6 sm:px-8">
+          <p className="mb-5 text-xs font-semibold uppercase tracking-[0.1em] text-ink/75">2025 at a glance</p>
+          <dl className="grid grid-cols-2 gap-x-5 gap-y-6 lg:grid-cols-4">
             {[
               { v: int(demographics.population2025), en: 'Population 2025', ar: 'إجمالي السكان' },
               { v: int(demographics.under18Omani), en: 'Omanis under 18', ar: 'دون 18 عاماً' },
               { v: int(demographics.liveBirths2025), en: 'Live Births 2025', ar: 'المواليد الأحياء' },
               { v: `${demographics.birthRate2025}‰`, en: 'Crude Birth Rate', ar: 'معدل المواليد' },
-            ].map((s) => (
-              <div key={s.en}>
-                <p className="font-display text-2xl font-bold tabular-nums text-white sm:text-[1.7rem]">
-                  {s.v}
-                </p>
-                <p dir="rtl" lang="ar" className="mt-0.5 text-left font-ar text-[0.78rem] font-semibold text-white/80">
-                  {s.ar}
-                </p>
-                <p className="text-[0.66rem] font-semibold uppercase tracking-wide text-white/55">
-                  {s.en}
-                </p>
+            ].map((stat) => (
+              <div key={stat.en}>
+                <dt className="text-sm leading-5 text-ink/80">{stat.en}</dt>
+                <dd className="mt-2 text-2xl font-semibold tracking-tight tabular-nums text-heading sm:text-3xl">{stat.v}</dd>
+                <dd lang="ar" dir="rtl" className="mt-1 text-left font-ar text-sm text-ink/75">{stat.ar}</dd>
               </div>
             ))}
-          </div>
-
-          <div
-            className="mt-10 hidden items-center gap-2 text-[0.7rem] font-medium uppercase tracking-[0.2em] text-white/40 sm:flex"
-            data-hero
-          >
-            <ArrowDown className="h-3.5 w-3.5" />
-            Scroll to explore
-          </div>
+          </dl>
         </div>
-      </section>
-
-      {/* ===== Official letterhead ===== */}
-      <section className="card flex justify-center px-6 py-7">
-        <img
-          src="/moh-logo-navy.png"
-          alt="وزارة الصحة — Ministry of Health, Oman"
-          className="block max-h-32 w-auto dark:hidden"
-        />
-        <img
-          src="/moh-logo-white.png"
-          alt=""
-          aria-hidden="true"
-          className="hidden max-h-32 w-auto dark:block"
-        />
       </section>
 
       {/* ===== Vision & Mission ===== */}
