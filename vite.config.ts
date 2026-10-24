@@ -1,5 +1,6 @@
 import { defineConfig, type Plugin } from 'vite'
 import react from '@vitejs/plugin-react'
+import { fileURLToPath, URL } from 'node:url'
 
 /**
  * The site's public address, when the build knows it: SITE_URL if set by
@@ -46,6 +47,7 @@ const VENDOR_CHUNKS: [RegExp, string][] = [
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react(), socialPreview()],
+  resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
   base: './',
   build: {
     // Recharts is the largest chunk (~415 kB, ~110 kB gzip) and loads only

@@ -24,6 +24,20 @@ export default function ChildMaltreatment() {
         subtitle="Counts by wilayat (2023 vs 2024), 2019–2025 trend, distribution & maltreatment type"
       />
 
+      <section aria-label="Child maltreatment programme training">
+        <dl className="grid grid-cols-2 gap-3.5">
+          {[
+            { label: 'Courses conducted', value: 1 },
+            { label: 'Master trainers', value: 3 },
+          ].map(({ label, value }) => (
+            <div key={label} className="card p-4 sm:p-5">
+              <dt className="text-caption font-medium text-ink/75">{label}</dt>
+              <dd className="mt-3 text-3xl font-medium tabular-nums text-[#4E4456] dark:text-[#A4C5BB]">{value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
       <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
         <KpiCard
           label="Notifications (2025)"
@@ -146,6 +160,21 @@ export default function ChildMaltreatment() {
             </Note>
           </div>
         </ChartCard>
+      </div>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <section className="card p-5" aria-labelledby="maltreatment-challenges">
+          <h3 id="maltreatment-challenges" className="text-title text-[#4E4456] dark:text-[#A4C5BB]">Programme Challenges</h3>
+          <ul className="mt-4 list-disc space-y-3 pl-5 text-body text-ink/80 marker:text-[#A4C5BB]">
+            <li>Activating the regional hospital task force committee.</li>
+            <li>Ensuring case follow-up by social affairs services.</li>
+          </ul>
+        </section>
+        <section className="card p-5" aria-labelledby="maltreatment-achievements">
+          <h3 id="maltreatment-achievements" className="text-title text-[#4E4456] dark:text-[#A4C5BB]">Achievements</h3>
+          <ul className="mt-4 list-disc space-y-3 pl-5 text-body text-ink/80 marker:text-[#A4C5BB]">
+            <li>Three doctors successfully completed the course and received master trainer certification.</li>
+          </ul>
+        </section>
       </div>
     </div>
   )

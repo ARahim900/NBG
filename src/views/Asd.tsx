@@ -33,6 +33,21 @@ export default function Asd() {
         subtitle="18 & 24-month developmental (M-CHAT/R) screening — 2024 detail, 2025 monthly & governorate summary"
       />
 
+      <section aria-label="ASD programme capacity">
+        <dl className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          {[
+            { label: 'Workshops conducted', value: 3 },
+            { label: 'Master trainers in North Al Batinah Governorate', value: 3 },
+            { label: 'Nurse focal points in institutions', value: 28 },
+          ].map(({ label, value }) => (
+            <div key={label} className="flex flex-col rounded-2xl border border-[#A4C5BB]/60 bg-[#A4C5BB]/10 p-5 shadow-sm">
+              <dt className="text-sm font-medium text-[#4E4456] dark:text-[#A4C5BB]">{label}</dt>
+              <dd className="mt-auto pt-3 text-4xl font-semibold tabular-nums text-[#4E4456] dark:text-white">{value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
+
       <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
         <KpiCard
           label="18-Month Coverage (2025)"
@@ -261,6 +276,25 @@ export default function Asd() {
             </ChartCard>
           </div>
         </div>
+      </div>
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <section aria-labelledby="asd-programme-challenges" className="rounded-2xl border border-[#4E4456]/20 bg-surface p-6 shadow-sm dark:border-[#A4C5BB]/40">
+          <h2 id="asd-programme-challenges" className="text-xl font-semibold text-[#4E4456] dark:text-white">Programme Challenges</h2>
+          <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-relaxed text-ink marker:text-[#A4C5BB]">
+            <li>Limited feedback on autism spectrum disorder (ASD) diagnosed cases from tertiary hospitals</li>
+            <li>Logistical requirements for launching the ASD Clinic</li>
+            <li>Tracking the number of ASD cases diagnosed in North Al Batinah for follow-up</li>
+            <li>Some institutions are not integrated with the Sultan Qaboos University system.</li>
+          </ul>
+        </section>
+        <section aria-labelledby="asd-future-plan" className="rounded-2xl border border-[#A4C5BB]/60 bg-[#A4C5BB]/10 p-6 shadow-sm">
+          <h2 id="asd-future-plan" className="text-xl font-semibold text-[#4E4456] dark:text-white">Future Plan</h2>
+          <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-relaxed text-ink marker:text-[#A4C5BB]">
+            <li>Conduct an ASD workshop for paediatricians on <time dateTime="2026-12-10" className="font-semibold">10 December 2026</time></li>
+            <li>Launch the ASD Clinic in the <span className="font-semibold">first quarter of 2027</span></li>
+            <li>Increase awareness about the ASD Clinic and early rehabilitation services</li>
+          </ul>
+        </section>
       </div>
     </div>
   )

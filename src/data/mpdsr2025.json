@@ -1,0 +1,1151 @@
+{
+  "source": {
+    "filename": "MPDSR Review Form Sheet 2025.xlsx",
+    "sha256": "2907f11636c2d4b5bc909d44a6939856a87a586f1a7581e12cac5b233aad9ae1",
+    "caseSheet": "Sheet1",
+    "codeSheet": "Sheet2",
+    "caseRange": "A6:AZ135",
+    "codeRange": "A5:A101"
+  },
+  "summary": {
+    "records": 119,
+    "earlyNeonatal": 47,
+    "stillbirth": 59,
+    "lateNeonatal": 13,
+    "incompleteRows": [
+      44
+    ],
+    "flaggedRecords": 52,
+    "duplicateCandidateGroups": [
+      [
+        17,
+        19
+      ]
+    ],
+    "exactDuplicateGroups": [],
+    "finalCodeMissing": 1,
+    "finalCodeUnmapped": 1
+  },
+  "monthly": [
+    {
+      "month": "Jan",
+      "stillbirth": 7,
+      "earlyNeonatal": 5,
+      "lateNeonatal": 0,
+      "total": 12
+    },
+    {
+      "month": "Feb",
+      "stillbirth": 6,
+      "earlyNeonatal": 5,
+      "lateNeonatal": 1,
+      "total": 12
+    },
+    {
+      "month": "Mar",
+      "stillbirth": 6,
+      "earlyNeonatal": 4,
+      "lateNeonatal": 2,
+      "total": 12
+    },
+    {
+      "month": "Apr",
+      "stillbirth": 2,
+      "earlyNeonatal": 7,
+      "lateNeonatal": 0,
+      "total": 9
+    },
+    {
+      "month": "May",
+      "stillbirth": 4,
+      "earlyNeonatal": 5,
+      "lateNeonatal": 0,
+      "total": 9
+    },
+    {
+      "month": "Jun",
+      "stillbirth": 5,
+      "earlyNeonatal": 3,
+      "lateNeonatal": 0,
+      "total": 8
+    },
+    {
+      "month": "Jul",
+      "stillbirth": 7,
+      "earlyNeonatal": 6,
+      "lateNeonatal": 1,
+      "total": 14
+    },
+    {
+      "month": "Aug",
+      "stillbirth": 2,
+      "earlyNeonatal": 3,
+      "lateNeonatal": 3,
+      "total": 8
+    },
+    {
+      "month": "Sep",
+      "stillbirth": 4,
+      "earlyNeonatal": 1,
+      "lateNeonatal": 1,
+      "total": 6
+    },
+    {
+      "month": "Oct",
+      "stillbirth": 4,
+      "earlyNeonatal": 1,
+      "lateNeonatal": 1,
+      "total": 6
+    },
+    {
+      "month": "Nov",
+      "stillbirth": 6,
+      "earlyNeonatal": 3,
+      "lateNeonatal": 2,
+      "total": 11
+    },
+    {
+      "month": "Dec",
+      "stillbirth": 6,
+      "earlyNeonatal": 4,
+      "lateNeonatal": 2,
+      "total": 12
+    }
+  ],
+  "codeTables": [
+    {
+      "prefix": "M",
+      "title": "Maternal conditions",
+      "rows": [
+        {
+          "code": "M1",
+          "description": "Maternal complications of pregnancy",
+          "sourceCell": "A5",
+          "finalCount": 8,
+          "selectedCount": 7
+        },
+        {
+          "code": "M2",
+          "description": "Complications of placenta, cord and membranes",
+          "sourceCell": "A14",
+          "finalCount": 9,
+          "selectedCount": 10
+        },
+        {
+          "code": "M3",
+          "description": "Other complications of labour and delivery 1",
+          "sourceCell": "A26",
+          "finalCount": 4,
+          "selectedCount": 4
+        },
+        {
+          "code": "M4",
+          "description": "Maternal medical and surgical conditions; noxious influences",
+          "sourceCell": "A36",
+          "finalCount": 55,
+          "selectedCount": 55
+        },
+        {
+          "code": "M5",
+          "description": "No maternal condition",
+          "sourceCell": "A56",
+          "finalCount": 42,
+          "selectedCount": 43
+        },
+        {
+          "code": "M6",
+          "description": "Other conditions not included in the list",
+          "sourceCell": "A59",
+          "finalCount": 0,
+          "selectedCount": 0
+        }
+      ]
+    },
+    {
+      "prefix": "A",
+      "title": "Antepartum causes",
+      "rows": [
+        {
+          "code": "A1",
+          "description": "Congenital malformations, deformations, and chromosomal abnormalities",
+          "sourceCell": "A74",
+          "finalCount": 17,
+          "selectedCount": 18
+        },
+        {
+          "code": "A2",
+          "description": "Infection",
+          "sourceCell": "A75",
+          "finalCount": 1,
+          "selectedCount": 1
+        },
+        {
+          "code": "A3",
+          "description": "Antepartum hypoxia",
+          "sourceCell": "A76",
+          "finalCount": 5,
+          "selectedCount": 6
+        },
+        {
+          "code": "A4",
+          "description": "Other specified antepartum disorder",
+          "sourceCell": "A77",
+          "finalCount": 18,
+          "selectedCount": 17
+        },
+        {
+          "code": "A5",
+          "description": "Disorders related to foetal growth",
+          "sourceCell": "A78",
+          "finalCount": 3,
+          "selectedCount": 2
+        },
+        {
+          "code": "A6",
+          "description": "Foetal death of unspecified cause",
+          "sourceCell": "A79",
+          "finalCount": 17,
+          "selectedCount": 16
+        }
+      ]
+    },
+    {
+      "prefix": "I",
+      "title": "Intrapartum causes",
+      "rows": [
+        {
+          "code": "I1",
+          "description": "Congenital malformations, deformations and chromosomal abnormalities",
+          "sourceCell": "A82",
+          "finalCount": 2,
+          "selectedCount": 2
+        },
+        {
+          "code": "I2",
+          "description": "Birth trauma",
+          "sourceCell": "A83",
+          "finalCount": 0,
+          "selectedCount": 0
+        },
+        {
+          "code": "I3",
+          "description": "Acute intrapartum event",
+          "sourceCell": "A84",
+          "finalCount": 3,
+          "selectedCount": 3
+        },
+        {
+          "code": "I4",
+          "description": "Infection",
+          "sourceCell": "A85",
+          "finalCount": 1,
+          "selectedCount": 1
+        },
+        {
+          "code": "I5",
+          "description": "Other specified intrapartum disorder",
+          "sourceCell": "A86",
+          "finalCount": 1,
+          "selectedCount": 1
+        },
+        {
+          "code": "I6",
+          "description": "Disorders related to foetal growth",
+          "sourceCell": "A87",
+          "finalCount": 0,
+          "selectedCount": 0
+        },
+        {
+          "code": "I7",
+          "description": "Intrapartum death of unspecified cause",
+          "sourceCell": "A88",
+          "finalCount": 0,
+          "selectedCount": 0
+        }
+      ]
+    },
+    {
+      "prefix": "N",
+      "title": "Neonatal causes",
+      "rows": [
+        {
+          "code": "N1",
+          "description": "Congenital malformations, deformations and chromosomal abnormalities",
+          "sourceCell": "A91",
+          "finalCount": 25,
+          "selectedCount": 25
+        },
+        {
+          "code": "N2",
+          "description": "Disorders related to foetal growth",
+          "sourceCell": "A92",
+          "finalCount": 0,
+          "selectedCount": 0
+        },
+        {
+          "code": "N3",
+          "description": "Birth trauma",
+          "sourceCell": "A93",
+          "finalCount": 0,
+          "selectedCount": 0
+        },
+        {
+          "code": "N4",
+          "description": "Complications of intrapartum events",
+          "sourceCell": "A94",
+          "finalCount": 5,
+          "selectedCount": 5
+        },
+        {
+          "code": "N5",
+          "description": "Convulsions and disorders of cerebral status",
+          "sourceCell": "A95",
+          "finalCount": 0,
+          "selectedCount": 1
+        },
+        {
+          "code": "N6",
+          "description": "Infection",
+          "sourceCell": "A96",
+          "finalCount": 1,
+          "selectedCount": 2
+        },
+        {
+          "code": "N7",
+          "description": "Respiratory and cardiovascular disorders",
+          "sourceCell": "A97",
+          "finalCount": 2,
+          "selectedCount": 3
+        },
+        {
+          "code": "N8",
+          "description": "Other neonatal conditions",
+          "sourceCell": "A98",
+          "finalCount": 0,
+          "selectedCount": 0
+        },
+        {
+          "code": "N9",
+          "description": "Low birth weight and prematurity",
+          "sourceCell": "A99",
+          "finalCount": 15,
+          "selectedCount": 15
+        },
+        {
+          "code": "N10",
+          "description": "Miscellaneous",
+          "sourceCell": "A100",
+          "finalCount": 1,
+          "selectedCount": 1
+        },
+        {
+          "code": "N11",
+          "description": "Neonatal death of unspecified cause",
+          "sourceCell": "A101",
+          "finalCount": 0,
+          "selectedCount": 0
+        }
+      ]
+    }
+  ],
+  "quality": [
+    {
+      "label": "Improvement in quality of care were identified, if these had been in place it would still have made no difference to the outcome",
+      "count": 4
+    },
+    {
+      "label": "Overall, there was good care",
+      "count": 112
+    },
+    {
+      "label": "Improvement in quality of care were identified, if these had been in place it may have made a difference to the to the outcome",
+      "count": 3
+    }
+  ],
+  "factors": [
+    {
+      "label": "Late/no antenatal care",
+      "group": "Family",
+      "yes": 1,
+      "no": 118,
+      "unknown": 0,
+      "sourceColumn": "Z"
+    },
+    {
+      "label": "Cultural inhibition to seeking care",
+      "group": "Family",
+      "yes": 0,
+      "no": 119,
+      "unknown": 0,
+      "sourceColumn": "AA"
+    },
+    {
+      "label": "No knowledge of danger signs",
+      "group": "Family",
+      "yes": 4,
+      "no": 115,
+      "unknown": 0,
+      "sourceColumn": "AB"
+    },
+    {
+      "label": "Financial constraints",
+      "group": "Family",
+      "yes": 3,
+      "no": 116,
+      "unknown": 0,
+      "sourceColumn": "AC"
+    },
+    {
+      "label": "Partner restricts care-seeking",
+      "group": "Family",
+      "yes": 0,
+      "no": 119,
+      "unknown": 0,
+      "sourceColumn": "AD"
+    },
+    {
+      "label": "Use of traditional/ herbal medicine",
+      "group": "Family",
+      "yes": 0,
+      "no": 119,
+      "unknown": 0,
+      "sourceColumn": "AE"
+    },
+    {
+      "label": "Smoking / drug / alcohol abuse",
+      "group": "Family",
+      "yes": 0,
+      "no": 119,
+      "unknown": 0,
+      "sourceColumn": "AF"
+    },
+    {
+      "label": "Attempted termination",
+      "group": "Family",
+      "yes": 0,
+      "no": 119,
+      "unknown": 0,
+      "sourceColumn": "AG"
+    },
+    {
+      "label": "Partogram was not used",
+      "group": "Medical team",
+      "yes": 0,
+      "no": 119,
+      "unknown": 0,
+      "sourceColumn": "AI"
+    },
+    {
+      "label": "Necessary action was not taken",
+      "group": "Medical team",
+      "yes": 2,
+      "no": 117,
+      "unknown": 0,
+      "sourceColumn": "AJ"
+    },
+    {
+      "label": "Inappropriate action was not taken",
+      "group": "Medical team",
+      "yes": 0,
+      "no": 119,
+      "unknown": 0,
+      "sourceColumn": "AK"
+    },
+    {
+      "label": "Iatrogenic delivery",
+      "group": "Medical team",
+      "yes": 0,
+      "no": 119,
+      "unknown": 0,
+      "sourceColumn": "AL"
+    },
+    {
+      "label": "Delay in referral to higher facility",
+      "group": "Medical team",
+      "yes": 1,
+      "no": 118,
+      "unknown": 0,
+      "sourceColumn": "AM"
+    },
+    {
+      "label": "Inadequate monitoring during labour",
+      "group": "Medical team",
+      "yes": 0,
+      "no": 119,
+      "unknown": 0,
+      "sourceColumn": "AN"
+    },
+    {
+      "label": "Delay in calling for assistance",
+      "group": "Medical team",
+      "yes": 1,
+      "no": 118,
+      "unknown": 0,
+      "sourceColumn": "AO"
+    },
+    {
+      "label": "Inappropriate discharge",
+      "group": "Medical team",
+      "yes": 0,
+      "no": 119,
+      "unknown": 0,
+      "sourceColumn": "AP"
+    },
+    {
+      "label": "Lack of training",
+      "group": "Medical team",
+      "yes": 1,
+      "no": 118,
+      "unknown": 0,
+      "sourceColumn": "AQ"
+    },
+    {
+      "label": "Unavailability/shortage of Neonatal specialised staff",
+      "group": "Health facility",
+      "yes": 1,
+      "no": 118,
+      "unknown": 0,
+      "sourceColumn": "AS"
+    },
+    {
+      "label": "Unavailability of operating theatre facilities",
+      "group": "Health facility",
+      "yes": 0,
+      "no": 119,
+      "unknown": 0,
+      "sourceColumn": "AT"
+    },
+    {
+      "label": "Unavailability of resuscitation equipment",
+      "group": "Health facility",
+      "yes": 0,
+      "no": 119,
+      "unknown": 0,
+      "sourceColumn": "AU"
+    },
+    {
+      "label": "Unavailability of Blood products",
+      "group": "Health facility",
+      "yes": 0,
+      "no": 119,
+      "unknown": 0,
+      "sourceColumn": "AV"
+    },
+    {
+      "label": "Insufficient staff numbers",
+      "group": "Health facility",
+      "yes": 1,
+      "no": 118,
+      "unknown": 0,
+      "sourceColumn": "AW"
+    },
+    {
+      "label": "Unavailability of anaesthetist",
+      "group": "Health facility",
+      "yes": 0,
+      "no": 119,
+      "unknown": 0,
+      "sourceColumn": "AX"
+    }
+  ],
+  "demographics": [
+    {
+      "title": "Sex",
+      "rows": [
+        {
+          "label": "Male",
+          "count": 69
+        },
+        {
+          "label": "Female",
+          "count": 48
+        },
+        {
+          "label": "Ambiguous",
+          "count": 1
+        },
+        {
+          "label": "Not recorded",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "title": "Place of delivery",
+      "rows": [
+        {
+          "label": "Health Facility",
+          "count": 117
+        },
+        {
+          "label": "In transit",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "title": "Mode of delivery",
+      "rows": [
+        {
+          "label": "LSCS Emergency",
+          "count": 35
+        },
+        {
+          "label": "SVD",
+          "count": 67
+        },
+        {
+          "label": "LSCS Elective",
+          "count": 17
+        }
+      ]
+    }
+  ],
+  "issues": [
+    {
+      "row": 11,
+      "kind": "Category / final code conflict",
+      "cells": "G11, Y11",
+      "detail": "Final cause-code group conflicts with the recorded death category."
+    },
+    {
+      "row": 12,
+      "kind": "Foetal date conflict",
+      "cells": "G12:I12",
+      "detail": "Foetal category has a death date after delivery; needs source review."
+    },
+    {
+      "row": 13,
+      "kind": "Timing / final code conflict",
+      "cells": "O13, Y13",
+      "detail": "Antepartum/intrapartum code conflicts with the selected timing of death."
+    },
+    {
+      "row": 14,
+      "kind": "Category / final code conflict",
+      "cells": "G14, Y14",
+      "detail": "Final cause-code group conflicts with the recorded death category."
+    },
+    {
+      "row": 15,
+      "kind": "Timing / final code conflict",
+      "cells": "O15, Y15",
+      "detail": "Antepartum/intrapartum code conflicts with the selected timing of death."
+    },
+    {
+      "row": 16,
+      "kind": "Final / selected code conflict",
+      "cells": "P16:Y16",
+      "detail": "Final code differs from selected maternal or cause fields; final-code counts and selected-field counts are shown separately."
+    },
+    {
+      "row": 17,
+      "kind": "Timing / final code conflict",
+      "cells": "O17, Y17",
+      "detail": "Antepartum/intrapartum code conflicts with the selected timing of death."
+    },
+    {
+      "row": 19,
+      "kind": "Reporting month mismatch",
+      "cells": "A19, I19",
+      "detail": "Reporting month differs from recorded death month; chart uses the reporting month."
+    },
+    {
+      "row": 19,
+      "kind": "Timing / final code conflict",
+      "cells": "O19, Y19",
+      "detail": "Antepartum/intrapartum code conflicts with the selected timing of death."
+    },
+    {
+      "row": 25,
+      "kind": "Category / final code conflict",
+      "cells": "G25, Y25",
+      "detail": "Final cause-code group conflicts with the recorded death category."
+    },
+    {
+      "row": 26,
+      "kind": "Category / final code conflict",
+      "cells": "G26, Y26",
+      "detail": "Final cause-code group conflicts with the recorded death category."
+    },
+    {
+      "row": 27,
+      "kind": "Category / final code conflict",
+      "cells": "G27, Y27",
+      "detail": "Final cause-code group conflicts with the recorded death category."
+    },
+    {
+      "row": 42,
+      "kind": "Neonatal chronology conflict",
+      "cells": "H42:I42",
+      "detail": "Recorded neonatal death precedes delivery."
+    },
+    {
+      "row": 44,
+      "kind": "Incomplete record",
+      "cells": "A44:I44",
+      "detail": "No reporting month, death category or dates; excluded from case totals and coding denominators."
+    },
+    {
+      "row": 46,
+      "kind": "Invalid date",
+      "cells": "H46",
+      "detail": "Date is missing or cannot be parsed as a valid calendar date; not corrected."
+    },
+    {
+      "row": 46,
+      "kind": "Invalid date",
+      "cells": "I46",
+      "detail": "Date is missing or cannot be parsed as a valid calendar date; not corrected."
+    },
+    {
+      "row": 47,
+      "kind": "Neonatal chronology conflict",
+      "cells": "H47:I47",
+      "detail": "Recorded neonatal death precedes delivery."
+    },
+    {
+      "row": 50,
+      "kind": "Neonatal chronology conflict",
+      "cells": "H50:I50",
+      "detail": "Recorded neonatal death precedes delivery."
+    },
+    {
+      "row": 51,
+      "kind": "Final / selected code conflict",
+      "cells": "P51:Y51",
+      "detail": "Final code differs from selected maternal or cause fields; final-code counts and selected-field counts are shown separately."
+    },
+    {
+      "row": 56,
+      "kind": "Final / selected code conflict",
+      "cells": "P56:Y56",
+      "detail": "Final code differs from selected maternal or cause fields; final-code counts and selected-field counts are shown separately."
+    },
+    {
+      "row": 58,
+      "kind": "Final / selected code conflict",
+      "cells": "P58:Y58",
+      "detail": "Final code differs from selected maternal or cause fields; final-code counts and selected-field counts are shown separately."
+    },
+    {
+      "row": 58,
+      "kind": "Category / final code conflict",
+      "cells": "G58, Y58",
+      "detail": "Final cause-code group conflicts with the recorded death category."
+    },
+    {
+      "row": 60,
+      "kind": "Category / timing conflict",
+      "cells": "G60, O60",
+      "detail": "Death category and timing selection disagree; reported category is retained."
+    },
+    {
+      "row": 70,
+      "kind": "Weight unit requires confirmation",
+      "cells": "K70",
+      "detail": "Weight appears inconsistent with the kg heading; no conversion or correction applied."
+    },
+    {
+      "row": 72,
+      "kind": "Reporting month mismatch",
+      "cells": "A72, I72",
+      "detail": "Reporting month differs from recorded death month; chart uses the reporting month."
+    },
+    {
+      "row": 72,
+      "kind": "Category / timing conflict",
+      "cells": "G72, O72",
+      "detail": "Death category and timing selection disagree; reported category is retained."
+    },
+    {
+      "row": 75,
+      "kind": "Incomplete gestation notation",
+      "cells": "J75",
+      "detail": "Weeks-plus notation has no day component; days have not been inferred."
+    },
+    {
+      "row": 76,
+      "kind": "Incomplete gestation notation",
+      "cells": "J76",
+      "detail": "Weeks-plus notation has no day component; days have not been inferred."
+    },
+    {
+      "row": 77,
+      "kind": "Delivery year mismatch",
+      "cells": "H77",
+      "detail": "Delivery year is outside 2024–2025; requires source confirmation."
+    },
+    {
+      "row": 77,
+      "kind": "Foetal date conflict",
+      "cells": "G77:I77",
+      "detail": "Foetal category has a death date after delivery; needs source review."
+    },
+    {
+      "row": 77,
+      "kind": "Timing / final code conflict",
+      "cells": "O77, Y77",
+      "detail": "Antepartum/intrapartum code conflicts with the selected timing of death."
+    },
+    {
+      "row": 78,
+      "kind": "Timing / final code conflict",
+      "cells": "O78, Y78",
+      "detail": "Antepartum/intrapartum code conflicts with the selected timing of death."
+    },
+    {
+      "row": 78,
+      "kind": "Missing descriptive field",
+      "cells": "K78",
+      "detail": "Birth weight or sex is missing; not imputed."
+    },
+    {
+      "row": 79,
+      "kind": "Missing final code",
+      "cells": "Y79",
+      "detail": "Final code is blank; no code inferred from selected fields."
+    },
+    {
+      "row": 80,
+      "kind": "Reporting month mismatch",
+      "cells": "A80, I80",
+      "detail": "Reporting month differs from recorded death month; chart uses the reporting month."
+    },
+    {
+      "row": 80,
+      "kind": "Foetal date conflict",
+      "cells": "G80:I80",
+      "detail": "Foetal category has a death date after delivery; needs source review."
+    },
+    {
+      "row": 80,
+      "kind": "Final / selected code conflict",
+      "cells": "P80:Y80",
+      "detail": "Final code differs from selected maternal or cause fields; final-code counts and selected-field counts are shown separately."
+    },
+    {
+      "row": 80,
+      "kind": "Timing / final code conflict",
+      "cells": "O80, Y80",
+      "detail": "Antepartum/intrapartum code conflicts with the selected timing of death."
+    },
+    {
+      "row": 81,
+      "kind": "Category / final code conflict",
+      "cells": "G81, Y81",
+      "detail": "Final cause-code group conflicts with the recorded death category."
+    },
+    {
+      "row": 82,
+      "kind": "Category / final code conflict",
+      "cells": "G82, Y82",
+      "detail": "Final cause-code group conflicts with the recorded death category."
+    },
+    {
+      "row": 84,
+      "kind": "Category / final code conflict",
+      "cells": "G84, Y84",
+      "detail": "Final cause-code group conflicts with the recorded death category."
+    },
+    {
+      "row": 89,
+      "kind": "Foetal date conflict",
+      "cells": "G89:I89",
+      "detail": "Foetal category has a death date after delivery; needs source review."
+    },
+    {
+      "row": 89,
+      "kind": "Incomplete gestation notation",
+      "cells": "J89",
+      "detail": "Weeks-plus notation has no day component; days have not been inferred."
+    },
+    {
+      "row": 90,
+      "kind": "Timing / final code conflict",
+      "cells": "O90, Y90",
+      "detail": "Antepartum/intrapartum code conflicts with the selected timing of death."
+    },
+    {
+      "row": 93,
+      "kind": "Incomplete gestation notation",
+      "cells": "J93",
+      "detail": "Weeks-plus notation has no day component; days have not been inferred."
+    },
+    {
+      "row": 94,
+      "kind": "Category / timing conflict",
+      "cells": "G94, O94",
+      "detail": "Death category and timing selection disagree; reported category is retained."
+    },
+    {
+      "row": 94,
+      "kind": "Neonatal interval conflict",
+      "cells": "G94:I94",
+      "detail": "Calendar-day interval falls outside the category selected in the workbook; no reclassification applied."
+    },
+    {
+      "row": 95,
+      "kind": "Unmapped final code",
+      "cells": "Y95",
+      "detail": "Final code M5A7 is not fully defined in Sheet2; unknown component retained as unmapped."
+    },
+    {
+      "row": 95,
+      "kind": "Final / selected code conflict",
+      "cells": "P95:Y95",
+      "detail": "Final code differs from selected maternal or cause fields; final-code counts and selected-field counts are shown separately."
+    },
+    {
+      "row": 95,
+      "kind": "Category / final code conflict",
+      "cells": "G95, Y95",
+      "detail": "Final cause-code group conflicts with the recorded death category."
+    },
+    {
+      "row": 96,
+      "kind": "Final / selected code conflict",
+      "cells": "P96:Y96",
+      "detail": "Final code differs from selected maternal or cause fields; final-code counts and selected-field counts are shown separately."
+    },
+    {
+      "row": 98,
+      "kind": "Neonatal interval conflict",
+      "cells": "G98:I98",
+      "detail": "Calendar-day interval falls outside the category selected in the workbook; no reclassification applied."
+    },
+    {
+      "row": 100,
+      "kind": "Gestation not known",
+      "cells": "J100",
+      "detail": "Gestational age is explicitly recorded as not known."
+    },
+    {
+      "row": 107,
+      "kind": "Death year mismatch",
+      "cells": "I107",
+      "detail": "Recorded death year is outside 2025; retained only in the provisional workbook cohort."
+    },
+    {
+      "row": 108,
+      "kind": "Timing / final code conflict",
+      "cells": "O108, Y108",
+      "detail": "Antepartum/intrapartum code conflicts with the selected timing of death."
+    },
+    {
+      "row": 109,
+      "kind": "Final / selected code conflict",
+      "cells": "P109:Y109",
+      "detail": "Final code differs from selected maternal or cause fields; final-code counts and selected-field counts are shown separately."
+    },
+    {
+      "row": 109,
+      "kind": "Timing / final code conflict",
+      "cells": "O109, Y109",
+      "detail": "Antepartum/intrapartum code conflicts with the selected timing of death."
+    },
+    {
+      "row": 112,
+      "kind": "Final / selected code conflict",
+      "cells": "P112:Y112",
+      "detail": "Final code differs from selected maternal or cause fields; final-code counts and selected-field counts are shown separately."
+    },
+    {
+      "row": 114,
+      "kind": "Timing / final code conflict",
+      "cells": "O114, Y114",
+      "detail": "Antepartum/intrapartum code conflicts with the selected timing of death."
+    },
+    {
+      "row": 116,
+      "kind": "Reporting month mismatch",
+      "cells": "A116, I116",
+      "detail": "Reporting month differs from recorded death month; chart uses the reporting month."
+    },
+    {
+      "row": 117,
+      "kind": "Timing / final code conflict",
+      "cells": "O117, Y117",
+      "detail": "Antepartum/intrapartum code conflicts with the selected timing of death."
+    },
+    {
+      "row": 119,
+      "kind": "Category / final code conflict",
+      "cells": "G119, Y119",
+      "detail": "Final cause-code group conflicts with the recorded death category."
+    },
+    {
+      "row": 124,
+      "kind": "Missing descriptive field",
+      "cells": "L124",
+      "detail": "Birth weight or sex is missing; not imputed."
+    },
+    {
+      "row": 127,
+      "kind": "Timing / final code conflict",
+      "cells": "O127, Y127",
+      "detail": "Antepartum/intrapartum code conflicts with the selected timing of death."
+    },
+    {
+      "row": 130,
+      "kind": "Reporting month mismatch",
+      "cells": "A130, I130",
+      "detail": "Reporting month differs from recorded death month; chart uses the reporting month."
+    },
+    {
+      "row": 130,
+      "kind": "Neonatal chronology conflict",
+      "cells": "H130:I130",
+      "detail": "Recorded neonatal death precedes delivery."
+    },
+    {
+      "row": 130,
+      "kind": "Incomplete gestation notation",
+      "cells": "J130",
+      "detail": "Weeks-plus notation has no day component; days have not been inferred."
+    },
+    {
+      "row": 132,
+      "kind": "Neonatal interval conflict",
+      "cells": "G132:I132",
+      "detail": "Calendar-day interval falls outside the category selected in the workbook; no reclassification applied."
+    },
+    {
+      "row": 134,
+      "kind": "Category / final code conflict",
+      "cells": "G134, Y134",
+      "detail": "Final cause-code group conflicts with the recorded death category."
+    },
+    {
+      "row": 134,
+      "kind": "Incomplete gestation notation",
+      "cells": "J134",
+      "detail": "Weeks-plus notation has no day component; days have not been inferred."
+    },
+    {
+      "row": 135,
+      "kind": "Category / final code conflict",
+      "cells": "G135, Y135",
+      "detail": "Final cause-code group conflicts with the recorded death category."
+    },
+    {
+      "row": 135,
+      "kind": "Incomplete gestation notation",
+      "cells": "J135",
+      "detail": "Weeks-plus notation has no day component; days have not been inferred."
+    },
+    {
+      "row": 17,
+      "kind": "Possible duplicate",
+      "cells": "C17:L17",
+      "detail": "Matching demographic, category and date fields in rows 17, 19; retained because no unique case identifier is supplied."
+    },
+    {
+      "row": 19,
+      "kind": "Possible duplicate",
+      "cells": "C19:L19",
+      "detail": "Matching demographic, category and date fields in rows 17, 19; retained because no unique case identifier is supplied."
+    }
+  ],
+  "issueSummary": [
+    {
+      "kind": "Category / final code conflict",
+      "count": 13
+    },
+    {
+      "kind": "Foetal date conflict",
+      "count": 4
+    },
+    {
+      "kind": "Timing / final code conflict",
+      "count": 13
+    },
+    {
+      "kind": "Final / selected code conflict",
+      "count": 9
+    },
+    {
+      "kind": "Reporting month mismatch",
+      "count": 5
+    },
+    {
+      "kind": "Neonatal chronology conflict",
+      "count": 4
+    },
+    {
+      "kind": "Incomplete record",
+      "count": 1
+    },
+    {
+      "kind": "Invalid date",
+      "count": 1
+    },
+    {
+      "kind": "Category / timing conflict",
+      "count": 3
+    },
+    {
+      "kind": "Weight unit requires confirmation",
+      "count": 1
+    },
+    {
+      "kind": "Incomplete gestation notation",
+      "count": 7
+    },
+    {
+      "kind": "Delivery year mismatch",
+      "count": 1
+    },
+    {
+      "kind": "Missing descriptive field",
+      "count": 2
+    },
+    {
+      "kind": "Missing final code",
+      "count": 1
+    },
+    {
+      "kind": "Neonatal interval conflict",
+      "count": 3
+    },
+    {
+      "kind": "Unmapped final code",
+      "count": 1
+    },
+    {
+      "kind": "Gestation not known",
+      "count": 1
+    },
+    {
+      "kind": "Death year mismatch",
+      "count": 1
+    },
+    {
+      "kind": "Possible duplicate",
+      "count": 2
+    }
+  ],
+  "unknownCodes": [
+    {
+      "code": "Not recorded",
+      "count": 1
+    },
+    {
+      "code": "A7",
+      "count": 1
+    }
+  ],
+  "excludedNonCaseRows": [
+    5,
+    18,
+    31,
+    54,
+    64,
+    73,
+    88,
+    97,
+    104,
+    123,
+    137
+  ]
+}

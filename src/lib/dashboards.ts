@@ -10,6 +10,9 @@ import {
   Map as MapIcon,
   PieChart,
   Microscope,
+  Milk,
+  Network,
+  Images,
   ShieldAlert,
   Stethoscope,
   TestTubes,
@@ -20,6 +23,8 @@ import {
 export type ViewId =
   | 'about'
   | 'overview'
+  | 'wch-team'
+  | 'gallery'
   | 'pop'
   | 'map'
   | 'asd'
@@ -29,9 +34,11 @@ export type ViewId =
   | 'ca'
   | 'sn'
   | 'ns'
+  | 'children/newborn-screening/extended-newborn-screening-2026'
   | 'mc'
   | 'fp'
   | 'cn'
+  | 'bfhi'
   | 'an'
 
 /** Top-level grouping used to segregate the sidebar into care domains. */
@@ -51,6 +58,7 @@ export interface NavItem {
   short?: string
   icon: LucideIcon
   group: NavGroup
+  parentId?: ViewId
 }
 
 export interface NavGroupMeta {
@@ -62,7 +70,7 @@ export interface NavGroupMeta {
 /** Rendered as labelled sections in the sidebar, in this order. */
 export const NAV_GROUPS: NavGroupMeta[] = [
   { id: 'region', label: 'Governorate', labelAr: 'المحافظة' },
-  { id: 'women', label: "Women's Health", labelAr: 'صحة المرأة' },
+  { id: 'women', label: "Women's & Reproductive Health", labelAr: 'صحة المرأة والصحة الإنجابية' },
   { id: 'children', label: "Children's Health", labelAr: 'صحة الطفل' },
 ]
 
@@ -83,6 +91,25 @@ export const NAV: NavItem[] = [
     name: 'Overview',
     blurb: 'Governorate-wide headline indicators',
     icon: LayoutDashboard,
+    group: 'general',
+  },
+
+  {
+    id: 'wch-team',
+    code: '',
+    name: 'WCH Team Structure',
+    short: 'Team',
+    blurb: 'Women and Child Health Department leadership and team structure',
+    icon: Network,
+    group: 'general',
+  },
+
+  {
+    id: 'gallery',
+    code: '',
+    name: 'Gallery',
+    blurb: 'Photographs and highlights from Women and Child Health activities',
+    icon: Images,
     group: 'general',
   },
 
@@ -172,6 +199,16 @@ export const NAV: NavItem[] = [
     group: 'children',
   },
   {
+    id: 'children/newborn-screening/extended-newborn-screening-2026',
+    code: '',
+    name: 'Extended Newborn Screening 2026',
+    short: 'Extended Screening 2026',
+    blurb: 'Provisional maternity and laboratory screening reports for 2026',
+    icon: TestTubes,
+    group: 'children',
+    parentId: 'ns',
+  },
+  {
     id: 'mt',
     code: 'CM',
     name: 'Child Maltreatment',
@@ -183,8 +220,16 @@ export const NAV: NavItem[] = [
     id: 'cn',
     code: 'CN',
     name: 'Child Nutrition',
-    blurb: 'Malnutrition categories & infant feeding',
+    blurb: 'Malnutrition categories and cases by wilayat',
     icon: Apple,
+    group: 'children',
+  },
+  {
+    id: 'bfhi',
+    code: '',
+    name: 'Breast Feeding & BFHI',
+    blurb: 'Breastfeeding specialists, training and infant-feeding patterns',
+    icon: Milk,
     group: 'children',
   },
   {

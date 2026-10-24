@@ -80,7 +80,7 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
             {/* Titles wrap to a second line on narrow screens — never cut off. */}
             <h1
               ref={titleRef}
-              className="mt-0.5 line-clamp-2 font-sans text-lg font-normal leading-tight text-heading [text-wrap:balance] sm:text-[1.65rem]"
+              className={`${item.parentId ? '' : 'line-clamp-2'} mt-0.5 font-sans text-lg font-normal leading-tight text-heading [text-wrap:balance] sm:text-[1.65rem]`}
             >
               {title}
             </h1>
@@ -88,7 +88,7 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
           </div>
 
           {/* Population charts use nationality and sex legends within each chart. */}
-          {active !== 'pop' && (
+          {active !== 'pop' && active !== 'wch-team' && active !== 'gallery' && active !== 'sn' && active !== 'bfhi' && !item.parentId && (
             <div
               className="hidden cursor-default select-none items-center gap-3 md:flex"
               role="note"

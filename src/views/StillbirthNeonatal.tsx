@@ -1,21 +1,17 @@
-import { Activity, Baby, CalendarRange, HeartPulse, Stethoscope, Table2 } from 'lucide-react'
+import { Activity, Baby, CalendarRange, Table2 } from 'lucide-react'
 import KpiCard from '../components/ui/KpiCard'
 import ChartCard from '../components/ui/ChartCard'
 import SectionTitle from '../components/ui/SectionTitle'
 import DataTable from '../components/ui/DataTable'
 import Note from '../components/ui/Note'
+import Mpdsr2025Report from '../components/reports/Mpdsr2025Report'
 import { ComparisonBars } from '../components/charts/Charts'
 import { sn, sumBy } from '../data/nbg'
 import { C } from '../lib/theme'
 import { int } from '../lib/format'
 
-const sv = (starts: string): number =>
-  sn.summary2025.find((r) => r.metric.startsWith(starts))?.value ?? 0
 const yt = (cat: string): number =>
   sn.yearTotals.find((r) => r.category === cat)?.cohortB ?? 0
-
-const perinatal2025 = sv('Total perinatal')
-const reviewMeetings = sv('Surveillance review')
 
 const cohortBars = sn.yearTotals.filter((r) => r.category !== 'TOTAL')
 
@@ -36,18 +32,25 @@ export default function StillbirthNeonatal() {
     <div className="space-y-8">
       <SectionTitle
         icon={Baby}
-        title="Stillbirth & Neonatal — Perinatal Mortality"
-        subtitle="2024 monthly detail & ICD-PM classification, with 2025 summary. END = early neonatal death, LND = late neonatal death"
+        title="Stillbirth & Neonatal"
+        subtitle="2025 MPDSR workbook analysis and original 2024 surveillance reference"
       />
 
-      <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
-        <KpiCard
-          label="Perinatal Deaths (2025)"
-          value={int(perinatal2025)}
-          icon={HeartPulse}
-          accent="navy"
-          hint="Stillbirth + neonatal"
-        />
+      <section aria-label="Stillbirth and neonatal programme activity">
+        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
+          {[
+            { label: 'Workshops conducted', value: 1 },
+            { label: 'Master trainers in North Al Batinah Governorate', value: 3 },
+            { label: 'Committee meetings held', value: 21 },
+          ].map(({ label, value }) => (
+            <KpiCard key={label} label={label} value={value} accent="navy" />
+          ))}
+        </div>
+      </section>
+
+      <Mpdsr2025Report />
+
+      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
         <KpiCard
           label="Total Perinatal (2024)"
           value={int(yt('TOTAL'))}
@@ -61,13 +64,6 @@ export default function StillbirthNeonatal() {
           icon={Baby}
           accent="gold"
           hint="Within first 7 days"
-        />
-        <KpiCard
-          label="Review Meetings (2025)"
-          value={int(reviewMeetings)}
-          icon={Stethoscope}
-          accent="teal"
-          hint="Perinatal-death surveillance"
         />
       </div>
 
@@ -163,12 +159,34 @@ export default function StillbirthNeonatal() {
           <div className="mt-3">
             <Note title="Source note:">
               The web app and KPI deck give slightly different 2024 monthly
-              figures (web total 109; deck total 113). The 2025 detailed monthly
-              breakdown was image-only in the deck — only the {int(perinatal2025)}-case
-              headline and {int(reviewMeetings)} review meetings are available.
+              figures (web total 109; deck total 113). These original 2024 figures
+              are retained. The 2025 analysis above uses the newly supplied MPDSR workbook.
             </Note>
           </div>
         </ChartCard>
+      </div>
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
+        <section aria-labelledby="sn-programme-challenges" className="card p-6">
+          <h2 id="sn-programme-challenges" className="text-title text-heading">Programme Challenges</h2>
+          <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-relaxed text-ink marker:text-teal">
+            <li>Delays in the submission of stillbirth and neonatal death notification forms by institutions.</li>
+            <li>Incomplete information in some death notification forms.</li>
+            <li>Many cases cannot be reviewed within the month in which the death occurred.</li>
+          </ul>
+        </section>
+        <section aria-labelledby="sn-achievements" className="card p-6">
+          <h2 id="sn-achievements" className="text-title text-heading">Achievements</h2>
+          <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-relaxed text-ink marker:text-teal">
+            <li>A catch-up plan has been put in place.</li>
+            <li>Doctors have been provided with a standardised template to ensure consistency in case presentations.</li>
+          </ul>
+        </section>
+        <section aria-labelledby="sn-future-plan" className="card p-6">
+          <h2 id="sn-future-plan" className="text-title text-heading">Future Plan</h2>
+          <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-relaxed text-ink marker:text-teal">
+            <li>Hold monthly case review meetings with the committee to prevent delays in reviewing stillbirths and neonatal deaths.</li>
+          </ul>
+        </section>
       </div>
     </div>
   )

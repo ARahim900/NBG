@@ -1,19 +1,16 @@
-import { Activity, Apple, Baby, Milk, Table2 } from 'lucide-react'
+import { Activity, Apple, Baby, Table2 } from 'lucide-react'
 import KpiCard from '../components/ui/KpiCard'
 import ChartCard from '../components/ui/ChartCard'
 import SectionTitle from '../components/ui/SectionTitle'
 import DataTable from '../components/ui/DataTable'
-import Note from '../components/ui/Note'
-import { ComparisonBars, TrendChart } from '../components/charts/Charts'
+import { ComparisonBars } from '../components/charts/Charts'
 import { nutrition } from '../data/nutrition'
 import { C } from '../lib/theme'
-import { int, pct } from '../lib/format'
+import { int } from '../lib/format'
 
 const crit = nutrition.malnutritionByCriteria
 const topCrit = crit.reduce((a, b) => (b.total > a.total ? b : a))
 const underweight = crit.find((c) => c.criteria === 'Under weight')?.total ?? 0
-const ebBirth = nutrition.ebByMilestone[0]
-const eb6 = nutrition.ebByMilestone.find((m) => m.milestone === '6 months')
 
 export default function ChildNutrition() {
   return (
@@ -21,10 +18,10 @@ export default function ChildNutrition() {
       <SectionTitle
         icon={Apple}
         title="Child Nutrition"
-        subtitle="Malnutrition categories and infant-feeding patterns across North Batinah — 2025, by health centre"
+        subtitle="Malnutrition categories across North Batinah — 2025, by health centre"
       />
 
-      <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
         <KpiCard
           label="Malnutrition Cases (total)"
           value={int(nutrition.malnutritionTotal)}
@@ -45,13 +42,6 @@ export default function ChildNutrition() {
           icon={Baby}
           accent="teal"
           hint="Weight-for-age below normal"
-        />
-        <KpiCard
-          label="Exclusive Breastfeeding @ Birth"
-          value={pct(ebBirth?.pct ?? 0)}
-          icon={Milk}
-          accent="gold"
-          hint={`Falls to ${pct(eb6?.pct ?? 0)} by 6 months`}
         />
       </div>
 
@@ -84,49 +74,8 @@ export default function ChildNutrition() {
       </div>
 
       <div>
-        <SectionTitle
-          icon={Milk}
-          title="Infant Feeding Pattern"
-          subtitle="Breastfeeding, formula & complementary feeding by child age"
-        />
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-          <ChartCard
-            title="Exclusive Breastfeeding Rate by Age"
-            subtitle="% exclusively breastfed · birth → 18 months"
-            footnote="The classic decline: 77.9% at birth, below 13% by 6 months as complementary foods begin."
-          >
-            <TrendChart
-              data={nutrition.ebByMilestone}
-              xKey="milestone"
-              variant="area"
-              yDomain={[0, 100]}
-              unit="%"
-              series={[{ key: 'pct', name: 'Exclusive breastfeeding', color: C.teal }]}
-            />
-          </ChartCard>
-          <ChartCard
-            title="Feeding Composition by Age"
-            subtitle="Children by feeding type (count)"
-            footnote="Mixed = breast + formula + complementary foods. Bottle use rises from ~21% at birth to ~38% by 18 months."
-          >
-            <ComparisonBars
-              data={nutrition.feedingByMilestone}
-              xKey="milestone"
-              stacked
-              series={[
-                { key: 'eb', name: 'Exclusive BF', color: C.teal },
-                { key: 'pb', name: 'Predominant BF', color: C.azure },
-                { key: 'formula', name: 'Formula only', color: C.gold },
-                { key: 'mixed', name: 'Mixed / complementary', color: C.navy },
-              ]}
-            />
-          </ChartCard>
-        </div>
-      </div>
-
-      <div>
-        <SectionTitle icon={Table2} title="Detailed Tables" subtitle="Categories & feeding milestones" />
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <SectionTitle icon={Table2} title="Detailed Tables" subtitle="Malnutrition categories" />
+        <div className="space-y-4">
           <ChartCard title="Malnutrition by Category" subtitle="Cases, new & improved">
             <DataTable
               columns={[
@@ -144,29 +93,6 @@ export default function ChildNutrition() {
               ]}
               dense
             />
-          </ChartCard>
-          <ChartCard title="Exclusive Breastfeeding by Age" subtitle="">
-            <DataTable
-              columns={[
-                { label: 'Child Age' },
-                { label: 'Exclusively BF', align: 'right' },
-                { label: 'Total Infants', align: 'right' },
-                { label: 'Rate', align: 'right' },
-              ]}
-              rows={nutrition.ebByMilestone.map((m) => [
-                m.milestone,
-                int(m.eb),
-                int(m.total),
-                pct(m.pct),
-              ])}
-              dense
-            />
-            <div className="mt-3">
-              <Note title="2025:">
-                Figures are summed across all health-centre returns in the six
-                wilayat. EB = exclusively breastfed.
-              </Note>
-            </div>
           </ChartCard>
         </div>
       </div>

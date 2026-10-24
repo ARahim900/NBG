@@ -93,6 +93,10 @@
       [
         "2025 population estimates by health-institution catchment (denominators)",
         "Population estimates 2025 workbook (MOH, updated July 2026)"
+      ],
+      [
+        "2025 stillbirth and neonatal review: 119 provisional workbook records; reconciliation required",
+        "MPDSR Review Form Sheet 2025.xlsx"
       ]
     ],
     "notes": [
@@ -100,7 +104,7 @@
       "Cross-check (confirms accuracy): Birth Spacing 2025 = 2,953 matched the KPI deck exactly; anaemia 28.5% and ANC ~12,433-12,488 matched; Child Maltreatment 2023=92 / 2024=195 and Congenital Anomalies sector splits matched the web app exactly.",
       "Governorate granularity differs by indicator: 2023-2024 had per-health-center detail for some dashboards; 2025 ASD/DS are governorate-aggregate (per-center 2025 not in the source files), while 2025 maternal/contraceptive are available by wilayat.",
       "Maternal Deaths: still no 2025 count in any source file (review meetings referenced only).",
-      "Stillbirth detailed monthly & ICD-PM tables are labelled 2024 (final surveillance) in the Nov-2025 deck; the 2025 headline (116 cases, 14 review meetings) is shown separately.",
+      "Stillbirth & Neonatal 2025 now uses the MPDSR review workbook: 119 provisional records (59 recorded foetal deaths, 47 early neonatal and 13 late neonatal). Dates, coding and possible duplicates require reconciliation. Original 2024 surveillance tables are retained. The 21 committee meetings shown in the programme section are user-supplied and have no specified reporting year.",
       "Minor source differences kept in cells: ANC 2024 12,753 (web)/12,754 (deck); ANC 2025 12,433 (deck)/12,488 (sum of centers); anaemia 2024 34.0%/34.4%."
     ]
   },

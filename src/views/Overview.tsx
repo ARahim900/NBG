@@ -16,7 +16,8 @@ import ChartCard from '../components/ui/ChartCard'
 import SectionTitle from '../components/ui/SectionTitle'
 import { ComparisonBars, TrendChart } from '../components/charts/Charts'
 import { NAV, type ViewId } from '../lib/dashboards'
-import { asd, fp, mc, meta, mt, sn, type YearPoint } from '../data/nbg'
+import { asd, fp, mc, meta, mt, type YearPoint } from '../data/nbg'
+import mpdsr from '../data/mpdsr2025.json'
 import { INSTITUTIONS } from '../data/population'
 import { C } from '../lib/theme'
 import { deltaPct, int, pct } from '../lib/format'
@@ -30,10 +31,7 @@ const prev = (a: YearPoint[]): number => a[a.length - 2]?.value ?? 0
 const yoy = (a: YearPoint[]): number | null => deltaPct(last(a), prev(a))
 
 /** Indicator dashboards (women's and children's health sections). */
-const DASHBOARD_COUNT = NAV.filter((d) => d.group === 'women' || d.group === 'children').length
-
-const perinatal2025 =
-  sn.summary2025.find((r) => r.metric.startsWith('Total perinatal'))?.value ?? 0
+const DASHBOARD_COUNT = NAV.filter((d) => !d.parentId && (d.group === 'women' || d.group === 'children')).length
 
 export default function Overview({ onNavigate }: ViewProps) {
   return (
@@ -140,13 +138,11 @@ export default function Overview({ onNavigate }: ViewProps) {
             hint="Reported cases · a rise can mean better reporting"
           />
           <KpiCard
-            label="Perinatal Deaths"
-            value={int(perinatal2025)}
+            label="Stillbirth & Neonatal Records (2025)"
+            value={int(mpdsr.summary.records)}
             icon={HeartPulse}
-            delta={deltaPct(perinatal2025, 117)}
-            deltaTone="down"
-            accent="good"
-            hint="Stillbirth + neonatal (vs 117 prior)"
+            accent="navy"
+            hint="Provisional workbook entries · reconciliation required"
           />
           <KpiCard
             label="Premarital Screening"
@@ -232,7 +228,7 @@ export default function Overview({ onNavigate }: ViewProps) {
         />
         {/* 14 pages → an even 7 × 2 grid. */}
         <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
-          {NAV.filter((d) => d.id !== 'overview').map((d) => (
+          {NAV.filter((d) => d.id !== 'overview' && !d.parentId).map((d) => (
             <button
               key={d.id}
               onClick={() => onNavigate(d.id)}

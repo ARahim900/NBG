@@ -1,0 +1,85 @@
+{
+  "source": {
+    "filename": "Data of ENS Feb -Augast 2026.xlsx",
+    "sha256": "88472219f7828584fcb00a9f585b244096bba37629777fbd6be6b1728477c346",
+    "sheet": "Sheet1",
+    "range": "F9:O15",
+    "periodLabel": "8th of Feb -31st of Augast 2026"
+  },
+  "period": {
+    "start": "2026-02-08",
+    "end": "2026-08-31"
+  },
+  "institutions": [
+    {
+      "sourceRow": 11,
+      "sourceName": "Suhar Hospital",
+      "name": "Suhar Hospital",
+      "omaniDeliveries": 3803,
+      "nonOmaniDeliveries": 33,
+      "deliveries": 3836,
+      "omaniScreened": 3178,
+      "nonOmaniScreened": 5,
+      "screened": 3183,
+      "received": 3829,
+      "rejected": 102,
+      "omaniScreeningRatio": 83.56560610044703
+    },
+    {
+      "sourceRow": 12,
+      "sourceName": "Suwaiq Hospital",
+      "name": "Suwaiq Hospital",
+      "omaniDeliveries": 533,
+      "nonOmaniDeliveries": 4,
+      "deliveries": 537,
+      "omaniScreened": 541,
+      "nonOmaniScreened": 0,
+      "screened": 541,
+      "received": 591,
+      "rejected": 21,
+      "omaniScreeningRatio": 101.50093808630393
+    },
+    {
+      "sourceRow": 13,
+      "sourceName": "Saham hospital",
+      "name": "Saham Hospital",
+      "omaniDeliveries": 311,
+      "nonOmaniDeliveries": 0,
+      "deliveries": 311,
+      "omaniScreened": 304,
+      "nonOmaniScreened": 0,
+      "screened": 304,
+      "received": 309,
+      "rejected": 6,
+      "omaniScreeningRatio": 97.7491961414791
+    },
+    {
+      "sourceRow": 14,
+      "sourceName": "Hibi Hospital",
+      "name": "Hibi Hospital",
+      "omaniDeliveries": 17,
+      "nonOmaniDeliveries": 0,
+      "deliveries": 17,
+      "omaniScreened": 17,
+      "nonOmaniScreened": 0,
+      "screened": 17,
+      "received": 9,
+      "rejected": 1,
+      "omaniScreeningRatio": 100.0
+    },
+    {
+      "sourceRow": 15,
+      "sourceName": "Shinas Polycinic",
+      "name": "Shinas Polyclinic",
+      "omaniDeliveries": 47,
+      "nonOmaniDeliveries": 0,
+      "deliveries": 47,
+      "omaniScreened": 47,
+      "nonOmaniScreened": 0,
+      "screened": 47,
+      "received": 47,
+      "rejected": 2,
+      "omaniScreeningRatio": 100.0
+    }
+  ]
+}

@@ -45,6 +45,28 @@ export default function DownSyndrome() {
         subtitle="Registered cases, associated morbidities & nutrition — 2023, 2024 & 2025 governorate registry"
       />
 
+      <section aria-label="Down syndrome programme capacity">
+        <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {[
+            { label: 'Workshops conducted', value: 2 },
+            { label: 'Awareness campaigns conducted', value: 2 },
+            { label: 'Master trainers in North Al Batinah Governorate', value: 2 },
+          ].map(({ label, value }) => (
+            <div key={label} className="flex flex-col rounded-2xl border border-[#A4C5BB]/60 bg-[#A4C5BB]/10 p-5 shadow-sm">
+              <dt className="text-sm font-medium text-[#4E4456] dark:text-[#A4C5BB]">{label}</dt>
+              <dd className="mt-auto pt-3 text-4xl font-semibold tabular-nums text-[#4E4456] dark:text-white">{value}</dd>
+            </div>
+          ))}
+          <div className="flex flex-col rounded-2xl border border-[#A4C5BB]/60 bg-[#A4C5BB]/10 p-5 shadow-sm">
+            <dt className="text-sm font-medium text-[#4E4456] dark:text-[#A4C5BB]">Focal points in institutions</dt>
+            <dd className="mt-auto flex gap-6 pt-3 text-[#4E4456] dark:text-white">
+              <span className="flex flex-col gap-1"><span className="text-4xl font-semibold tabular-nums">6</span><span className="text-sm">Doctors</span></span>
+              <span className="flex flex-col gap-1"><span className="text-4xl font-semibold tabular-nums">6</span><span className="text-sm">Nurses</span></span>
+            </dd>
+          </div>
+        </dl>
+      </section>
+
       <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
         <KpiCard
           label="Total Registered (2025)"
@@ -168,6 +190,49 @@ export default function DownSyndrome() {
           </div>
         </ChartCard>
       </div>
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <section aria-labelledby="ds-programme-challenges" className="rounded-2xl border border-[#4E4456]/20 bg-surface p-6 shadow-sm dark:border-[#A4C5BB]/40">
+          <h2 id="ds-programme-challenges" className="text-xl font-semibold text-[#4E4456] dark:text-white">Programme Challenges</h2>
+          <p className="mt-4 text-sm leading-relaxed text-ink">No genetic counsellor is currently available in North Al Batinah Governorate.</p>
+        </section>
+        <section aria-labelledby="ds-achievements" className="rounded-2xl border border-[#A4C5BB]/60 bg-[#A4C5BB]/10 p-6 shadow-sm">
+          <h2 id="ds-achievements" className="text-xl font-semibold text-[#4E4456] dark:text-white">Achievements</h2>
+          <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-relaxed text-ink marker:text-[#A4C5BB]">
+            <li>A poster presentation on the Basma app won third place at COMHS Research Day.</li>
+            <li>An oral presentation was delivered at a paediatric conference in Taiwan.</li>
+          </ul>
+        </section>
+      </div>
+
+      <section aria-labelledby="ds-future-plan" className="rounded-2xl border border-[#A4C5BB]/60 bg-[#A4C5BB]/10 p-6 shadow-sm">
+        <h2 id="ds-future-plan" className="text-xl font-semibold text-[#4E4456] dark:text-white">Future Plan</h2>
+        <ul className="mt-4 space-y-5 text-sm leading-relaxed text-ink">
+          <li className="grid items-center gap-5 lg:grid-cols-[1fr_auto]">
+            <div>
+              <p className="font-semibold">Launch the Basma app.</p>
+              <p className="mt-2">BASMAH — Caregiver Toolkit for Down Syndrome</p>
+              <p className="mt-2 text-ink/75">Scan a QR code, or select it to open its link.</p>
+            </div>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {[
+                { label: 'Google Play Store', image: '/basma/google-play-qr.png', url: 'https://q.me-qr.com/nh2qqjkk' },
+                { label: 'Apple Store', image: '/basma/apple-store-qr.png', url: 'https://q.me-qr.com/lq6nayae' },
+              ].map(({ label, image, url }) => (
+                <a key={label} href={url} target="_blank" rel="noopener noreferrer"
+                  aria-label={`Open the Basma ${label} QR link (opens in a new tab)`}
+                  className="flex min-w-0 flex-col items-center gap-3 rounded-xl border border-[#A4C5BB]/60 bg-surface p-3 text-center font-semibold text-[#4E4456] shadow-sm transition-shadow hover:shadow-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4E4456] dark:text-[#A4C5BB] dark:focus-visible:outline-[#A4C5BB]">
+                  <span className="block w-full max-w-44 rounded-lg bg-white p-3">
+                    <img src={image} alt={`Basma QR code labelled ${label} in the supplied PDF`} width={707} height={707}
+                      className="h-auto w-full" loading="lazy" />
+                  </span>
+                  <span>{label}</span>
+                </a>
+              ))}
+            </div>
+          </li>
+          <li className="border-t border-[#A4C5BB]/40 pt-4">Publish the research paper.</li>
+        </ul>
+      </section>
     </div>
   )
 }

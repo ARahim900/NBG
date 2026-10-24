@@ -4,6 +4,7 @@ import {
   NAV,
   NAV_GROUPS,
   type NavGroup,
+  type NavItem,
   type ViewId,
 } from '../lib/dashboards'
 
@@ -18,7 +19,7 @@ const GROUP_ICON: Record<Exclude<NavGroup, 'general'>, LucideIcon> = {
   children: Baby,
 }
 const GROUP_SHORT: Record<Exclude<NavGroup, 'general'>, string> = {
-  region: 'Governorate',
+  region: 'Region',
   women: 'Women',
   children: 'Children',
 }
@@ -71,8 +72,21 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
     setSheet(null)
   }
 
+  const renderItem = (item: NavItem) => {
+    const isActive = item.id === active
+    return (
+      <button key={item.id} type="button" onClick={() => go(item.id)}
+        aria-current={isActive ? 'page' : undefined}
+        className={`flex min-h-12 w-full items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors ${isActive ? 'border-line/30 bg-mist text-heading' : 'border-line/10 text-ink hover:bg-mist'}`}>
+        <item.icon className="h-5 w-5 shrink-0" aria-hidden="true" />
+        <span className="flex-1">{item.name}</span>
+        {isActive && <span className="text-xs">Current</span>}
+      </button>
+    )
+  }
+
   const tabClass = (on: boolean) =>
-    `flex min-h-14 flex-1 flex-col items-center justify-center gap-1 py-2 text-[0.62rem] font-semibold transition-colors duration-200 ${
+    `flex min-h-14 min-w-11 flex-1 flex-col items-center justify-center gap-1 py-2 text-[0.62rem] font-semibold transition-colors duration-200 ${
       on ? 'text-glow' : 'text-white/70'
     }`
 
@@ -107,18 +121,16 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
             </button>
           </div>
           <div className="grid gap-2">
-            {sheetItems.map((item) => {
-              const isActive = item.id === active
-              return (
-                <button key={item.id} type="button" onClick={() => go(item.id)}
-                  aria-current={isActive ? 'page' : undefined}
-                  className={`flex min-h-12 items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors ${isActive ? 'border-line/30 bg-mist text-heading' : 'border-line/10 text-ink hover:bg-mist'}`}>
-                  <item.icon className="h-5 w-5 shrink-0" aria-hidden="true" />
-                  <span className="flex-1">{item.name}</span>
-                  {isActive && <span className="text-xs">Current</span>}
-                </button>
-              )
-            })}
+            {sheetItems.filter((item) => !item.parentId).map((item) => (
+              <div key={item.id} className="space-y-2">
+                {renderItem(item)}
+                {sheetItems.some((child) => child.parentId === item.id) && (
+                  <div role="group" aria-label={`${item.name} subsections`} className="ml-5 space-y-2 border-l border-[#A4C5BB] pl-3">
+                    {sheetItems.filter((child) => child.parentId === item.id).map(renderItem)}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         </dialog>
       )}
@@ -159,6 +171,7 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
           return (
             <button
               key={g.id}
+              aria-label={g.label}
               onClick={() => setSheet((s) => (s === g.id ? null : g.id))}
               aria-expanded={sheet === g.id}
               aria-haspopup="dialog"

@@ -37,7 +37,7 @@ export default function Sidebar({
         }`}
       >
         <item.icon className="nav-ico h-[1.15rem] w-[1.15rem] shrink-0" />
-        <span className={`flex-1 truncate ${collapsed ? 'lg:hidden' : ''}`}>
+        <span className={`flex-1 ${item.parentId ? 'whitespace-normal text-xs leading-relaxed' : 'truncate'} ${collapsed ? 'lg:hidden' : ''}`}>
           {item.name}
         </span>
         {item.code && (
@@ -119,7 +119,7 @@ export default function Sidebar({
           {NAV_GROUPS.map((g) => (
             <div key={g.id} className="pt-4">
               <div
-                className={`mb-1.5 flex items-baseline justify-between px-3 ${
+                className={`mb-1.5 flex px-3 ${g.id === 'women' ? 'flex-col items-start gap-1' : 'items-baseline justify-between'} ${
                   collapsed ? 'lg:hidden' : ''
                 }`}
               >
@@ -134,7 +134,17 @@ export default function Sidebar({
                 <div className="mx-2 my-2 hidden border-t border-white/10 lg:block" />
               )}
               <div className="space-y-1">
-                {NAV.filter((i) => i.group === g.id).map(renderItem)}
+                {NAV.filter((i) => i.group === g.id && !i.parentId).map((item) => (
+                  <div key={item.id}>
+                    {renderItem(item)}
+                    {NAV.some((child) => child.parentId === item.id) && (
+                      <div role="group" aria-label={`${item.name} subsections`}
+                        className={`ml-6 mt-1 space-y-1 border-l border-[#A4C5BB]/50 pl-2 ${collapsed ? 'lg:ml-0 lg:border-0 lg:pl-0' : ''}`}>
+                        {NAV.filter((child) => child.parentId === item.id).map(renderItem)}
+                      </div>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           ))}

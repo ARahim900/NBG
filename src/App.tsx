@@ -28,6 +28,8 @@ import { NAV_BY_ID, type ViewId, type ViewProps } from './lib/dashboards'
 const LOADERS: Record<ViewId, () => Promise<{ default: ComponentType<ViewProps> }>> = {
   about: () => import('./views/About'),
   overview: () => import('./views/Overview'),
+  'wch-team': () => import('./views/WchTeamStructure'),
+  gallery: () => import('./views/Gallery'),
   pop: () => import('./views/Population'),
   map: () => import('./views/HealthMap'),
   asd: () => import('./views/Asd'),
@@ -37,9 +39,11 @@ const LOADERS: Record<ViewId, () => Promise<{ default: ComponentType<ViewProps> 
   ca: () => import('./views/CongenitalAnomalies'),
   sn: () => import('./views/StillbirthNeonatal'),
   ns: () => import('./views/NewbornScreening'),
+  'children/newborn-screening/extended-newborn-screening-2026': () => import('./views/ExtendedNewbornScreening'),
   mc: () => import('./views/MaternalCare'),
   fp: () => import('./views/FamilyPlanning'),
   cn: () => import('./views/ChildNutrition'),
+  bfhi: () => import('./views/BreastFeedingBfhi'),
   an: () => import('./views/ChildAnaemia'),
 }
 const VIEWS = {} as Record<ViewId, LazyExoticComponent<ComponentType<ViewProps>>>
@@ -275,7 +279,7 @@ export default function App() {
         <footer className="mx-4 flex flex-col items-center gap-1 border-t border-sky py-4 text-center text-[0.7rem] text-[#7c8ba0] dark:border-[rgb(var(--card-border))] dark:text-ink/55 sm:mx-6 sm:flex-row sm:justify-between sm:gap-4 sm:text-left lg:mx-8">
           <span>Ministry of Health — Sultanate of Oman</span>
           <span className="hidden md:inline">
-            Women &amp; Child Health Department · Health Monitoring Dashboards 2023–2025
+            Women &amp; Child Health Department · {active === 'gallery' ? 'Gallery' : active === 'wch-team' ? 'Team Structure' : `Health Monitoring Dashboards ${NAV_BY_ID[active].parentId === 'ns' ? '2026' : '2023–2025'}`}
           </span>
           <span className="italic">
             DGHS · North Al Batinah · {NAV_BY_ID[active].short ?? NAV_BY_ID[active].name}
