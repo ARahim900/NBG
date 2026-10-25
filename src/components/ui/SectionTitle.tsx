@@ -13,8 +13,8 @@ interface SectionTitleProps {
  */
 export default function SectionTitle({ title, subtitle }: SectionTitleProps) {
   return (
-    <div className="mb-4 mt-2" data-reveal>
-      <h2 className="font-sans text-xl font-normal leading-tight text-heading sm:text-[1.4rem]">
+    <div className="mb-4 mt-2 [container-type:inline-size]" data-reveal>
+      <h2 className="font-sans text-[clamp(1.125rem,calc(0.9rem+1cqi),1.4rem)] font-normal leading-snug text-heading">
         {title}
       </h2>
       <span className="accent-tab mt-2 bg-azure" aria-hidden="true" />

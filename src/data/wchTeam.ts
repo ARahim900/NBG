@@ -26,12 +26,6 @@ export const teamDepartments: TeamDepartment[] = [
     lead: { name: 'Dr. Wafa Al Kiyumi', nameAr: 'د. وفاء الكيومية', photo: '/team/wafa-al-kiyumi.jpg' },
   },
   {
-    id: 'reproductive',
-    name: 'Reproductive Health',
-    nameAr: 'قسم الصحة الإنجابية',
-    lead: { name: 'Midwife Munira Al Balushi', nameAr: 'القابلة منيرة البلوشي', photo: '/team/munira-al-balushi.jpg' },
-  },
-  {
     id: 'child',
     name: 'Child Health',
     nameAr: 'قسم صحة الطفل',
@@ -43,5 +37,11 @@ export const teamDepartments: TeamDepartment[] = [
       roleAr: 'عضو لجنة حماية الطفل',
       photo: null,
     },
+  },
+  {
+    id: 'reproductive',
+    name: 'Reproductive Health',
+    nameAr: 'قسم الصحة الإنجابية',
+    lead: { name: 'Midwife Munira Al Balushi', nameAr: 'القابلة منيرة البلوشي', photo: '/team/munira-al-balushi.jpg' },
   },
 ]

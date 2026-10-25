@@ -14,7 +14,7 @@ const eb6 = nutrition.ebByMilestone.find((m) => m.milestone === '6 months')
 
 export default function BreastFeedingBfhi() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <SectionTitle
         icon={Milk}
         title="Breast Feeding & BFHI"
@@ -22,13 +22,13 @@ export default function BreastFeedingBfhi() {
       />
 
       <section aria-label="Breastfeeding programme capacity and training">
-        <dl className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
+        <dl className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,15rem),1fr))] gap-3.5">
           {[
             { label: 'Breastfeeding specialists', value: 7, detail: '3 at governorate level · 4 at Suhar Hospital' },
             { label: 'Nurse-led courses conducted', value: 6, detail: '3 by Suhar Hospital · 3 by Saham Hospital' },
             { label: 'WHO national assessors', value: 3, detail: null },
           ].map(({ label, value, detail }) => (
-            <div key={label} className="card p-5">
+            <div key={label} className="card min-w-0 p-4 sm:p-5">
               <dt className="text-caption font-medium text-ink/75">{label}</dt>
               <dd className="mt-3 text-3xl font-medium tabular-nums text-[#4E4456] dark:text-[#A4C5BB]">{value}</dd>
               {detail && <dd className="mt-2 text-caption text-ink/65">{detail}</dd>}

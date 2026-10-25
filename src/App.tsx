@@ -250,7 +250,7 @@ export default function App() {
   return (
     <div
       className={`min-h-screen transition-[padding] duration-300 ${
-        collapsed ? 'lg:pl-20' : 'lg:pl-72'
+        collapsed ? 'xl:pl-20' : 'xl:pl-72'
       }`}
     >
 
@@ -262,9 +262,9 @@ export default function App() {
         collapsed={collapsed}
         onToggleCollapse={() => setCollapsed((c) => !c)}
       />
-      <div className="flex min-h-screen flex-col pb-[4.75rem] lg:pb-0">
+      <div className="flex min-h-screen flex-col pb-[calc(54px+env(safe-area-inset-bottom))] xl:pb-0">
         <Header active={active} />
-        <main ref={mainRef} className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+        <main ref={mainRef} className="min-w-0 flex-1 px-3 py-4 sm:px-5 sm:py-5 xl:px-8 xl:py-6">
           {/* Keyed per view: a failure is contained to this dashboard and
               clears as soon as the user navigates elsewhere. */}
           <ErrorBoundary key={active} fallback={<ViewError onHome={() => navigate('about')} />}>

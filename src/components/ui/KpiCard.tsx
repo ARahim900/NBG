@@ -41,7 +41,7 @@ export default function KpiCard({
   accent = 'navy',
 }: KpiCardProps) {
   return (
-    <div className="card card-lift p-4 sm:p-5">
+    <div className="card card-lift min-w-0 p-3 sm:p-4 xl:p-5">
       <div className="relative flex items-start justify-between gap-3">
         <span className={`accent-tab mt-1 ${ACCENTS[accent]}`} aria-hidden="true" />
         {delta !== undefined && <Delta value={delta} tone={deltaTone} />}
@@ -54,7 +54,7 @@ export default function KpiCard({
           </span>
           {unit && <span className="text-caption text-ink/55">{unit}</span>}
         </div>
-        <p className="mt-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-[#7c8ba0] dark:text-ink/60">
+        <p className="mt-1.5 text-[0.68rem] font-semibold uppercase tracking-[0.04em] text-[#7c8ba0] dark:text-ink/60">
           {label}
         </p>
         {hint && <p className="mt-1 text-caption text-ink/60">{hint}</p>}

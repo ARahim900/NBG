@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useInView, useReducedMotion } from 'framer-motion'
-import { ChevronLeft, ChevronRight, ImageOff, Maximize2, X } from 'lucide-react'
+import { AnimatePresence, motion, useInView, useReducedMotion } from 'framer-motion'
+import { ArrowUpRight, ChevronLeft, ChevronRight, ImageOff, LoaderCircle, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { AspectRatio } from '@/components/ui/aspect-ratio'
 
@@ -23,7 +23,7 @@ export function ImageGallery({ images }: ImageGalleryProps) {
 
   return (
     <>
-      <div className="columns-1 gap-5 sm:columns-2 xl:columns-3" aria-label="Gallery photographs">
+      <div role="group" className="columns-2 gap-3 md:gap-5 xl:columns-3" aria-label="Gallery photographs">
         {images.map((image, index) => (
           <AnimatedImage key={image.id} image={image} index={index} onOpen={() => setSelected(index)} />
         ))}
@@ -43,31 +43,57 @@ function AnimatedImage({ image, index, onOpen }: { image: GalleryImage; index: n
   const visible = status === 'ready' && (inView || reduceMotion)
 
   return (
-    <div className="mb-5 break-inside-avoid">
+    <div className="mb-3 break-inside-avoid md:mb-5">
       <button type="button" onClick={onOpen} disabled={status === 'error'}
         aria-label={`Enlarge photo ${index + 1}: ${image.alt}`}
-        className="group relative block w-full overflow-hidden rounded-xl border border-[#A4C5BB]/50 bg-[#A4C5BB]/10 text-[#4E4456] shadow-sm outline-none transition-shadow hover:shadow-lg focus-visible:ring-2 focus-visible:ring-[#4E4456] focus-visible:ring-offset-4 dark:focus-visible:ring-[#A4C5BB]">
-        <AspectRatio ref={ref} ratio={image.width / image.height}>
+        className="group block w-full overflow-hidden rounded-xl border border-line/10 bg-surface text-left shadow-sm outline-none transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-lg focus-visible:ring-[3px] focus-visible:ring-[#A4C5BB] focus-visible:ring-offset-2 focus-visible:ring-offset-surface motion-reduce:transform-none motion-reduce:transition-none">
+        <AspectRatio ref={ref} ratio={image.width / image.height} className="overflow-hidden bg-[#A4C5BB]/10">
           {status === 'loading' && <span className="absolute inset-0 animate-pulse bg-[#A4C5BB]/15 motion-reduce:animate-none" aria-hidden="true" />}
           {status === 'error' ? (
-            <span role="status" className="flex h-full flex-col items-center justify-center gap-2 p-4 text-sm dark:text-[#A4C5BB]">
+            <span role="status" className="flex h-full flex-col items-center justify-center gap-2 p-4 text-sm text-[#4E4456] dark:text-[#A4C5BB]">
               <ImageOff className="h-6 w-6" aria-hidden="true" />Photo unavailable
             </span>
           ) : (
             <img src={image.src} alt={image.alt} width={image.width} height={image.height}
               loading={index < 3 ? 'eager' : 'lazy'} decoding="async"
-              className={cn('h-full w-full object-contain opacity-0 transition-opacity duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] motion-reduce:transition-none', visible && 'opacity-100')}
+              className={cn('h-full w-full object-contain opacity-0 transition-opacity duration-500 ease-out motion-reduce:transition-none', visible && 'opacity-100')}
               onLoad={() => setStatus('ready')}
               onError={() => { setStatus('error'); console.error('Gallery image failed to load:', image.src) }} />
           )}
         </AspectRatio>
-        {status === 'ready' && (
-          <span aria-hidden="true" className="pointer-events-none absolute bottom-3 right-3 rounded-full bg-[#4E4456] p-2 text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100 motion-reduce:transition-none">
-            <Maximize2 className="h-4 w-4" />
-          </span>
-        )}
+        <span aria-hidden="true" className="flex items-center justify-between gap-2 px-3 py-2.5 text-xs text-[#4E4456] dark:text-[#A4C5BB]">
+          <span className="font-medium tabular-nums">{String(index + 1).padStart(2, '0')}</span>
+          <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transform-none motion-reduce:transition-none" />
+        </span>
       </button>
     </div>
+  )
+}
+
+function ViewerImage({ image }: { image: GalleryImage }) {
+  const [status, setStatus] = useState<'loading' | 'ready' | 'error'>('loading')
+
+  return (
+    <>
+      <img src={image.src} alt="" aria-hidden="true" draggable={false}
+        className="absolute inset-0 h-full w-full object-contain" />
+      {status !== 'error' && (
+        <img src={image.fullSrc} alt={image.alt} draggable={false}
+          className={cn('absolute inset-0 h-full w-full object-contain transition-opacity duration-200 motion-reduce:transition-none', status === 'ready' ? 'opacity-100' : 'opacity-0')}
+          onLoad={() => setStatus('ready')}
+          onError={() => { setStatus('error'); console.error('Gallery preview failed to load:', image.fullSrc) }} />
+      )}
+      {status === 'loading' && (
+        <span role="status" className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-[#4E4456] px-3 py-2 text-xs text-white">
+          <LoaderCircle className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" />Loading photograph
+        </span>
+      )}
+      {status === 'error' && (
+        <span role="alert" className="absolute inset-x-3 bottom-3 rounded-lg bg-[#4E4456] p-3 text-center text-sm text-white">
+          Full-size photograph unavailable. Showing the preview.
+        </span>
+      )}
+    </>
   )
 }
 
@@ -78,7 +104,9 @@ function GalleryViewer({ images, index, onChange, onClose }: {
   onClose: () => void
 }) {
   const ref = useRef<HTMLDialogElement>(null)
-  const [failedSource, setFailedSource] = useState<string | null>(null)
+  const activeThumbnail = useRef<HTMLButtonElement>(null)
+  const [direction, setDirection] = useState(1)
+  const reduceMotion = useReducedMotion()
   const image = images[index]
 
   useEffect(() => {
@@ -95,39 +123,70 @@ function GalleryViewer({ images, index, onChange, onClose }: {
     }
   }, [])
 
+  useEffect(() => {
+    activeThumbnail.current?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: reduceMotion ? 'instant' : 'smooth' })
+  }, [index, reduceMotion])
+
+  const navigate = (next: number) => {
+    if (next < 0 || next >= images.length || next === index) return
+    setDirection(next > index ? 1 : -1)
+    onChange(next)
+  }
+  const controlClass = 'flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line/20 text-[#4E4456] transition-colors hover:bg-[#A4C5BB]/20 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#A4C5BB] aria-disabled:opacity-30 dark:text-[#A4C5BB]'
+
   return (
     <dialog ref={ref} aria-labelledby="gallery-viewer-title" aria-describedby="gallery-viewer-caption"
-      onCancel={onClose} onClose={onClose}
+      onCancel={(event) => { event.preventDefault(); onClose() }}
       onClick={(event) => { if (event.target === event.currentTarget) onClose() }}
       onKeyDown={(event) => {
-        if (event.key === 'ArrowLeft' && index > 0) { event.preventDefault(); onChange(index - 1) }
-        if (event.key === 'ArrowRight' && index < images.length - 1) { event.preventDefault(); onChange(index + 1) }
+        if (event.key === 'ArrowLeft') { event.preventDefault(); navigate(index - 1) }
+        if (event.key === 'ArrowRight') { event.preventDefault(); navigate(index + 1) }
       }}
-      className="fixed inset-0 m-auto max-h-[94dvh] w-[calc(100%-2rem)] max-w-5xl overflow-y-auto rounded-2xl border border-[#A4C5BB]/50 bg-surface p-0 text-ink shadow-2xl backdrop:bg-[#4E4456]/85">
-      <div className="flex items-center justify-between gap-4 border-b border-[#A4C5BB]/30 px-4 py-3">
-        <h2 id="gallery-viewer-title" className="text-sm font-semibold">Photo {index + 1} of {images.length}</h2>
-        <button type="button" autoFocus onClick={onClose} aria-label="Close photograph"
-          className="flex h-11 w-11 items-center justify-center rounded-full text-ink hover:bg-[#A4C5BB]/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#A4C5BB]">
-          <X className="h-5 w-5" aria-hidden="true" />
-        </button>
-      </div>
-      {failedSource === image.fullSrc ? (
-        <p role="alert" className="p-12 text-center">This photograph could not be loaded.</p>
-      ) : (
-        <img key={image.id} src={image.fullSrc} alt={image.alt} width={image.width} height={image.height}
-          className="mx-auto h-[min(65dvh,760px)] w-full object-contain"
-          onError={() => { setFailedSource(image.fullSrc); console.error('Gallery preview failed to load:', image.fullSrc) }} />
-      )}
-      <div className="flex items-center justify-between gap-3 border-t border-[#A4C5BB]/30 p-3">
-        <button type="button" onClick={() => onChange(index - 1)} disabled={index === 0} aria-label="Previous photograph"
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#A4C5BB]/20 disabled:opacity-30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#A4C5BB]">
-          <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-        </button>
-        <p id="gallery-viewer-caption" className="text-center text-xs sm:text-sm">{image.alt}</p>
-        <button type="button" onClick={() => onChange(index + 1)} disabled={index === images.length - 1} aria-label="Next photograph"
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#A4C5BB]/20 disabled:opacity-30 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#A4C5BB]">
-          <ChevronRight className="h-5 w-5" aria-hidden="true" />
-        </button>
+      className="fixed inset-0 m-auto h-[100dvh] max-h-[100dvh] w-full max-w-none overflow-hidden border-0 bg-surface p-0 text-ink shadow-2xl backdrop:bg-[#4E4456]/90 sm:h-[min(92dvh,960px)] sm:w-[calc(100%-3rem)] sm:max-w-6xl sm:rounded-2xl">
+      <div className="flex h-full min-h-0 flex-col">
+        <header className="flex shrink-0 items-center justify-between gap-4 border-b border-line/10 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6">
+          <div>
+            <h2 id="gallery-viewer-title" className="text-sm font-semibold text-[#4E4456] dark:text-[#A4C5BB]">Women &amp; Child Health</h2>
+            <p className="mt-1 text-xs tabular-nums text-ink/65">Photo {index + 1} of {images.length}</p>
+          </div>
+          <button type="button" autoFocus onClick={onClose} aria-label="Close photograph" className={controlClass}>
+            <X className="h-5 w-5" aria-hidden="true" />
+          </button>
+        </header>
+        <div className="relative min-h-0 flex-1 overflow-hidden bg-[#4E4456]/5 dark:bg-black/20">
+          <AnimatePresence initial={false} custom={direction}>
+            <motion.div key={image.id} custom={direction}
+              variants={{ enter: (d: number) => ({ opacity: reduceMotion ? 1 : 0, x: reduceMotion ? 0 : d * 28 }), visible: { opacity: 1, x: 0 }, exit: (d: number) => ({ opacity: reduceMotion ? 1 : 0, x: reduceMotion ? 0 : d * -28 }) }}
+              initial="enter" animate="visible" exit="exit"
+              transition={{ duration: reduceMotion ? 0 : 0.24, ease: [0.25, 1, 0.5, 1] }}
+              drag="x" dragConstraints={{ left: 0, right: 0 }} dragElastic={0.12}
+              onDragEnd={(_, info) => { if (info.offset.x < -45) navigate(index + 1); else if (info.offset.x > 45) navigate(index - 1) }}
+              className="absolute inset-0 cursor-grab touch-pan-y active:cursor-grabbing">
+              <ViewerImage image={image} />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+        <footer className="shrink-0 border-t border-line/10 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-6">
+          <div className="mb-3 flex items-center gap-3">
+            <button type="button" onClick={() => navigate(index - 1)} aria-disabled={index === 0} aria-label="Previous photograph" className={controlClass}>
+              <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+            </button>
+            <p id="gallery-viewer-caption" aria-live="polite" aria-atomic="true" className="min-w-0 flex-1 text-center text-sm leading-snug">{image.alt}</p>
+            <button type="button" onClick={() => navigate(index + 1)} aria-disabled={index === images.length - 1} aria-label="Next photograph" className={controlClass}>
+              <ChevronRight className="h-5 w-5" aria-hidden="true" />
+            </button>
+          </div>
+          <div role="group" className="flex gap-2 overflow-x-auto p-1" aria-label="Choose a photograph">
+            {images.map((photo, photoIndex) => (
+              <button key={photo.id} ref={photoIndex === index ? activeThumbnail : undefined} type="button"
+                onClick={() => navigate(photoIndex)} aria-label={`View photograph ${photoIndex + 1}: ${photo.alt}`}
+                aria-current={photoIndex === index ? 'true' : undefined}
+                className={cn('h-12 w-14 shrink-0 overflow-hidden rounded-md outline-none transition-opacity focus-visible:ring-[3px] focus-visible:ring-[#A4C5BB] motion-reduce:transition-none', photoIndex === index ? 'ring-2 ring-[#A4C5BB] ring-offset-2 ring-offset-surface' : 'opacity-50 hover:opacity-100')}>
+                <img src={photo.src} alt="" loading="lazy" draggable={false} className="h-full w-full object-cover" />
+              </button>
+            ))}
+          </div>
+        </footer>
       </div>
     </dialog>
   )

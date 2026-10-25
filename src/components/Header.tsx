@@ -47,17 +47,17 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
       {/* MOH template page header: logo, letter-spaced section label, DM Sans
           title with the accent tab, thin light-blue rule. */}
       <header className="sticky top-0 z-20 border-b border-sky bg-surface transition-colors duration-300 dark:border-[rgb(var(--card-border))]">
-        <div className="flex items-center gap-3 px-4 py-3 sm:px-6 lg:px-8">
+        <div className="flex flex-wrap items-center gap-2 px-3 py-3 sm:gap-3 sm:px-6 lg:px-8">
           {onOpenMenu && (
             <button
               onClick={onOpenMenu}
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-control border border-line/15 text-heading transition-colors hover:bg-tint/10 lg:hidden"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-control border border-line/15 text-heading transition-colors hover:bg-tint/10 xl:hidden"
               aria-label="Open navigation"
             >
               <Menu className="h-5 w-5" />
             </button>
           )}
-          <span className="flex h-9 shrink-0 items-center lg:hidden">
+          <span className="flex h-7 shrink-0 items-center sm:h-9 xl:hidden">
             <img
               src="/moh-logo-colour.webp"
               alt="Ministry of Health, Oman"
@@ -71,16 +71,16 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
             />
           </span>
 
-          <div className="min-w-0 flex-1 overflow-hidden">
+          <div className="min-w-0 flex-1 [container-type:inline-size]">
             {/* Section label (the page name itself is the title below). */}
             <p className="text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-[#7c8ba0] dark:text-ink/60">
               <span className="hidden sm:inline">Ministry of Health · </span>
               {group ? group.label : item.name}
             </p>
-            {/* Titles wrap to a second line on narrow screens — never cut off. */}
+            {/* Scale to the title column; long titles remain fully readable. */}
             <h1
               ref={titleRef}
-              className={`${item.parentId ? '' : 'line-clamp-2'} mt-0.5 font-sans text-lg font-normal leading-tight text-heading [text-wrap:balance] sm:text-[1.65rem]`}
+              className="mt-0.5 font-sans text-[clamp(1rem,calc(0.75rem+1.5cqi),1.65rem)] font-normal leading-snug text-heading [overflow-wrap:break-word]"
             >
               {title}
             </h1>
@@ -90,7 +90,7 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
           {/* Population charts use nationality and sex legends within each chart. */}
           {active !== 'pop' && active !== 'wch-team' && active !== 'gallery' && active !== 'sn' && active !== 'bfhi' && !item.parentId && (
             <div
-              className="hidden cursor-default select-none items-center gap-3 md:flex"
+              className="order-last hidden w-full cursor-default select-none items-center justify-end gap-3 md:flex 2xl:order-none 2xl:w-auto"
               role="note"
               aria-label="Chart colours by year: 2023 teal, 2024 blue, 2025 navy"
             >

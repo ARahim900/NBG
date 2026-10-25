@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
-import { Baby, Heart, Map as MapIcon, X, type LucideIcon } from 'lucide-react'
+import { Baby, Heart, MoreHorizontal, X, type LucideIcon } from 'lucide-react'
 import {
   NAV,
-  NAV_GROUPS,
-  type NavGroup,
   type NavItem,
   type ViewId,
 } from '../lib/dashboards'
@@ -13,24 +11,16 @@ interface BottomNavProps {
   onSelect: (id: ViewId) => void
 }
 
-const GROUP_ICON: Record<Exclude<NavGroup, 'general'>, LucideIcon> = {
-  region: MapIcon,
-  women: Heart,
-  children: Baby,
-}
-const GROUP_SHORT: Record<Exclude<NavGroup, 'general'>, string> = {
-  region: 'Region',
-  women: 'Women',
-  children: 'Children',
-}
+type MenuId = 'women' | 'children' | 'more'
 
-/**
- * Mobile-only bottom navigation bar (hidden on lg+, where the sidebar shows).
- * General items (Home, Overview) navigate directly; each health section opens
- * an upward bottom sheet listing its dashboards — so all views stay reachable.
- */
+const MENU_TABS: { id: MenuId; label: string; short: string; icon: LucideIcon }[] = [
+  { id: 'women', label: "Women's & Reproductive Health", short: 'Women', icon: Heart },
+  { id: 'children', label: "Children's Health", short: 'Children', icon: Baby },
+  { id: 'more', label: 'More', short: 'More', icon: MoreHorizontal },
+]
+
 export default function BottomNav({ active, onSelect }: BottomNavProps) {
-  const [sheet, setSheet] = useState<Exclude<NavGroup, 'general'> | null>(null)
+  const [sheet, setSheet] = useState<MenuId | null>(null)
   const dialogRef = useRef<HTMLDialogElement>(null)
 
   useEffect(() => {
@@ -41,7 +31,7 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
     const previousOverflow = document.body.style.overflow
     dialog.showModal()
     document.body.style.overflow = 'hidden'
-    const desktop = window.matchMedia('(min-width: 1024px)')
+    const desktop = window.matchMedia('(min-width: 1280px)')
     const closeOnDesktop = () => {
       if (desktop.matches) setSheet(null)
     }
@@ -57,15 +47,15 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
     }
   }, [sheet])
 
-  const general = NAV.filter((i) => i.group === 'general')
-  const activeGroup = NAV.find((i) => i.id === active)?.group
-  // Position of the highlighted tab, for the sliding indicator.
-  const tabCount = general.length + NAV_GROUPS.length
-  const generalIdx = general.findIndex((i) => i.id === active)
-  const tabIdx =
-    generalIdx >= 0 ? generalIdx : general.length + NAV_GROUPS.findIndex((g) => g.id === activeGroup)
-
-  const sheetItems = sheet ? NAV.filter((i) => i.group === sheet) : []
+  const directItems = NAV.filter((item) => item.id === 'about' || item.id === 'overview')
+  const activeGroup = NAV.find((item) => item.id === active)?.group
+  const activeMenu = activeGroup === 'women' || activeGroup === 'children'
+    ? activeGroup
+    : directItems.some((item) => item.id === active) ? null : 'more'
+  const sheetItems = sheet === 'more'
+    ? NAV.filter((item) => item.group === 'region' ||
+        (item.group === 'general' && !directItems.some((direct) => direct.id === item.id)))
+    : NAV.filter((item) => item.group === sheet)
 
   const go = (id: ViewId) => {
     onSelect(id)
@@ -77,7 +67,7 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
     return (
       <button key={item.id} type="button" onClick={() => go(item.id)}
         aria-current={isActive ? 'page' : undefined}
-        className={`flex min-h-12 w-full items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors ${isActive ? 'border-line/30 bg-mist text-heading' : 'border-line/10 text-ink hover:bg-mist'}`}>
+        className={`flex min-h-12 w-full items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#A4C5BB] ${isActive ? 'border-line/30 bg-mist text-heading' : 'border-line/10 text-ink hover:bg-mist'}`}>
         <item.icon className="h-5 w-5 shrink-0" aria-hidden="true" />
         <span className="flex-1">{item.name}</span>
         {isActive && <span className="text-xs">Current</span>}
@@ -86,12 +76,12 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
   }
 
   const tabClass = (on: boolean) =>
-    `flex min-h-14 min-w-11 flex-1 flex-col items-center justify-center gap-1 py-2 text-[0.62rem] font-semibold transition-colors duration-200 ${
-      on ? 'text-glow' : 'text-white/70'
+    `relative flex h-[52px] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 py-1.5 text-[11px] font-semibold leading-4 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-inset focus-visible:ring-[#A4C5BB] motion-reduce:transition-none ${
+      on ? 'text-glow after:absolute after:top-0 after:h-0.5 after:w-7 after:rounded-b-full after:bg-glow' : 'text-white/75 hover:text-white'
     }`
 
   return (
-    <div className="lg:hidden">
+    <div className="xl:hidden">
       {sheet && (
         <dialog
           ref={dialogRef}
@@ -110,13 +100,13 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
         >
           <div className="mb-4 flex items-center justify-between gap-4">
             <div>
-              <h2 id="dashboard-menu-title" className="text-lg font-semibold text-heading">
-                {NAV_GROUPS.find((g) => g.id === sheet)?.label}
+              <h2 id="dashboard-menu-title" className="text-lg font-semibold text-[#4E4456] dark:text-[#A4C5BB]">
+                {MENU_TABS.find((item) => item.id === sheet)?.label}
               </h2>
               <p className="mt-1 text-sm text-ink/80">Choose a dashboard</p>
             </div>
             <button type="button" autoFocus onClick={() => setSheet(null)} aria-label="Close dashboard menu"
-              className="flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-line/20 hover:bg-mist">
+              className="flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-line/20 hover:bg-mist focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#A4C5BB]">
               <X className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
@@ -141,45 +131,38 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
         aria-label="Primary"
       >
-        {/* Indicator glides to the active tab */}
-        {tabIdx >= 0 && (
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute left-0 top-0 flex justify-center transition-transform duration-300 ease-[cubic-bezier(0.4,0,0.2,1)]"
-            style={{ width: `${100 / tabCount}%`, transform: `translateX(${tabIdx * 100}%)` }}
-          >
-            <span className="h-[3px] w-8 rounded-b-full bg-glow" />
-          </span>
-        )}
-        {general.map((item) => {
+        {directItems.map((item) => {
           const isActive = active === item.id
           return (
             <button
               key={item.id}
+              type="button"
               onClick={() => go(item.id)}
               aria-current={isActive ? 'page' : undefined}
-              className={tabClass(isActive)}
+              className={tabClass(isActive && !sheet)}
             >
-              <item.icon className="h-5 w-5" />
+              <item.icon className="h-[18px] w-[18px]" aria-hidden="true" />
               <span>{item.short ?? item.name}</span>
             </button>
           )
         })}
-        {NAV_GROUPS.map((g) => {
-          const Icon = GROUP_ICON[g.id]
-          const on = activeGroup === g.id || sheet === g.id
+        {MENU_TABS.map((g) => {
+          const Icon = g.icon
+          const on = sheet ? sheet === g.id : activeMenu === g.id
           return (
             <button
               key={g.id}
+              type="button"
               aria-label={g.label}
               onClick={() => setSheet((s) => (s === g.id ? null : g.id))}
+              aria-current={activeMenu === g.id ? 'true' : undefined}
               aria-expanded={sheet === g.id}
               aria-haspopup="dialog"
               aria-controls={sheet === g.id ? 'dashboard-menu' : undefined}
               className={tabClass(on)}
             >
-              <Icon className="h-5 w-5" />
-              <span>{GROUP_SHORT[g.id]}</span>
+              <Icon className="h-[18px] w-[18px]" aria-hidden="true" />
+              <span>{g.short}</span>
             </button>
           )
         })}

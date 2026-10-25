@@ -33,11 +33,11 @@ export default function Sidebar({
         title={item.name}
         aria-current={isActive ? 'page' : undefined}
         className={`nav-link w-full text-left ${isActive ? 'nav-link-active' : ''} ${
-          collapsed ? 'lg:justify-center lg:px-0' : ''
+          collapsed ? 'xl:justify-center xl:px-0' : ''
         }`}
       >
         <item.icon className="nav-ico h-[1.15rem] w-[1.15rem] shrink-0" />
-        <span className={`flex-1 ${item.parentId ? 'whitespace-normal text-xs leading-relaxed' : 'truncate'} ${collapsed ? 'lg:hidden' : ''}`}>
+        <span className={`flex-1 ${item.parentId ? 'whitespace-normal text-xs leading-relaxed' : 'truncate'} ${collapsed ? 'xl:hidden' : ''}`}>
           {item.name}
         </span>
         {item.code && (
@@ -46,7 +46,7 @@ export default function Sidebar({
               isActive
                 ? 'bg-glow/15 text-glow'
                 : 'bg-white/5 text-white/45'
-            } ${collapsed ? 'lg:hidden' : ''}`}
+            } ${collapsed ? 'xl:hidden' : ''}`}
           >
             {item.code}
           </span>
@@ -59,7 +59,7 @@ export default function Sidebar({
     <>
       {/* Mobile backdrop */}
       <div
-        className={`fixed inset-0 z-30 bg-navy-900/60 backdrop-blur-sm transition-opacity lg:hidden ${
+        className={`fixed inset-0 z-30 bg-navy-900/60 backdrop-blur-sm transition-opacity xl:hidden ${
           mobileOpen ? 'opacity-100' : 'pointer-events-none opacity-0'
         }`}
         onClick={onClose}
@@ -67,18 +67,18 @@ export default function Sidebar({
       />
 
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-l-4 border-azure bg-navy transition-[transform,width,visibility] duration-300 dark:bg-[#0b2235] lg:visible lg:translate-x-0 ${
-          collapsed ? 'lg:w-20' : 'lg:w-72'
+        className={`fixed inset-y-0 left-0 z-40 flex w-72 flex-col border-l-4 border-azure bg-navy transition-[transform,width,visibility] duration-300 dark:bg-[#0b2235] xl:visible xl:translate-x-0 ${
+          collapsed ? 'xl:w-20' : 'xl:w-72'
         } ${mobileOpen ? 'translate-x-0' : 'invisible -translate-x-full'}`}
       >
         {/* Brand */}
         <div
           className={`relative flex items-center gap-3 px-5 pb-5 pt-6 ${
-            collapsed ? 'lg:gap-0 lg:px-0' : ''
+            collapsed ? 'xl:gap-0 xl:px-0' : ''
           }`}
         >
           {/* Official MOH lockup; the emblem alone when the rail is collapsed. */}
-          <div className={`min-w-0 ${collapsed ? 'lg:hidden' : ''}`}>
+          <div className={`min-w-0 ${collapsed ? 'xl:hidden' : ''}`}>
             <img
               src="/moh-logo-white.png"
               alt="Ministry of Health, Oman"
@@ -90,7 +90,7 @@ export default function Sidebar({
           </div>
           <div
             className={`hidden h-11 w-11 shrink-0 items-center justify-center ${
-              collapsed ? 'lg:mx-auto lg:flex' : ''
+              collapsed ? 'xl:mx-auto xl:flex' : ''
             }`}
           >
             <img
@@ -101,7 +101,7 @@ export default function Sidebar({
           </div>
           <button
             onClick={onClose}
-            className="ml-auto rounded-lg p-1.5 text-white/70 hover:bg-white/10 lg:hidden"
+            className="ml-auto rounded-lg p-1.5 text-white/70 hover:bg-white/10 xl:hidden"
             aria-label="Close menu"
           >
             <X className="h-5 w-5" />
@@ -109,7 +109,7 @@ export default function Sidebar({
         </div>
 
         <div
-          className={`relative mb-3 border-t border-white/10 ${collapsed ? 'mx-5 lg:mx-3' : 'mx-5'}`}
+          className={`relative mb-3 border-t border-white/10 ${collapsed ? 'mx-5 xl:mx-3' : 'mx-5'}`}
         />
 
         {/* Nav — groups stay open so every dashboard is one click away */}
@@ -120,7 +120,7 @@ export default function Sidebar({
             <div key={g.id} className="pt-4">
               <div
                 className={`mb-1.5 flex px-3 ${g.id === 'women' ? 'flex-col items-start gap-1' : 'items-baseline justify-between'} ${
-                  collapsed ? 'lg:hidden' : ''
+                  collapsed ? 'xl:hidden' : ''
                 }`}
               >
                 <span className="text-eyebrow uppercase text-glow/70">
@@ -131,7 +131,7 @@ export default function Sidebar({
                 </span>
               </div>
               {collapsed && (
-                <div className="mx-2 my-2 hidden border-t border-white/10 lg:block" />
+                <div className="mx-2 my-2 hidden border-t border-white/10 xl:block" />
               )}
               <div className="space-y-1">
                 {NAV.filter((i) => i.group === g.id && !i.parentId).map((item) => (
@@ -139,7 +139,7 @@ export default function Sidebar({
                     {renderItem(item)}
                     {NAV.some((child) => child.parentId === item.id) && (
                       <div role="group" aria-label={`${item.name} subsections`}
-                        className={`ml-6 mt-1 space-y-1 border-l border-[#A4C5BB]/50 pl-2 ${collapsed ? 'lg:ml-0 lg:border-0 lg:pl-0' : ''}`}>
+                        className={`ml-6 mt-1 space-y-1 border-l border-[#A4C5BB]/50 pl-2 ${collapsed ? 'xl:ml-0 xl:border-0 xl:pl-0' : ''}`}>
                         {NAV.filter((child) => child.parentId === item.id).map(renderItem)}
                       </div>
                     )}
@@ -156,8 +156,8 @@ export default function Sidebar({
             onClick={onToggleCollapse}
             aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
             title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
-            className={`hidden w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-white/55 transition-colors hover:bg-white/10 hover:text-white lg:flex ${
-              collapsed ? 'lg:justify-center lg:px-0' : ''
+            className={`hidden w-full items-center gap-2 rounded-xl px-3 py-2 text-xs font-medium text-white/55 transition-colors hover:bg-white/10 hover:text-white xl:flex ${
+              collapsed ? 'xl:justify-center xl:px-0' : ''
             }`}
           >
             {collapsed ? (
@@ -165,9 +165,9 @@ export default function Sidebar({
             ) : (
               <ChevronsLeft className="h-4 w-4 shrink-0" />
             )}
-            <span className={collapsed ? 'lg:hidden' : ''}>Collapse</span>
+            <span className={collapsed ? 'xl:hidden' : ''}>Collapse</span>
           </button>
-          <div className={`px-2 pt-2 ${collapsed ? 'lg:hidden' : ''}`}>
+          <div className={`px-2 pt-2 ${collapsed ? 'xl:hidden' : ''}`}>
             <p className="text-[0.7rem] font-semibold text-white/80">
               Ministry of Health · Oman
             </p>
