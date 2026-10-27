@@ -1,0 +1,235 @@
+{
+  "source": {
+    "filename": "Maltreatment Notifications 2025.xlsx",
+    "sha256": "6c5bfeab89d82744c55df948a024c84b401c374c183e02543774616b43cb2058",
+    "sheets": [
+      "data"
+    ]
+  },
+  "year": 2025,
+  "total": 204,
+  "omani": 201,
+  "types": [
+    "Neglect",
+    "Physical abuse",
+    "Sexual abuse",
+    "Emotional abuse",
+    "Others"
+  ],
+  "byWilayat": [
+    {
+      "wilayat": "Shinas",
+      "count": 31,
+      "Neglect": 6,
+      "Physical abuse": 14,
+      "Sexual abuse": 2,
+      "Emotional abuse": 1,
+      "Others": 8
+    },
+    {
+      "wilayat": "Liwa",
+      "count": 0,
+      "Neglect": 0,
+      "Physical abuse": 0,
+      "Sexual abuse": 0,
+      "Emotional abuse": 0,
+      "Others": 0
+    },
+    {
+      "wilayat": "Sohar",
+      "count": 75,
+      "Neglect": 50,
+      "Physical abuse": 10,
+      "Sexual abuse": 4,
+      "Emotional abuse": 0,
+      "Others": 11
+    },
+    {
+      "wilayat": "Saham",
+      "count": 38,
+      "Neglect": 22,
+      "Physical abuse": 8,
+      "Sexual abuse": 4,
+      "Emotional abuse": 0,
+      "Others": 4
+    },
+    {
+      "wilayat": "Al Khabourah",
+      "count": 20,
+      "Neglect": 12,
+      "Physical abuse": 1,
+      "Sexual abuse": 0,
+      "Emotional abuse": 1,
+      "Others": 6
+    },
+    {
+      "wilayat": "As Suwayq",
+      "count": 40,
+      "Neglect": 5,
+      "Physical abuse": 29,
+      "Sexual abuse": 3,
+      "Emotional abuse": 1,
+      "Others": 2
+    }
+  ],
+  "byType": [
+    {
+      "type": "Neglect",
+      "count": 95
+    },
+    {
+      "type": "Physical abuse",
+      "count": 62
+    },
+    {
+      "type": "Sexual abuse",
+      "count": 13
+    },
+    {
+      "type": "Emotional abuse",
+      "count": 3
+    },
+    {
+      "type": "Others",
+      "count": 31
+    }
+  ],
+  "byMonth": [
+    23,
+    19,
+    12,
+    24,
+    17,
+    13,
+    16,
+    7,
+    5,
+    20,
+    25,
+    23
+  ],
+  "byAge": [
+    {
+      "band": "Under 1",
+      "count": 29
+    },
+    {
+      "band": "1–4",
+      "count": 86
+    },
+    {
+      "band": "5–9",
+      "count": 35
+    },
+    {
+      "band": "10–14",
+      "count": 37
+    },
+    {
+      "band": "15–17",
+      "count": 17
+    }
+  ],
+  "bySex": [
+    {
+      "sex": "Male",
+      "count": 112
+    },
+    {
+      "sex": "Female",
+      "count": 92
+    }
+  ],
+  "byInstitution": [
+    {
+      "institution": "AsSuwayq Extended HealthCenter(PolyClinic)",
+      "wilayat": "As Suwayq",
+      "count": 31
+    },
+    {
+      "institution": "Al Uwaynat Health Center",
+      "wilayat": "Sohar",
+      "count": 27
+    },
+    {
+      "institution": "Shinas Extended Health Center (PolyClinic)",
+      "wilayat": "Shinas",
+      "count": 22
+    },
+    {
+      "institution": "Sohar Hospital",
+      "wilayat": "Sohar",
+      "count": 20
+    },
+    {
+      "institution": "Al Ghuwaisah Health Center",
+      "wilayat": "Saham",
+      "count": 17
+    },
+    {
+      "institution": "Al Khabourah Extended Health Center (PolyClinic)",
+      "wilayat": "Al Khabourah",
+      "count": 17
+    },
+    {
+      "institution": "Saham Extended Health Center (PolyClinic)",
+      "wilayat": "Saham",
+      "count": 17
+    },
+    {
+      "institution": "Sohar Extended Health Center",
+      "wilayat": "Sohar",
+      "count": 11
+    },
+    {
+      "institution": "Al Multaqa Health Center",
+      "wilayat": "Sohar",
+      "count": 10
+    },
+    {
+      "institution": "Abu Baqrah Health Center",
+      "wilayat": "Shinas",
+      "count": 9
+    },
+    {
+      "institution": "Al Tareef Health Center",
+      "wilayat": "Sohar",
+      "count": 5
+    },
+    {
+      "institution": "Al Khadra Health Center",
+      "wilayat": "As Suwayq",
+      "count": 4
+    },
+    {
+      "institution": "Al Tharmad Health Center",
+      "wilayat": "As Suwayq",
+      "count": 4
+    },
+    {
+      "institution": "Hafit Health Center (North Batina)",
+      "wilayat": "Saham",
+      "count": 4
+    },
+    {
+      "institution": "Qasabiya Health Center",
+      "wilayat": "Al Khabourah",
+      "count": 3
+    },
+    {
+      "institution": "Falaj Al Qabail Health Center",
+      "wilayat": "Sohar",
+      "count": 1
+    },
+    {
+      "institution": "Wadi Al Jahawir Health Center",
+      "wilayat": "As Suwayq",
+      "count": 1
+    },
+    {
+      "institution": "Wadi Hibi Hospital",
+      "wilayat": "Sohar",
+      "count": 1
+    }
+  ]
+}

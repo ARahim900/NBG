@@ -139,7 +139,7 @@ export default function Sidebar({
                     {renderItem(item)}
                     {NAV.some((child) => child.parentId === item.id) && (
                       <div role="group" aria-label={`${item.name} subsections`}
-                        className={`ml-6 mt-1 space-y-1 border-l border-[#A4C5BB]/50 pl-2 ${collapsed ? 'xl:ml-0 xl:border-0 xl:pl-0' : ''}`}>
+                        className={`ml-6 mt-1 space-y-1 border-l border-teal/50 pl-2 ${collapsed ? 'xl:ml-0 xl:border-0 xl:pl-0' : ''}`}>
                         {NAV.filter((child) => child.parentId === item.id).map(renderItem)}
                       </div>
                     )}

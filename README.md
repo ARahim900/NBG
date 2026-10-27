@@ -2,17 +2,18 @@
 
 An interactive dashboard for the **Health Monitoring Dashboards of North Batinah
 Governorate (NBG)** — Women & Child Health Department, Ministry of Health, Oman.
-It covers eleven indicator dashboards across **2023, 2024 and 2025**, plus the
+It covers twelve indicator dashboards across **2023, 2024 and 2025**, plus the
 2025 population estimates and a governorate map.
 
 The visual design follows the **Ministry of Health Oman branded template**
 (*DS Conf – MOH Branded*): navy `#144066`, MOH blue `#0089DD`, teal `#4FA8B2`,
-light-blue hairlines `#D7EAF9`, slate body text `#36465A`; serif (Georgia)
-titles with the template's slanted accent tab; flat white cards with a thin
+light-blue hairlines `#D7EAF9`, slate body text `#36465A`; DM Sans titles
+with the template's accent tab; flat white cards with a thin
 light-blue border and the cut top-right corner; the official MOH logo; and the
 template's header, footer and cover layouts. Everything is flat — no gradients,
-glows or animated backgrounds. Body text and figures use **DM Sans** (Muscat Bay
-design system) and Arabic uses **Cairo**; all fonts are self-hosted, so they load
+glows or animated backgrounds. Headings, body text and figures use **DM Sans**
+and Arabic uses **Cairo**. Colours come only from the theme tokens in
+`tailwind.config.js` and `src/lib/theme.ts` — no hard-coded brand hex in views; all fonts are self-hosted, so they load
 with no external request and work offline.
 
 **Figures are never animated.** KPI values render at their final figure (no
@@ -31,7 +32,7 @@ bookmarked, shared, refreshed or reached with the Back button.
 |------|------|---------------|
 | `#/about` | **Home (الرئيسية)** | Vision, mission, values, department sections and 2026–2030 objectives |
 | `#/overview` | **Overview** | Governorate headline KPIs and multi-year trends |
-| `#/map` | **Health Centre Map** | North Batinah map: wilayat circles sized and coloured by the chosen metric, a ranked list and table linked to the map on hover, every health centre's catchment |
+| `#/map` | **Health Centre Map** | North Batinah map: wilayat circles sized and coloured by the chosen metric, a ranked list and table linked to the map on hover, every health centre's catchment, plus Al Suwaiq Hospital (catchment = whole wilayat) |
 | `#/pop` | **Population 2025** | Age–sex pyramid, catchment populations, target groups (under-5, women 15–49, 60+), service-to-population ratios, CSV export |
 
 ### Indicator dashboards
@@ -42,11 +43,12 @@ bookmarked, shared, refreshed or reached with the Back button.
 | MD  | `#/md`  | Maternal Deaths | 10-year surveillance, causes, recent records |
 | FP  | `#/fp`  | Family Planning | Contraception and premarital screening |
 | ASD | `#/asd` | ASD Early Screening | 18 & 24-month M-CHAT/R coverage, monthly 2025, risk detection |
-| DS  | `#/ds`  | Down Syndrome | Registry by centre, morbidities, nutrition, 2025 registry |
+| DS  | `#/ds`  | Down Syndrome | Registry by health centre 2023–2025, 2025 comorbidities by centre, nutrition |
 | CA  | `#/ca`  | Congenital Anomalies | By facility and sector, MOH-vs-private split |
 | SN  | `#/sn`  | Stillbirth & Neonatal | Monthly perinatal mortality, ICD-PM coding, 2025 summary |
-| NS  | `#/ns`  | Newborn Screening | TSH, hearing, 3 & 4-year developmental visits |
-| CM  | `#/mt`  | Child Maltreatment | Notifications by wilayat and type, 2019–2025 trend |
+| NS  | `#/ns`  | Newborn Screening | TSH and neonatal hearing screening |
+| ECR | `#/ecr` | Extra Child Health Register | 3 & 4-year developmental visits by institution (2025), Safe Transport of the Critically Ill Child workshops |
+| CM  | `#/mt`  | Child Maltreatment | 2019–2025 trend; 2025 by wilayat, type, month, age and reporting institution |
 | CN  | `#/cn`  | Child Nutrition | Malnutrition categories, infant feeding curve |
 | AN  | `#/an`  | Child Anaemia | 9 & 18-month screening coverage and prevalence, treatment follow-up |
 
@@ -55,7 +57,7 @@ bookmarked, shared, refreshed or reached with the Back button.
 - **React 18 + TypeScript + Vite**, **Tailwind CSS**
 - **Recharts** (charts), **lucide-react** (icons); page fades use the browser's
   built-in Web Animations API (no animation library)
-- **DM Sans**, **Cairo** and **Gelasio** (Georgia fallback) via `@fontsource-variable` (self-hosted)
+- **DM Sans** and **Cairo** via `@fontsource-variable` (self-hosted)
 - Every chart carries a plain-language data summary for screen readers
 - Installable **PWA** with offline caching (`public/sw.js`)
 - No backend: all data is bundled from `src/data/*.json`
@@ -78,11 +80,20 @@ npm run preview  # preview the production build
 |------|-------------|----------------|
 | Indicator dashboards | `src/data/nbg.json`, `src/data/nutrition.json` | Edited from the source workbooks |
 | Population 2025 | `src/data/population.json` | `npm run build:population -- path/to/workbook.xlsx` (needs `pip install openpyxl`) |
+| 3 & 4-year visits, Down syndrome registry, maltreatment notifications (2025) | `src/data/childVisits2025.json`, `downSyndrome2025.json`, `maltreatment2025.json` | `npm run build:wch2025 -- --visits V.xlsx --down-syndrome D.xlsx --maltreatment M.xlsx` |
+| Wilayat hospitals | `src/data/hospitals.ts` | Edit by hand |
 | Base map | `src/data/map-base.json` | `npm run build:map` |
 | Health-centre locations | `src/data/facility-locations.json` | Edit by hand (see below) |
 
 `scripts/build_population.py` refuses to write the file if any institution's age
 bands do not add up to its total row, so a malformed workbook cannot reach the app.
+
+`scripts/build_wch_2025.py` copies the 2025 workbooks exactly: a blank cell stays
+blank (never zero), and anything inconsistent in the source — totals that do not
+match their months, more referrals than visits — is kept as reported and listed
+as a data note on the dashboard. Maltreatment notifications are stored as totals
+only, never as individual records. Tests: `cd scripts && python3 -m unittest test_wch_2025`
+(set `WCH_SOURCE_DIR` to the workbook folder to check the saved JSON against them).
 
 ### Adding health-centre locations
 

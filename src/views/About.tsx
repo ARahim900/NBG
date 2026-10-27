@@ -145,7 +145,7 @@ export default function About({ onNavigate }: ViewProps) {
           <button
             type="button"
             onClick={() => onNavigate('overview')}
-            className="mx-auto mt-7 flex min-h-12 w-full max-w-sm flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-lg bg-[#A4C5BB] px-5 py-3 text-sm font-semibold text-[#4E4456] transition-opacity hover:opacity-90 focus-visible:outline-white sm:w-auto"
+            className="mx-auto mt-7 flex min-h-12 w-full max-w-sm flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-lg bg-teal px-5 py-3 text-sm font-semibold text-heading transition-opacity hover:opacity-90 focus-visible:outline-white sm:w-auto"
           >
             <span lang="ar" dir="rtl" className="font-ar">استعراض لوحات المؤشرات</span>
             <span aria-hidden="true">·</span>

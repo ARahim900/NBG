@@ -2,6 +2,7 @@ import {
   Apple,
   Baby,
   Brain,
+  ClipboardList,
   Dna,
   Droplets,
   Home,
@@ -35,6 +36,7 @@ export type ViewId =
   | 'sn'
   | 'ns'
   | 'children/newborn-screening/extended-newborn-screening-2026'
+  | 'ecr'
   | 'mc'
   | 'fp'
   | 'cn'
@@ -194,7 +196,7 @@ export const NAV: NavItem[] = [
     id: 'ns',
     code: 'NS',
     name: 'Newborn Screening',
-    blurb: 'Congenital hypothyroidism (TSH), hearing & developmental visits',
+    blurb: 'Congenital hypothyroidism (TSH) & neonatal hearing screening',
     icon: TestTubes,
     group: 'children',
   },
@@ -207,6 +209,15 @@ export const NAV: NavItem[] = [
     icon: TestTubes,
     group: 'children',
     parentId: 'ns',
+  },
+  {
+    id: 'ecr',
+    code: 'ECR',
+    name: 'Extra Child Health Register',
+    short: 'Child Register',
+    blurb: '3 & 4-year developmental visits and child-health programme activity',
+    icon: ClipboardList,
+    group: 'children',
   },
   {
     id: 'mt',

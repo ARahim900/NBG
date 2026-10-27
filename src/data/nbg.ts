@@ -21,8 +21,6 @@ const db = raw as unknown as {
     nutritional_status: { '2023': Row[]; '2024': Row[] }
     monthly_2024: Row[]
     year_comparison: Row[]
-    gov_2025: Row[]
-    y2025_note: string
   }
   md: Record<string, Row[]> & { y2025_note: string }
   mt: Record<string, Row[]>
@@ -155,8 +153,6 @@ export const ds = {
     newCases: n(r[1]),
     assessments: n(r[2]),
   })),
-  gov2025: db.ds.gov_2025.map((r) => ({ metric: s(r[0]), value: n(r[1]) })),
-  note2025: db.ds.y2025_note,
 }
 
 // =========================================================================
@@ -191,16 +187,9 @@ export const mt = {
     change: n(r[5]),
   })),
   totalTrend: xy(db.mt.total_trend),
-  wilayatPct: db.mt.wilayat_pct.map((r) => ({
-    wilayat: s(r[0]),
-    y2023: n(r[1]),
-    y2024: n(r[2]),
-    y2025: n(r[3]),
-  })),
-  typePct: db.mt.type_pct.map((r) => ({
+  typePct2024: db.mt.type_pct.map((r) => ({
     type: s(r[0]),
     y2024: n(r[1]),
-    y2025: n(r[2]),
   })),
 }
 
@@ -352,12 +341,6 @@ export const fp = {
   newborn2025: db.fp.newborn_2025.map((r) => ({
     metric: s(r[0]),
     value: n(r[1]),
-  })),
-  visitCoverage2025: db.fp.visit_coverage_2025.map((r) => ({
-    visit: s(r[0]),
-    due: n(r[1]),
-    screened: n(r[2]),
-    coverage: n(r[3]),
   })),
   note2025: db.fp.y2025_note,
 }

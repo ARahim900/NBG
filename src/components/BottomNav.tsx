@@ -67,7 +67,7 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
     return (
       <button key={item.id} type="button" onClick={() => go(item.id)}
         aria-current={isActive ? 'page' : undefined}
-        className={`flex min-h-12 w-full items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#A4C5BB] ${isActive ? 'border-line/30 bg-mist text-heading' : 'border-line/10 text-ink hover:bg-mist'}`}>
+        className={`flex min-h-12 w-full items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-azure ${isActive ? 'border-line/30 bg-mist text-heading' : 'border-line/10 text-ink hover:bg-mist'}`}>
         <item.icon className="h-5 w-5 shrink-0" aria-hidden="true" />
         <span className="flex-1">{item.name}</span>
         {isActive && <span className="text-xs">Current</span>}
@@ -76,7 +76,7 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
   }
 
   const tabClass = (on: boolean) =>
-    `relative flex h-[52px] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 py-1.5 text-[11px] font-semibold leading-4 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-inset focus-visible:ring-[#A4C5BB] motion-reduce:transition-none ${
+    `relative flex h-[52px] min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 py-1.5 text-[11px] font-semibold leading-4 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-inset focus-visible:ring-azure motion-reduce:transition-none ${
       on ? 'text-glow after:absolute after:top-0 after:h-0.5 after:w-7 after:rounded-b-full after:bg-glow' : 'text-white/75 hover:text-white'
     }`
 
@@ -100,13 +100,13 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
         >
           <div className="mb-4 flex items-center justify-between gap-4">
             <div>
-              <h2 id="dashboard-menu-title" className="text-lg font-semibold text-[#4E4456] dark:text-[#A4C5BB]">
+              <h2 id="dashboard-menu-title" className="text-lg font-semibold text-heading dark:text-glow">
                 {MENU_TABS.find((item) => item.id === sheet)?.label}
               </h2>
               <p className="mt-1 text-sm text-ink/80">Choose a dashboard</p>
             </div>
             <button type="button" autoFocus onClick={() => setSheet(null)} aria-label="Close dashboard menu"
-              className="flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-line/20 hover:bg-mist focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#A4C5BB]">
+              className="flex min-h-11 min-w-11 items-center justify-center rounded-lg border border-line/20 hover:bg-mist focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-azure">
               <X className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
@@ -115,7 +115,7 @@ export default function BottomNav({ active, onSelect }: BottomNavProps) {
               <div key={item.id} className="space-y-2">
                 {renderItem(item)}
                 {sheetItems.some((child) => child.parentId === item.id) && (
-                  <div role="group" aria-label={`${item.name} subsections`} className="ml-5 space-y-2 border-l border-[#A4C5BB] pl-3">
+                  <div role="group" aria-label={`${item.name} subsections`} className="ml-5 space-y-2 border-l border-teal pl-3">
                     {sheetItems.filter((child) => child.parentId === item.id).map(renderItem)}
                   </div>
                 )}

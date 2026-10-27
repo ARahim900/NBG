@@ -3,10 +3,9 @@ import DataTable from '../ui/DataTable'
 import { ComparisonBars } from '../charts/Charts'
 import { extendedNewborn, institutions, newbornTotals, rejectionRate } from '../../data/extendedNewborn2026'
 import { int, pct } from '../../lib/format'
+import { C } from '../../lib/theme'
 
-const PURPLE = '#4E4456'
-const SAGE = '#A4C5BB'
-const chartStyle = '[&_h3]:text-[#4E4456] dark:[&_h3]:text-[#A4C5BB]'
+const chartStyle = '[&_h3]:text-heading dark:[&_h3]:text-glow'
 const rateLabel = (value: number | null) => value === null ? 'Not available' : pct(value, 2)
 const chartData = institutions.map((row) => ({
   ...row,
@@ -66,7 +65,7 @@ export default function ExtendedNewbornScreening2026() {
           ].map(({ label, value }) => (
             <div key={label} className="card p-5">
               <dt className="text-caption font-medium text-ink/75">{label}</dt>
-              <dd className="mt-3 text-2xl font-medium tabular-nums text-[#4E4456] dark:text-[#A4C5BB]">{value}</dd>
+              <dd className="mt-3 text-2xl font-medium tabular-nums text-heading dark:text-glow">{value}</dd>
             </div>
           ))}
         </dl>
@@ -77,15 +76,15 @@ export default function ExtendedNewbornScreening2026() {
         {metrics.map(({ label, value, hint }) => (
           <div key={label} className="card p-4 sm:p-5">
             <dt className="text-caption font-medium text-ink/75">
-              <span className="mb-3 block h-1 w-7 bg-[#A4C5BB]" aria-hidden="true" />{label}
+              <span className="mb-3 block h-1 w-7 bg-teal" aria-hidden="true" />{label}
             </dt>
-            <dd className="mt-2 text-3xl font-medium tabular-nums text-[#4E4456] dark:text-[#A4C5BB]">{value}</dd>
+            <dd className="mt-2 text-3xl font-medium tabular-nums text-heading dark:text-glow">{value}</dd>
             <dd className="mt-2 text-caption text-ink/65">{hint}</dd>
           </div>
         ))}
       </dl>
 
-      <p className="rounded-xl border border-[#A4C5BB]/60 bg-[#A4C5BB]/10 p-4 text-body text-ink/80">
+      <p className="rounded-xl border border-teal/60 bg-teal/10 p-4 text-body text-ink/80">
         These are reported institution totals, not a verified governorate coverage measure.
         Suwaiq reports 541 screened newborns against 537 deliveries; its Omani-only ratio is 101.50%.
         The discrepancy requires reconciliation. Laboratory samples are counted separately and must not be added to newborn counts.
@@ -94,12 +93,12 @@ export default function ExtendedNewbornScreening2026() {
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ChartCard className={chartStyle} title="Deliveries & screened newborns" subtitle="Reported counts · all nationalities · 8 February–31 August 2026" footnote="Five reporting institutions. PC = Polyclinic. Bar lengths show counts, not verified coverage.">
           <ComparisonBars data={chartData} xKey="institution" layout="vertical" categoryWidth={72} height={350}
-            series={[{ key: 'deliveries', name: 'Deliveries', color: PURPLE }, { key: 'screened', name: 'Screened', color: SAGE }]} />
+            series={[{ key: 'deliveries', name: 'Deliveries', color: C.navy }, { key: 'screened', name: 'Screened', color: C.teal }]} />
         </ChartCard>
         <ChartCard className={chartStyle} title="Laboratory sample rejection rate" subtitle="Rejected ÷ received × 100 · same reporting period" footnote="Hibi: 1 rejected sample out of 9 received. Small sample counts can produce a high percentage; this is not a trend chart.">
           <ComparisonBars data={chartData} xKey="institution" layout="vertical" categoryWidth={72} height={350}
             valueFormatter={(value) => pct(value, 2)} showLegend={false}
-            series={[{ key: 'rejectionRate', name: 'Rejection rate', color: PURPLE }]} />
+            series={[{ key: 'rejectionRate', name: 'Rejection rate', color: C.navy }]} />
         </ChartCard>
       </div>
 
@@ -122,7 +121,7 @@ export default function ExtendedNewbornScreening2026() {
       </ChartCard>
 
       <details className="card p-5">
-        <summary className="cursor-pointer rounded text-body font-semibold text-heading focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#4E4456]">
+        <summary className="cursor-pointer rounded text-body font-semibold text-heading focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-azure">
           Data source & interpretation
         </summary>
         <div className="mt-4 space-y-3 text-caption text-ink/80">
@@ -138,9 +137,9 @@ export default function ExtendedNewbornScreening2026() {
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
           {programmeSections.map(({ title, items }) => (
             <section key={title} className="card p-5">
-              <h3 className="text-title text-[#4E4456] dark:text-[#A4C5BB]">{title}</h3>
+              <h3 className="text-title text-heading dark:text-glow">{title}</h3>
               <ul className="mt-4 space-y-3 text-body text-ink/80">
-                {items.map((item) => <li key={item} className="flex items-start gap-2.5"><span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#A4C5BB]" /><span>{item}</span></li>)}
+                {items.map((item) => <li key={item} className="flex items-start gap-2.5"><span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-teal" /><span>{item}</span></li>)}
               </ul>
             </section>
           ))}

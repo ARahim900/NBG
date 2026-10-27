@@ -40,6 +40,7 @@ const LOADERS: Record<ViewId, () => Promise<{ default: ComponentType<ViewProps> 
   sn: () => import('./views/StillbirthNeonatal'),
   ns: () => import('./views/NewbornScreening'),
   'children/newborn-screening/extended-newborn-screening-2026': () => import('./views/ExtendedNewbornScreening'),
+  ecr: () => import('./views/ExtraChildHealthRegister'),
   mc: () => import('./views/MaternalCare'),
   fp: () => import('./views/FamilyPlanning'),
   cn: () => import('./views/ChildNutrition'),

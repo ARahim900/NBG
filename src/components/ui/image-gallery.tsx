@@ -46,11 +46,11 @@ function AnimatedImage({ image, index, onOpen }: { image: GalleryImage; index: n
     <div className="mb-3 break-inside-avoid md:mb-5">
       <button type="button" onClick={onOpen} disabled={status === 'error'}
         aria-label={`Enlarge photo ${index + 1}: ${image.alt}`}
-        className="group block w-full overflow-hidden rounded-xl border border-line/10 bg-surface text-left shadow-sm outline-none transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-lg focus-visible:ring-[3px] focus-visible:ring-[#A4C5BB] focus-visible:ring-offset-2 focus-visible:ring-offset-surface motion-reduce:transform-none motion-reduce:transition-none">
-        <AspectRatio ref={ref} ratio={image.width / image.height} className="overflow-hidden bg-[#A4C5BB]/10">
-          {status === 'loading' && <span className="absolute inset-0 animate-pulse bg-[#A4C5BB]/15 motion-reduce:animate-none" aria-hidden="true" />}
+        className="group block w-full overflow-hidden rounded-xl border border-line/10 bg-surface text-left shadow-sm outline-none transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-lg focus-visible:ring-[3px] focus-visible:ring-azure focus-visible:ring-offset-2 focus-visible:ring-offset-surface motion-reduce:transform-none motion-reduce:transition-none">
+        <AspectRatio ref={ref} ratio={image.width / image.height} className="overflow-hidden bg-teal/10">
+          {status === 'loading' && <span className="absolute inset-0 animate-pulse bg-teal/15 motion-reduce:animate-none" aria-hidden="true" />}
           {status === 'error' ? (
-            <span role="status" className="flex h-full flex-col items-center justify-center gap-2 p-4 text-sm text-[#4E4456] dark:text-[#A4C5BB]">
+            <span role="status" className="flex h-full flex-col items-center justify-center gap-2 p-4 text-sm text-heading dark:text-glow">
               <ImageOff className="h-6 w-6" aria-hidden="true" />Photo unavailable
             </span>
           ) : (
@@ -61,7 +61,7 @@ function AnimatedImage({ image, index, onOpen }: { image: GalleryImage; index: n
               onError={() => { setStatus('error'); console.error('Gallery image failed to load:', image.src) }} />
           )}
         </AspectRatio>
-        <span aria-hidden="true" className="flex items-center justify-between gap-2 px-3 py-2.5 text-xs text-[#4E4456] dark:text-[#A4C5BB]">
+        <span aria-hidden="true" className="flex items-center justify-between gap-2 px-3 py-2.5 text-xs text-heading dark:text-glow">
           <span className="font-medium tabular-nums">{String(index + 1).padStart(2, '0')}</span>
           <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 motion-reduce:transform-none motion-reduce:transition-none" />
         </span>
@@ -84,12 +84,12 @@ function ViewerImage({ image }: { image: GalleryImage }) {
           onError={() => { setStatus('error'); console.error('Gallery preview failed to load:', image.fullSrc) }} />
       )}
       {status === 'loading' && (
-        <span role="status" className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-[#4E4456] px-3 py-2 text-xs text-white">
+        <span role="status" className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-navy px-3 py-2 text-xs text-white">
           <LoaderCircle className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" />Loading photograph
         </span>
       )}
       {status === 'error' && (
-        <span role="alert" className="absolute inset-x-3 bottom-3 rounded-lg bg-[#4E4456] p-3 text-center text-sm text-white">
+        <span role="alert" className="absolute inset-x-3 bottom-3 rounded-lg bg-navy p-3 text-center text-sm text-white">
           Full-size photograph unavailable. Showing the preview.
         </span>
       )}
@@ -132,7 +132,7 @@ function GalleryViewer({ images, index, onChange, onClose }: {
     setDirection(next > index ? 1 : -1)
     onChange(next)
   }
-  const controlClass = 'flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line/20 text-[#4E4456] transition-colors hover:bg-[#A4C5BB]/20 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-[#A4C5BB] aria-disabled:opacity-30 dark:text-[#A4C5BB]'
+  const controlClass = 'flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-line/20 text-heading transition-colors hover:bg-teal/20 focus-visible:outline-none focus-visible:ring-[3px] focus-visible:ring-azure aria-disabled:opacity-30 dark:text-glow'
 
   return (
     <dialog ref={ref} aria-labelledby="gallery-viewer-title" aria-describedby="gallery-viewer-caption"
@@ -142,18 +142,18 @@ function GalleryViewer({ images, index, onChange, onClose }: {
         if (event.key === 'ArrowLeft') { event.preventDefault(); navigate(index - 1) }
         if (event.key === 'ArrowRight') { event.preventDefault(); navigate(index + 1) }
       }}
-      className="fixed inset-0 m-auto h-[100dvh] max-h-[100dvh] w-full max-w-none overflow-hidden border-0 bg-surface p-0 text-ink shadow-2xl backdrop:bg-[#4E4456]/90 sm:h-[min(92dvh,960px)] sm:w-[calc(100%-3rem)] sm:max-w-6xl sm:rounded-2xl">
+      className="fixed inset-0 m-auto h-[100dvh] max-h-[100dvh] w-full max-w-none overflow-hidden border-0 bg-surface p-0 text-ink shadow-2xl backdrop:bg-navy/90 sm:h-[min(92dvh,960px)] sm:w-[calc(100%-3rem)] sm:max-w-6xl sm:rounded-2xl">
       <div className="flex h-full min-h-0 flex-col">
         <header className="flex shrink-0 items-center justify-between gap-4 border-b border-line/10 px-4 pb-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6">
           <div>
-            <h2 id="gallery-viewer-title" className="text-sm font-semibold text-[#4E4456] dark:text-[#A4C5BB]">Women &amp; Child Health</h2>
+            <h2 id="gallery-viewer-title" className="text-sm font-semibold text-heading dark:text-glow">Women &amp; Child Health</h2>
             <p className="mt-1 text-xs tabular-nums text-ink/65">Photo {index + 1} of {images.length}</p>
           </div>
           <button type="button" autoFocus onClick={onClose} aria-label="Close photograph" className={controlClass}>
             <X className="h-5 w-5" aria-hidden="true" />
           </button>
         </header>
-        <div className="relative min-h-0 flex-1 overflow-hidden bg-[#4E4456]/5 dark:bg-black/20">
+        <div className="relative min-h-0 flex-1 overflow-hidden bg-navy/5 dark:bg-black/20">
           <AnimatePresence initial={false} custom={direction}>
             <motion.div key={image.id} custom={direction}
               variants={{ enter: (d: number) => ({ opacity: reduceMotion ? 1 : 0, x: reduceMotion ? 0 : d * 28 }), visible: { opacity: 1, x: 0 }, exit: (d: number) => ({ opacity: reduceMotion ? 1 : 0, x: reduceMotion ? 0 : d * -28 }) }}
@@ -181,7 +181,7 @@ function GalleryViewer({ images, index, onChange, onClose }: {
               <button key={photo.id} ref={photoIndex === index ? activeThumbnail : undefined} type="button"
                 onClick={() => navigate(photoIndex)} aria-label={`View photograph ${photoIndex + 1}: ${photo.alt}`}
                 aria-current={photoIndex === index ? 'true' : undefined}
-                className={cn('h-12 w-14 shrink-0 overflow-hidden rounded-md outline-none transition-opacity focus-visible:ring-[3px] focus-visible:ring-[#A4C5BB] motion-reduce:transition-none', photoIndex === index ? 'ring-2 ring-[#A4C5BB] ring-offset-2 ring-offset-surface' : 'opacity-50 hover:opacity-100')}>
+                className={cn('h-12 w-14 shrink-0 overflow-hidden rounded-md outline-none transition-opacity focus-visible:ring-[3px] focus-visible:ring-azure motion-reduce:transition-none', photoIndex === index ? 'ring-2 ring-azure ring-offset-2 ring-offset-surface' : 'opacity-50 hover:opacity-100')}>
                 <img src={photo.src} alt="" loading="lazy" draggable={false} className="h-full w-full object-cover" />
               </button>
             ))}

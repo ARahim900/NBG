@@ -1,0 +1,178 @@
+{
+  "source": {
+    "filename": "Suhar 2025 Down syndrome .xlsx",
+    "sha256": "c4918e4018f073bc8ba4fee44aaf88d16b756e3a9cd0b6fb7a9151ae62e6e35e",
+    "sheets": [
+      "Sheet1"
+    ]
+  },
+  "year": 2025,
+  "focalPoints": {
+    "doctors": 6,
+    "nurses": 6
+  },
+  "centres": [
+    {
+      "name": "Sohar EHC",
+      "wilayat": "Sohar",
+      "newCases": 10,
+      "registered": 86,
+      "age0to5": 45,
+      "age6to12": 33,
+      "age13to18": 11,
+      "male": 45,
+      "female": 41,
+      "comorbidities": {
+        "cardiac": 46,
+        "earsHearing": 8,
+        "ophthalmic": 10,
+        "hypothyroidism": 9,
+        "hyperthyroidism": 1,
+        "diabetes": 1,
+        "haematological": 7,
+        "underweight": 16,
+        "normalWeight": 65,
+        "overweight": 5,
+        "developmentalDelay": 86,
+        "noDevelopmentalDelay": 0,
+        "gastrointestinal": 3
+      }
+    },
+    {
+      "name": "Suwaiq EHC",
+      "wilayat": "As Suwayq",
+      "newCases": 0,
+      "registered": 30,
+      "age0to5": 15,
+      "age6to12": 11,
+      "age13to18": 3,
+      "male": 18,
+      "female": 12,
+      "comorbidities": {
+        "cardiac": 15,
+        "earsHearing": 13,
+        "ophthalmic": 2,
+        "hypothyroidism": 2,
+        "hyperthyroidism": 1,
+        "diabetes": 1,
+        "haematological": 2,
+        "underweight": 1,
+        "normalWeight": 24,
+        "overweight": 5,
+        "developmentalDelay": 30,
+        "noDevelopmentalDelay": 0,
+        "gastrointestinal": 0
+      }
+    },
+    {
+      "name": "Khaboura EHC",
+      "wilayat": "Al Khabourah",
+      "newCases": 8,
+      "registered": 43,
+      "age0to5": 29,
+      "age6to12": 14,
+      "age13to18": 0,
+      "male": 22,
+      "female": 21,
+      "comorbidities": {
+        "cardiac": 23,
+        "earsHearing": 0,
+        "ophthalmic": 7,
+        "hypothyroidism": 5,
+        "hyperthyroidism": 0,
+        "diabetes": 0,
+        "haematological": 2,
+        "underweight": 8,
+        "normalWeight": 34,
+        "overweight": 1,
+        "developmentalDelay": 5,
+        "noDevelopmentalDelay": 0,
+        "gastrointestinal": 0
+      }
+    },
+    {
+      "name": "Saham Poly Clinic",
+      "wilayat": "Saham",
+      "newCases": 1,
+      "registered": 65,
+      "age0to5": 31,
+      "age6to12": 23,
+      "age13to18": 9,
+      "male": 32,
+      "female": 33,
+      "comorbidities": {
+        "cardiac": 45,
+        "earsHearing": 5,
+        "ophthalmic": 12,
+        "hypothyroidism": 1,
+        "hyperthyroidism": 6,
+        "diabetes": 1,
+        "haematological": 0,
+        "underweight": 4,
+        "normalWeight": 54,
+        "overweight": 5,
+        "developmentalDelay": 1,
+        "noDevelopmentalDelay": 0,
+        "gastrointestinal": 2
+      }
+    },
+    {
+      "name": "Shinas EHC",
+      "wilayat": "Shinas",
+      "newCases": 6,
+      "registered": 48,
+      "age0to5": 21,
+      "age6to12": 26,
+      "age13to18": 1,
+      "male": 22,
+      "female": 26,
+      "comorbidities": {
+        "cardiac": 13,
+        "earsHearing": 3,
+        "ophthalmic": 2,
+        "hypothyroidism": 4,
+        "hyperthyroidism": 0,
+        "diabetes": 0,
+        "haematological": 0,
+        "underweight": 8,
+        "normalWeight": 38,
+        "overweight": 2,
+        "developmentalDelay": 48,
+        "noDevelopmentalDelay": 0,
+        "gastrointestinal": 0
+      }
+    },
+    {
+      "name": "Liwa HC",
+      "wilayat": "Liwa",
+      "newCases": 2,
+      "registered": 23,
+      "age0to5": 11,
+      "age6to12": 9,
+      "age13to18": 3,
+      "male": 15,
+      "female": 8,
+      "comorbidities": {
+        "cardiac": 9,
+        "earsHearing": 0,
+        "ophthalmic": 1,
+        "hypothyroidism": 5,
+        "hyperthyroidism": 0,
+        "diabetes": 0,
+        "haematological": 0,
+        "underweight": 22,
+        "normalWeight": 1,
+        "overweight": 0,
+        "developmentalDelay": 0,
+        "noDevelopmentalDelay": 0,
+        "gastrointestinal": 0
+      }
+    }
+  ],
+  "flags": [
+    "Sohar EHC: age groups add to 89; 86 children are registered.",
+    "Suwaiq EHC: age groups add to 29; 30 children are registered.",
+    "Saham Poly Clinic: age groups add to 63; 65 children are registered.",
+    "Saham Poly Clinic: weight categories cover 63 of 65 children."
+  ]
+}

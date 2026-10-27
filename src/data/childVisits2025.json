@@ -1,0 +1,4052 @@
+{
+  "source": {
+    "filename": "3 & 4 years Visits 2025.xlsx",
+    "sha256": "5ccbd50b63d245636a8d87c08e924773ad4a794e67b9fc091c4158e7a40c788d",
+    "sheets": [
+      "3 years Visits 2025",
+      "4 years Visits 2025"
+    ]
+  },
+  "year": 2025,
+  "months": [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ],
+  "three": {
+    "centres": [
+      {
+        "sourceRow": 9,
+        "sourceName": "Shinas PC",
+        "name": "Shinas EHC",
+        "wilayat": "Shinas",
+        "target": 1044,
+        "clerked": 357,
+        "referred": 8,
+        "monthly": [
+          {
+            "target": 1282,
+            "clerked": 3,
+            "referred": 1
+          },
+          {
+            "target": 1282,
+            "clerked": 8,
+            "referred": 1
+          },
+          {
+            "target": 1282,
+            "clerked": 16,
+            "referred": 0
+          },
+          {
+            "target": 1282,
+            "clerked": 19,
+            "referred": 0
+          },
+          {
+            "target": 1282,
+            "clerked": 12,
+            "referred": 1
+          },
+          {
+            "target": 1282,
+            "clerked": 9,
+            "referred": 0
+          },
+          {
+            "target": 1044,
+            "clerked": 12,
+            "referred": 0
+          },
+          {
+            "target": 1044,
+            "clerked": 18,
+            "referred": 0
+          },
+          {
+            "target": 1044,
+            "clerked": 218,
+            "referred": 3
+          },
+          {
+            "target": 1044,
+            "clerked": 27,
+            "referred": 0
+          },
+          {
+            "target": 1044,
+            "clerked": 9,
+            "referred": 1
+          },
+          {
+            "target": 1044,
+            "clerked": 6,
+            "referred": 1
+          }
+        ]
+      },
+      {
+        "sourceRow": 10,
+        "sourceName": "Abu Baqra",
+        "name": "Abu Baqra HC",
+        "wilayat": "Shinas",
+        "target": 315,
+        "clerked": 133,
+        "referred": 3,
+        "monthly": [
+          {
+            "target": 46,
+            "clerked": 35,
+            "referred": 0
+          },
+          {
+            "target": 16,
+            "clerked": 8,
+            "referred": 0
+          },
+          {
+            "target": 28,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 24,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 14,
+            "clerked": 7,
+            "referred": 0
+          },
+          {
+            "target": 24,
+            "clerked": 8,
+            "referred": 0
+          },
+          {
+            "target": 22,
+            "clerked": 6,
+            "referred": 0
+          },
+          {
+            "target": 30,
+            "clerked": 10,
+            "referred": 0
+          },
+          {
+            "target": 29,
+            "clerked": 15,
+            "referred": 0
+          },
+          {
+            "target": 27,
+            "clerked": 13,
+            "referred": 3
+          },
+          {
+            "target": 30,
+            "clerked": 12,
+            "referred": 0
+          },
+          {
+            "target": 25,
+            "clerked": 12,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 11,
+        "sourceName": "Liwa PC",
+        "name": "Liwa HC",
+        "wilayat": "Liwa",
+        "target": 732,
+        "clerked": 786,
+        "referred": 357,
+        "monthly": [
+          {
+            "target": 52,
+            "clerked": 28,
+            "referred": 357
+          },
+          {
+            "target": 48,
+            "clerked": 26,
+            "referred": 0
+          },
+          {
+            "target": 68,
+            "clerked": 45,
+            "referred": 0
+          },
+          {
+            "target": 56,
+            "clerked": 45,
+            "referred": 0
+          },
+          {
+            "target": 68,
+            "clerked": 92,
+            "referred": 0
+          },
+          {
+            "target": 56,
+            "clerked": 60,
+            "referred": 0
+          },
+          {
+            "target": 66,
+            "clerked": 92,
+            "referred": 0
+          },
+          {
+            "target": 62,
+            "clerked": 92,
+            "referred": 0
+          },
+          {
+            "target": 63,
+            "clerked": 77,
+            "referred": 0
+          },
+          {
+            "target": 66,
+            "clerked": 104,
+            "referred": 0
+          },
+          {
+            "target": 60,
+            "clerked": 58,
+            "referred": 0
+          },
+          {
+            "target": 67,
+            "clerked": 67,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 12,
+        "sourceName": "Nuber PC",
+        "name": "Nabur HC",
+        "wilayat": "Liwa",
+        "target": 1056,
+        "clerked": 220,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 82,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 57,
+            "clerked": 26,
+            "referred": 0
+          },
+          {
+            "target": 54,
+            "clerked": 10,
+            "referred": 0
+          },
+          {
+            "target": 97,
+            "clerked": 16,
+            "referred": 0
+          },
+          {
+            "target": 93,
+            "clerked": 93,
+            "referred": 0
+          },
+          {
+            "target": 62,
+            "clerked": 25,
+            "referred": 0
+          },
+          {
+            "target": 70,
+            "clerked": 31,
+            "referred": 0
+          },
+          {
+            "target": 60,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 107,
+            "clerked": 16,
+            "referred": 0
+          },
+          {
+            "target": 911,
+            "clerked": 8,
+            "referred": 0
+          },
+          {
+            "target": 723,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 41,
+            "clerked": 1,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 13,
+        "sourceName": "Rahab",
+        "name": "Rahab HC",
+        "wilayat": "Liwa",
+        "target": 27,
+        "clerked": 13,
+        "referred": 1,
+        "monthly": [
+          {
+            "target": 5,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 5,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 2,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 3,
+            "clerked": 2,
+            "referred": 1
+          },
+          {
+            "target": 3,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 3,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 1,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 14,
+        "sourceName": "Suhar PC",
+        "name": "Sohar EHC",
+        "wilayat": "Sohar",
+        "target": 1321,
+        "clerked": 275,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 120,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 92,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 89,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 83,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 96,
+            "clerked": 6,
+            "referred": 0
+          },
+          {
+            "target": 112,
+            "clerked": 45,
+            "referred": 0
+          },
+          {
+            "target": 113,
+            "clerked": 47,
+            "referred": 1
+          },
+          {
+            "target": 112,
+            "clerked": 37,
+            "referred": 1
+          },
+          {
+            "target": 130,
+            "clerked": 43,
+            "referred": 0
+          },
+          {
+            "target": 136,
+            "clerked": 25,
+            "referred": 1
+          },
+          {
+            "target": 118,
+            "clerked": 15,
+            "referred": 1
+          },
+          {
+            "target": 120,
+            "clerked": 57,
+            "referred": 1
+          }
+        ]
+      },
+      {
+        "sourceRow": 15,
+        "sourceName": "Multaqa",
+        "name": "Al Multaqa HC",
+        "wilayat": "Sohar",
+        "target": 581,
+        "clerked": 166,
+        "referred": 10,
+        "monthly": [
+          {
+            "target": 52,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 55,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 42,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 37,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 44,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 52,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 42,
+            "clerked": 25,
+            "referred": 1
+          },
+          {
+            "target": 69,
+            "clerked": 19,
+            "referred": 3
+          },
+          {
+            "target": 52,
+            "clerked": 21,
+            "referred": 3
+          },
+          {
+            "target": 57,
+            "clerked": 21,
+            "referred": 2
+          },
+          {
+            "target": 46,
+            "clerked": 23,
+            "referred": 0
+          },
+          {
+            "target": 33,
+            "clerked": 44,
+            "referred": 1
+          }
+        ]
+      },
+      {
+        "sourceRow": 16,
+        "sourceName": "Tarif",
+        "name": "Al Traif HC",
+        "wilayat": "Sohar",
+        "target": 854,
+        "clerked": 102,
+        "referred": 7,
+        "monthly": [
+          {
+            "target": 100,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 70,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 73,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 86,
+            "clerked": 6,
+            "referred": 0
+          },
+          {
+            "target": 86,
+            "clerked": 6,
+            "referred": 1
+          },
+          {
+            "target": 80,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 60,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 93,
+            "clerked": 10,
+            "referred": 2
+          },
+          {
+            "target": 56,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 50,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 50,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 50,
+            "clerked": 50,
+            "referred": 4
+          }
+        ]
+      },
+      {
+        "sourceRow": 17,
+        "sourceName": "Falaj Al Qabil",
+        "name": "Falaj Al Qabail HC",
+        "wilayat": "Sohar",
+        "target": 445,
+        "clerked": 430,
+        "referred": 7,
+        "monthly": [
+          {
+            "target": 41,
+            "clerked": 40,
+            "referred": 0
+          },
+          {
+            "target": 35,
+            "clerked": 34,
+            "referred": 0
+          },
+          {
+            "target": 35,
+            "clerked": 33,
+            "referred": 0
+          },
+          {
+            "target": 41,
+            "clerked": 41,
+            "referred": 0
+          },
+          {
+            "target": 39,
+            "clerked": 18,
+            "referred": 0
+          },
+          {
+            "target": 36,
+            "clerked": 32,
+            "referred": 0
+          },
+          {
+            "target": 37,
+            "clerked": 21,
+            "referred": 0
+          },
+          {
+            "target": 37,
+            "clerked": 20,
+            "referred": 2
+          },
+          {
+            "target": 37,
+            "clerked": 91,
+            "referred": 2
+          },
+          {
+            "target": 27,
+            "clerked": 37,
+            "referred": 0
+          },
+          {
+            "target": 47,
+            "clerked": 19,
+            "referred": 2
+          },
+          {
+            "target": 33,
+            "clerked": 44,
+            "referred": 1
+          }
+        ]
+      },
+      {
+        "sourceRow": 18,
+        "sourceName": "Al Uwainate",
+        "name": "Al Uwainat HC",
+        "wilayat": "Sohar",
+        "target": 437,
+        "clerked": 78,
+        "referred": 2,
+        "monthly": [
+          {
+            "target": 33,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 34,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 30,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 33,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 41,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 32,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 41,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 36,
+            "clerked": 8,
+            "referred": 0
+          },
+          {
+            "target": 40,
+            "clerked": 28,
+            "referred": 1
+          },
+          {
+            "target": 39,
+            "clerked": 7,
+            "referred": 1
+          },
+          {
+            "target": 36,
+            "clerked": 14,
+            "referred": 0
+          },
+          {
+            "target": 42,
+            "clerked": 6,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 19,
+        "sourceName": "Wadi Hibi",
+        "name": "Wadi Hibi Hospital",
+        "wilayat": "Sohar",
+        "target": 97,
+        "clerked": 44,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 9,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 7,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 11,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 13,
+            "clerked": 6,
+            "referred": 0
+          },
+          {
+            "target": 11,
+            "clerked": 7,
+            "referred": 0
+          },
+          {
+            "target": 14,
+            "clerked": 14,
+            "referred": 0
+          },
+          {
+            "target": 7,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 5,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 7,
+            "clerked": 5,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 20,
+        "sourceName": "Wadi Ahin",
+        "name": "Wadi Ahin HC",
+        "wilayat": "Sohar",
+        "target": 62,
+        "clerked": 39,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 9,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 4,
+            "clerked": 11,
+            "referred": 0
+          },
+          {
+            "target": 4,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 7,
+            "clerked": 6,
+            "referred": 0
+          },
+          {
+            "target": 4,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 7,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 7,
+            "clerked": 2,
+            "referred": 1
+          },
+          {
+            "target": 6,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 0,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 21,
+        "sourceName": "Saham pc",
+        "name": "Saham EHC",
+        "wilayat": "Saham",
+        "target": 1418,
+        "clerked": 1028,
+        "referred": 319,
+        "monthly": [
+          {
+            "target": 117,
+            "clerked": 112,
+            "referred": 61
+          },
+          {
+            "target": 100,
+            "clerked": 4,
+            "referred": 26
+          },
+          {
+            "target": 110,
+            "clerked": 37,
+            "referred": 20
+          },
+          {
+            "target": 113,
+            "clerked": 56,
+            "referred": 23
+          },
+          {
+            "target": 124,
+            "clerked": 40,
+            "referred": 11
+          },
+          {
+            "target": 115,
+            "clerked": 63,
+            "referred": 30
+          },
+          {
+            "target": 118,
+            "clerked": 113,
+            "referred": 19
+          },
+          {
+            "target": 122,
+            "clerked": 116,
+            "referred": 33
+          },
+          {
+            "target": 114,
+            "clerked": 113,
+            "referred": 15
+          },
+          {
+            "target": 134,
+            "clerked": 133,
+            "referred": 25
+          },
+          {
+            "target": 134,
+            "clerked": 130,
+            "referred": 33
+          },
+          {
+            "target": 117,
+            "clerked": 111,
+            "referred": 23
+          }
+        ]
+      },
+      {
+        "sourceRow": 22,
+        "sourceName": "Guwisah",
+        "name": "Al Ghwaisah HC",
+        "wilayat": "Saham",
+        "target": 522,
+        "clerked": 234,
+        "referred": 6,
+        "monthly": [
+          {
+            "target": 50,
+            "clerked": 26,
+            "referred": 0
+          },
+          {
+            "target": 56,
+            "clerked": 32,
+            "referred": 0
+          },
+          {
+            "target": 45,
+            "clerked": 26,
+            "referred": 0
+          },
+          {
+            "target": 43,
+            "clerked": 21,
+            "referred": 0
+          },
+          {
+            "target": 31,
+            "clerked": 28,
+            "referred": 1
+          },
+          {
+            "target": 43,
+            "clerked": 21,
+            "referred": 0
+          },
+          {
+            "target": 48,
+            "clerked": 23,
+            "referred": 0
+          },
+          {
+            "target": 48,
+            "clerked": 26,
+            "referred": 3
+          },
+          {
+            "target": 32,
+            "clerked": 19,
+            "referred": 0
+          },
+          {
+            "target": 42,
+            "clerked": 15,
+            "referred": 1
+          },
+          {
+            "target": 37,
+            "clerked": 11,
+            "referred": 1
+          },
+          {
+            "target": 47,
+            "clerked": 12,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 23,
+        "sourceName": "Hafeet",
+        "name": "Hafeet HC",
+        "wilayat": "Saham",
+        "target": 795,
+        "clerked": 67,
+        "referred": 2,
+        "monthly": [
+          {
+            "target": 90,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 73,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 70,
+            "clerked": 3,
+            "referred": 1
+          },
+          {
+            "target": 63,
+            "clerked": 2,
+            "referred": 1
+          },
+          {
+            "target": 75,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 7,
+            "referred": 0
+          },
+          {
+            "target": 67,
+            "clerked": 6,
+            "referred": 0
+          },
+          {
+            "target": 60,
+            "clerked": 23,
+            "referred": 0
+          },
+          {
+            "target": 69,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 79,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 73,
+            "clerked": 9,
+            "referred": 0
+          },
+          {
+            "target": 70,
+            "clerked": 3,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 24,
+        "sourceName": "Wadi bani omar",
+        "name": "Wadi Bani Umar HC",
+        "wilayat": "Saham",
+        "target": 76,
+        "clerked": 30,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 8,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 5,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 5,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 7,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 5,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 8,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 11,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 5,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 4,
+            "clerked": 2,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 25,
+        "sourceName": "Khabourah",
+        "name": "Al Khabourah EHC",
+        "wilayat": "Al Khabourah",
+        "target": 929,
+        "clerked": 10,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 97,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 77,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 64,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 70,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 65,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 92,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 96,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 109,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 89,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 91,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 73,
+            "clerked": 0,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 26,
+        "sourceName": "Qasabiah",
+        "name": "Al Qasabiyah HC",
+        "wilayat": "Al Khabourah",
+        "target": 540,
+        "clerked": 76,
+        "referred": 2,
+        "monthly": [
+          {
+            "target": 63,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 49,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 40,
+            "clerked": 19,
+            "referred": 0
+          },
+          {
+            "target": 42,
+            "clerked": 6,
+            "referred": 0
+          },
+          {
+            "target": 41,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 43,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 45,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 65,
+            "clerked": 15,
+            "referred": 0
+          },
+          {
+            "target": 40,
+            "clerked": 9,
+            "referred": 0
+          },
+          {
+            "target": 48,
+            "clerked": 14,
+            "referred": 0
+          },
+          {
+            "target": 34,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 30,
+            "clerked": 6,
+            "referred": 2
+          }
+        ]
+      },
+      {
+        "sourceRow": 27,
+        "sourceName": "Wadi shafan",
+        "name": "Wadi Shafan HC",
+        "wilayat": "Al Khabourah",
+        "target": 12,
+        "clerked": 10,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 0,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 2,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 0,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 0,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 4,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 0,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 3,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 2,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 0,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 0,
+            "clerked": 0,
+            "referred": 0
+          },
+          null
+        ]
+      },
+      {
+        "sourceRow": 28,
+        "sourceName": "Wadi hawasnah",
+        "name": "Wadi Al Hawasinah Hospital",
+        "wilayat": "Al Khabourah",
+        "target": 36,
+        "clerked": 27,
+        "referred": 1,
+        "monthly": [
+          {
+            "target": 4,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 0,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 0,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 2,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 0,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 4,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 4,
+            "clerked": 2,
+            "referred": 1
+          },
+          {
+            "target": 4,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 0,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 2,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 29,
+        "sourceName": "Wadi sarami",
+        "name": "Wadi As Sarami Hospital",
+        "wilayat": "Al Khabourah",
+        "target": 30,
+        "clerked": 30,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 2,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 2,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 2,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 2,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 2,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 3,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 3,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 3,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 3,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 6,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 30,
+        "sourceName": "Al Suwaiq pc",
+        "name": "As Suwayq EHC",
+        "wilayat": "As Suwayq",
+        "target": 634,
+        "clerked": 150,
+        "referred": 25,
+        "monthly": [
+          {
+            "target": 85,
+            "clerked": 25,
+            "referred": 4
+          },
+          {
+            "target": 70,
+            "clerked": 18,
+            "referred": 5
+          },
+          {
+            "target": 50,
+            "clerked": 16,
+            "referred": 3
+          },
+          {
+            "target": 50,
+            "clerked": 19,
+            "referred": 4
+          },
+          {
+            "target": 80,
+            "clerked": 28,
+            "referred": 4
+          },
+          null,
+          null,
+          {
+            "target": 58,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 65,
+            "clerked": 26,
+            "referred": 0
+          },
+          {
+            "target": 68,
+            "clerked": 11,
+            "referred": 3
+          },
+          {
+            "target": 52,
+            "clerked": 6,
+            "referred": 2
+          },
+          {
+            "target": 56,
+            "clerked": 0,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 31,
+        "sourceName": "Al Bidayah",
+        "name": "Al Bidayah HC",
+        "wilayat": "As Suwayq",
+        "target": 763,
+        "clerked": 190,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 76,
+            "clerked": 20,
+            "referred": 0
+          },
+          {
+            "target": 59,
+            "clerked": 15,
+            "referred": 0
+          },
+          {
+            "target": 67,
+            "clerked": 25,
+            "referred": 0
+          },
+          {
+            "target": 60,
+            "clerked": 15,
+            "referred": 0
+          },
+          {
+            "target": 61,
+            "clerked": 15,
+            "referred": 0
+          },
+          {
+            "target": 58,
+            "clerked": 13,
+            "referred": 0
+          },
+          {
+            "target": 75,
+            "clerked": 13,
+            "referred": 0
+          },
+          {
+            "target": 70,
+            "clerked": 13,
+            "referred": 0
+          },
+          {
+            "target": 65,
+            "clerked": 16,
+            "referred": 0
+          },
+          {
+            "target": 63,
+            "clerked": 16,
+            "referred": 0
+          },
+          {
+            "target": 54,
+            "clerked": 14,
+            "referred": 0
+          },
+          {
+            "target": 55,
+            "clerked": 15,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 32,
+        "sourceName": "Al Khadra",
+        "name": "Al Khadra HC",
+        "wilayat": "As Suwayq",
+        "target": 797,
+        "clerked": 242,
+        "referred": 1,
+        "monthly": [
+          {
+            "target": 60,
+            "clerked": 10,
+            "referred": 0
+          },
+          {
+            "target": 69,
+            "clerked": 6,
+            "referred": 0
+          },
+          {
+            "target": 69,
+            "clerked": 6,
+            "referred": 0
+          },
+          {
+            "target": 53,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 75,
+            "clerked": 15,
+            "referred": 0
+          },
+          {
+            "target": 55,
+            "clerked": 6,
+            "referred": 0
+          },
+          {
+            "target": 67,
+            "clerked": 60,
+            "referred": 0
+          },
+          {
+            "target": 68,
+            "clerked": 16,
+            "referred": 0
+          },
+          {
+            "target": 90,
+            "clerked": 36,
+            "referred": 0
+          },
+          {
+            "target": 53,
+            "clerked": 21,
+            "referred": 1
+          },
+          {
+            "target": 60,
+            "clerked": 11,
+            "referred": 0
+          },
+          {
+            "target": 78,
+            "clerked": 50,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 33,
+        "sourceName": "Al Shareesa",
+        "name": "Al Shreesah HC",
+        "wilayat": "As Suwayq",
+        "target": 510,
+        "clerked": 355,
+        "referred": 62,
+        "monthly": [
+          {
+            "target": 51,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 44,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 35,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 38,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 34,
+            "clerked": 10,
+            "referred": 0
+          },
+          {
+            "target": 49,
+            "clerked": 95,
+            "referred": 4
+          },
+          {
+            "target": 42,
+            "clerked": 110,
+            "referred": 43
+          },
+          {
+            "target": 43,
+            "clerked": 43,
+            "referred": 7
+          },
+          {
+            "target": 53,
+            "clerked": 25,
+            "referred": 3
+          },
+          {
+            "target": 51,
+            "clerked": 21,
+            "referred": 1
+          },
+          {
+            "target": 35,
+            "clerked": 21,
+            "referred": 3
+          },
+          {
+            "target": 35,
+            "clerked": 14,
+            "referred": 1
+          }
+        ]
+      },
+      {
+        "sourceRow": 34,
+        "sourceName": "Al Tharmad",
+        "name": "Al Tharmed HC",
+        "wilayat": "As Suwayq",
+        "target": 391,
+        "clerked": 82,
+        "referred": 2,
+        "monthly": [
+          {
+            "target": 34,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 37,
+            "clerked": 16,
+            "referred": 0
+          },
+          {
+            "target": 25,
+            "clerked": 8,
+            "referred": 0
+          },
+          {
+            "target": 25,
+            "clerked": 16,
+            "referred": 0
+          },
+          {
+            "target": 28,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 22,
+            "clerked": 4,
+            "referred": 1
+          },
+          {
+            "target": 36,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 29,
+            "clerked": 9,
+            "referred": 0
+          },
+          {
+            "target": 45,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 47,
+            "clerked": 11,
+            "referred": 1
+          },
+          {
+            "target": 31,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 32,
+            "clerked": 5,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 35,
+        "sourceName": "Wadi Jahawer",
+        "name": "Wadi Al Jahawir HC",
+        "wilayat": "As Suwayq",
+        "target": 61,
+        "clerked": 36,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 2,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 4,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 5,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 4,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 4,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 14,
+            "clerked": 9,
+            "referred": 0
+          },
+          {
+            "target": 5,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 3,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 7,
+            "clerked": 5,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 36,
+        "sourceName": "Mashaiq",
+        "name": "Al Mashaiq HC",
+        "wilayat": "As Suwayq",
+        "target": 106,
+        "clerked": 131,
+        "referred": 2,
+        "monthly": [
+          {
+            "target": 14,
+            "clerked": 9,
+            "referred": 0
+          },
+          {
+            "target": 8,
+            "clerked": 6,
+            "referred": 0
+          },
+          {
+            "target": 7,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 6,
+            "referred": 0
+          },
+          {
+            "target": 8,
+            "clerked": 6,
+            "referred": 1
+          },
+          {
+            "target": 10,
+            "clerked": 8,
+            "referred": 0
+          },
+          {
+            "target": 13,
+            "clerked": 13,
+            "referred": 0
+          },
+          {
+            "target": 5,
+            "clerked": 38,
+            "referred": 1
+          },
+          {
+            "target": 5,
+            "clerked": 13,
+            "referred": 0
+          },
+          {
+            "target": 15,
+            "clerked": 15,
+            "referred": 0
+          },
+          {
+            "target": 9,
+            "clerked": 7,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 6,
+            "referred": 0
+          }
+        ]
+      }
+    ],
+    "statedTotals": {
+      "target": 14591,
+      "clerked": 5341,
+      "referred": 817
+    },
+    "monthlyClerked": [
+      335,
+      238,
+      272,
+      303,
+      406,
+      423,
+      606,
+      551,
+      804,
+      527,
+      387,
+      530
+    ],
+    "flags": [
+      "Liwa HC: Jan reports 357 referrals from 28 visits.",
+      "Liwa HC: 786 visits against a target of 732 (107%).",
+      "Nabur HC: clerked months add to 230, total column says 220.",
+      "Rahab HC: clerked months add to 17, total column says 13.",
+      "Sohar EHC: referred months add to 5, total column says 0.",
+      "Wadi Hibi Hospital: clerked months add to 45, total column says 44.",
+      "Wadi Ahin HC: referred months add to 1, total column says 0.",
+      "Saham EHC: Feb reports 26 referrals from 4 visits.",
+      "Al Ghwaisah HC: clerked months add to 260, total column says 234.",
+      "Wadi Shafan HC: no figures for Dec.",
+      "As Suwayq EHC: no figures for Jun, Jul.",
+      "Al Mashaiq HC: 131 visits against a target of 106 (124%)."
+    ]
+  },
+  "four": {
+    "centres": [
+      {
+        "sourceRow": 10,
+        "sourceName": "Shinas PC",
+        "name": "Shinas EHC",
+        "wilayat": "Shinas",
+        "target": 1282,
+        "clerked": 515,
+        "referred": 6,
+        "monthly": [
+          {
+            "target": 1280,
+            "clerked": 1,
+            "referred": 1
+          },
+          {
+            "target": 1280,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 1280,
+            "clerked": 21,
+            "referred": 0
+          },
+          {
+            "target": 1280,
+            "clerked": 17,
+            "referred": 1
+          },
+          {
+            "target": 1280,
+            "clerked": 10,
+            "referred": 2
+          },
+          {
+            "target": 1280,
+            "clerked": 12,
+            "referred": 2
+          },
+          {
+            "target": 1044,
+            "clerked": 12,
+            "referred": 0
+          },
+          {
+            "target": 1044,
+            "clerked": 355,
+            "referred": 8
+          },
+          {
+            "target": 1044,
+            "clerked": 35,
+            "referred": 0
+          },
+          {
+            "target": 1190,
+            "clerked": 16,
+            "referred": 1
+          },
+          {
+            "target": 119,
+            "clerked": 7,
+            "referred": 0
+          },
+          {
+            "target": 1190,
+            "clerked": 25,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 11,
+        "sourceName": "Abu Baqra",
+        "name": "Abu Baqra HC",
+        "wilayat": "Shinas",
+        "target": 364,
+        "clerked": 100,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 24,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 24,
+            "clerked": 10,
+            "referred": 0
+          },
+          {
+            "target": 21,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 27,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 31,
+            "clerked": 15,
+            "referred": 0
+          },
+          {
+            "target": 34,
+            "clerked": 6,
+            "referred": 0
+          },
+          {
+            "target": 36,
+            "clerked": 6,
+            "referred": 0
+          },
+          {
+            "target": 35,
+            "clerked": 8,
+            "referred": 0
+          },
+          {
+            "target": 33,
+            "clerked": 16,
+            "referred": 0
+          },
+          {
+            "target": 32,
+            "clerked": 10,
+            "referred": 0
+          },
+          {
+            "target": 33,
+            "clerked": 15,
+            "referred": 0
+          },
+          {
+            "target": 34,
+            "clerked": 5,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 12,
+        "sourceName": "Liwa PC",
+        "name": "Liwa HC",
+        "wilayat": "Liwa",
+        "target": 675,
+        "clerked": 695,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 55,
+            "clerked": 26,
+            "referred": 0
+          },
+          {
+            "target": 55,
+            "clerked": 30,
+            "referred": 0
+          },
+          {
+            "target": 78,
+            "clerked": 58,
+            "referred": 0
+          },
+          {
+            "target": 64,
+            "clerked": 58,
+            "referred": 0
+          },
+          {
+            "target": 58,
+            "clerked": 78,
+            "referred": 0
+          },
+          {
+            "target": 54,
+            "clerked": 40,
+            "referred": 0
+          },
+          {
+            "target": 72,
+            "clerked": 87,
+            "referred": 0
+          },
+          {
+            "target": 77,
+            "clerked": 80,
+            "referred": 0
+          },
+          {
+            "target": 65,
+            "clerked": 65,
+            "referred": 0
+          },
+          {
+            "target": 77,
+            "clerked": 102,
+            "referred": 0
+          },
+          {
+            "target": 65,
+            "clerked": 68,
+            "referred": 0
+          },
+          {
+            "target": 32,
+            "clerked": 3,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 13,
+        "sourceName": "Nuber PC",
+        "name": "Nabur HC",
+        "wilayat": "Liwa",
+        "target": 1074,
+        "clerked": 172,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 89,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 88,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 78,
+            "clerked": 10,
+            "referred": 0
+          },
+          {
+            "target": 84,
+            "clerked": 7,
+            "referred": 0
+          },
+          {
+            "target": 90,
+            "clerked": 90,
+            "referred": 0
+          },
+          {
+            "target": 64,
+            "clerked": 21,
+            "referred": 0
+          },
+          {
+            "target": 63,
+            "clerked": 18,
+            "referred": 0
+          },
+          {
+            "target": 44,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 122,
+            "clerked": 12,
+            "referred": 0
+          },
+          {
+            "target": 1080,
+            "clerked": 9,
+            "referred": 0
+          },
+          {
+            "target": 813,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 32,
+            "clerked": 3,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 14,
+        "sourceName": "Rahab",
+        "name": "Rahab HC",
+        "wilayat": "Liwa",
+        "target": 22,
+        "clerked": 12,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 1,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 3,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 3,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 2,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 3,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 2,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 4,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 0,
+            "clerked": 0,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 15,
+        "sourceName": "Suhar PC",
+        "name": "Sohar EHC",
+        "wilayat": "Sohar",
+        "target": 1327,
+        "clerked": 284,
+        "referred": 8,
+        "monthly": [
+          {
+            "target": 113,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 85,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 89,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 107,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 91,
+            "clerked": 13,
+            "referred": 0
+          },
+          {
+            "target": 121,
+            "clerked": 30,
+            "referred": 8
+          },
+          {
+            "target": 122,
+            "clerked": 45,
+            "referred": 3
+          },
+          {
+            "target": 118,
+            "clerked": 24,
+            "referred": 2
+          },
+          {
+            "target": 130,
+            "clerked": 48,
+            "referred": 1
+          },
+          {
+            "target": 130,
+            "clerked": 38,
+            "referred": 1
+          },
+          {
+            "target": 105,
+            "clerked": 20,
+            "referred": 1
+          },
+          {
+            "target": 116,
+            "clerked": 63,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 16,
+        "sourceName": "Multaqa",
+        "name": "Al Multaqa HC",
+        "wilayat": "Sohar",
+        "target": 672,
+        "clerked": 171,
+        "referred": 1,
+        "monthly": [
+          {
+            "target": 50,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 59,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 52,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 44,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 52,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 44,
+            "clerked": 6,
+            "referred": 1
+          },
+          {
+            "target": 45,
+            "clerked": 5,
+            "referred": 1
+          },
+          {
+            "target": 44,
+            "clerked": 19,
+            "referred": 4
+          },
+          {
+            "target": 64,
+            "clerked": 22,
+            "referred": 0
+          },
+          {
+            "target": 66,
+            "clerked": 24,
+            "referred": 0
+          },
+          {
+            "target": 116,
+            "clerked": 62,
+            "referred": 0
+          },
+          {
+            "target": 36,
+            "clerked": 19,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 17,
+        "sourceName": "Tarif",
+        "name": "Al Traif HC",
+        "wilayat": "Sohar",
+        "target": 860,
+        "clerked": 40,
+        "referred": 2,
+        "monthly": [
+          {
+            "target": 100,
+            "clerked": 2,
+            "referred": 1
+          },
+          {
+            "target": 85,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 75,
+            "clerked": 7,
+            "referred": 0
+          },
+          {
+            "target": 67,
+            "clerked": 7,
+            "referred": 0
+          },
+          {
+            "target": 67,
+            "clerked": 7,
+            "referred": 0
+          },
+          {
+            "target": 85,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 65,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 90,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 66,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 50,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 50,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 60,
+            "clerked": 5,
+            "referred": 1
+          }
+        ]
+      },
+      {
+        "sourceRow": 18,
+        "sourceName": "Falaj Al Qabil",
+        "name": "Falaj Al Qabail HC",
+        "wilayat": "Sohar",
+        "target": 467,
+        "clerked": 409,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 44,
+            "clerked": 42,
+            "referred": 0
+          },
+          {
+            "target": 34,
+            "clerked": 42,
+            "referred": 0
+          },
+          {
+            "target": 37,
+            "clerked": 35,
+            "referred": 0
+          },
+          {
+            "target": 27,
+            "clerked": 39,
+            "referred": 0
+          },
+          {
+            "target": 30,
+            "clerked": 18,
+            "referred": 0
+          },
+          {
+            "target": 28,
+            "clerked": 25,
+            "referred": 0
+          },
+          {
+            "target": 42,
+            "clerked": 11,
+            "referred": 0
+          },
+          {
+            "target": 38,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 61,
+            "clerked": 88,
+            "referred": 0
+          },
+          {
+            "target": 50,
+            "clerked": 37,
+            "referred": 0
+          },
+          {
+            "target": 37,
+            "clerked": 28,
+            "referred": 2
+          },
+          {
+            "target": 39,
+            "clerked": 39,
+            "referred": 1
+          }
+        ]
+      },
+      {
+        "sourceRow": 19,
+        "sourceName": "Al Uwainate",
+        "name": "Al Uwainat HC",
+        "wilayat": "Sohar",
+        "target": 428,
+        "clerked": 20,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 37,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 34,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 30,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 34,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 35,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 30,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 37,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 42,
+            "clerked": 3,
+            "referred": 3
+          },
+          {
+            "target": 38,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 31,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 41,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 39,
+            "clerked": 4,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 20,
+        "sourceName": "Wadi Hibi",
+        "name": "Wadi Hibi Hospital",
+        "wilayat": "Sohar",
+        "target": 148,
+        "clerked": 87,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 6,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 16,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 20,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 7,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 8,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 9,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 11,
+            "clerked": 8,
+            "referred": 0
+          },
+          {
+            "target": 11,
+            "clerked": 10,
+            "referred": 0
+          },
+          {
+            "target": 14,
+            "clerked": 8,
+            "referred": 0
+          },
+          {
+            "target": 18,
+            "clerked": 12,
+            "referred": 0
+          },
+          {
+            "target": 14,
+            "clerked": 11,
+            "referred": 0
+          },
+          {
+            "target": 14,
+            "clerked": 17,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 21,
+        "sourceName": "Wadi Ahin",
+        "name": "Wadi Ahin HC",
+        "wilayat": "Sohar",
+        "target": 81,
+        "clerked": 33,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 2,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 5,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 8,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 5,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 7,
+            "clerked": 6,
+            "referred": 0
+          },
+          {
+            "target": 7,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 7,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 4,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 18,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 1,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 22,
+        "sourceName": "Saham pc",
+        "name": "Saham EHC",
+        "wilayat": "Saham",
+        "target": 1473,
+        "clerked": 1183,
+        "referred": 165,
+        "monthly": [
+          {
+            "target": 126,
+            "clerked": 122,
+            "referred": 55
+          },
+          {
+            "target": 121,
+            "clerked": 50,
+            "referred": 25
+          },
+          {
+            "target": 96,
+            "clerked": 60,
+            "referred": 12
+          },
+          {
+            "target": 92,
+            "clerked": 44,
+            "referred": 23
+          },
+          {
+            "target": 119,
+            "clerked": 85,
+            "referred": 16
+          },
+          {
+            "target": 122,
+            "clerked": 80,
+            "referred": 34
+          },
+          {
+            "target": 150,
+            "clerked": 105,
+            "referred": 15
+          },
+          {
+            "target": 141,
+            "clerked": 139,
+            "referred": 14
+          },
+          {
+            "target": 97,
+            "clerked": 95,
+            "referred": 24
+          },
+          {
+            "target": 126,
+            "clerked": 124,
+            "referred": 33
+          },
+          {
+            "target": 131,
+            "clerked": 130,
+            "referred": 32
+          },
+          {
+            "target": 152,
+            "clerked": 149,
+            "referred": 35
+          }
+        ]
+      },
+      {
+        "sourceRow": 23,
+        "sourceName": "Guwisah",
+        "name": "Al Ghwaisah HC",
+        "wilayat": "Saham",
+        "target": 587,
+        "clerked": 266,
+        "referred": 1,
+        "monthly": [
+          {
+            "target": 44,
+            "clerked": 32,
+            "referred": 0
+          },
+          {
+            "target": 59,
+            "clerked": 22,
+            "referred": 0
+          },
+          {
+            "target": 43,
+            "clerked": 28,
+            "referred": 0
+          },
+          {
+            "target": 44,
+            "clerked": 27,
+            "referred": 0
+          },
+          {
+            "target": 48,
+            "clerked": 13,
+            "referred": 1
+          },
+          {
+            "target": 44,
+            "clerked": 27,
+            "referred": 0
+          },
+          {
+            "target": 58,
+            "clerked": 31,
+            "referred": 0
+          },
+          {
+            "target": 52,
+            "clerked": 22,
+            "referred": 0
+          },
+          {
+            "target": 52,
+            "clerked": 25,
+            "referred": 0
+          },
+          {
+            "target": 48,
+            "clerked": 13,
+            "referred": 0
+          },
+          {
+            "target": 49,
+            "clerked": 9,
+            "referred": 0
+          },
+          {
+            "target": 46,
+            "clerked": 17,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 24,
+        "sourceName": "Hafeet",
+        "name": "Hafeet HC",
+        "wilayat": "Saham",
+        "target": 853,
+        "clerked": 57,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 83,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 59,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 61,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 66,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 70,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 67,
+            "clerked": 12,
+            "referred": 0
+          },
+          {
+            "target": 62,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 85,
+            "clerked": 7,
+            "referred": 0
+          },
+          {
+            "target": 74,
+            "clerked": 14,
+            "referred": 0
+          },
+          {
+            "target": 78,
+            "clerked": 6,
+            "referred": 0
+          },
+          {
+            "target": 79,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 69,
+            "clerked": 1,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 25,
+        "sourceName": "Wadi bani omar",
+        "name": "Wadi Bani Umar HC",
+        "wilayat": "Saham",
+        "target": 75,
+        "clerked": 27,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 5,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 4,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 8,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 7,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 5,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 7,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 10,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 7,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 5,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 5,
+            "clerked": 3,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 26,
+        "sourceName": "Khabourah",
+        "name": "Al Khabourah EHC",
+        "wilayat": "Al Khabourah",
+        "target": 353,
+        "clerked": 96,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 110,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 87,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 78,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 73,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 74,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 4,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 111,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 82,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 99,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 95,
+            "clerked": 95,
+            "referred": 0
+          },
+          {
+            "target": 80,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 73,
+            "clerked": 0,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 27,
+        "sourceName": "Qasabiah",
+        "name": "Al Qasabiyah HC",
+        "wilayat": "Al Khabourah",
+        "target": 520,
+        "clerked": 29,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 36,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 36,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 49,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 44,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 41,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 45,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 33,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 55,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 55,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 50,
+            "clerked": 10,
+            "referred": 0
+          },
+          {
+            "target": 49,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 27,
+            "clerked": 3,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 28,
+        "sourceName": "Wadi shafan",
+        "name": "Wadi Shafan HC",
+        "wilayat": "Al Khabourah",
+        "target": 11,
+        "clerked": 9,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 0,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 0,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 0,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 0,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 2,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 0,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 3,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 3,
+            "clerked": 3,
+            "referred": 0
+          },
+          null
+        ]
+      },
+      {
+        "sourceRow": 29,
+        "sourceName": "Wadi hawasnah",
+        "name": "Wadi Al Hawasinah Hospital",
+        "wilayat": "Al Khabourah",
+        "target": 36,
+        "clerked": 17,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 3,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 2,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 4,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 2,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 0,
+            "referred": 0
+          },
+          null,
+          {
+            "target": 4,
+            "clerked": 3,
+            "referred": 1
+          },
+          {
+            "target": 7,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 2,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 4,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 1,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 30,
+        "sourceName": "Wadi sarami",
+        "name": "Wadi As Sarami Hospital",
+        "wilayat": "Al Khabourah",
+        "target": 21,
+        "clerked": 22,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 1,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 2,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 4,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 3,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 0,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 2,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 3,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 1,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 3,
+            "clerked": 3,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 31,
+        "sourceName": "Al Suwaiq pc",
+        "name": "As Suwayq EHC",
+        "wilayat": "As Suwayq",
+        "target": 468,
+        "clerked": 99,
+        "referred": 18,
+        "monthly": [
+          {
+            "target": 71,
+            "clerked": 20,
+            "referred": 5
+          },
+          {
+            "target": 60,
+            "clerked": 22,
+            "referred": 3
+          },
+          {
+            "target": 52,
+            "clerked": 15,
+            "referred": 2
+          },
+          {
+            "target": 88,
+            "clerked": 22,
+            "referred": 5
+          },
+          {
+            "target": 68,
+            "clerked": 17,
+            "referred": 3
+          },
+          null,
+          null,
+          {
+            "target": 69,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 0,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 0,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 0,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 60,
+            "clerked": 2,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 32,
+        "sourceName": "Al Bidayah",
+        "name": "Al Bidayah HC",
+        "wilayat": "As Suwayq",
+        "target": 918,
+        "clerked": 197,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 79,
+            "clerked": 19,
+            "referred": 0
+          },
+          {
+            "target": 73,
+            "clerked": 22,
+            "referred": 0
+          },
+          {
+            "target": 68,
+            "clerked": 10,
+            "referred": 0
+          },
+          {
+            "target": 53,
+            "clerked": 25,
+            "referred": 0
+          },
+          {
+            "target": 71,
+            "clerked": 14,
+            "referred": 0
+          },
+          {
+            "target": 63,
+            "clerked": 12,
+            "referred": 0
+          },
+          {
+            "target": 86,
+            "clerked": 16,
+            "referred": 0
+          },
+          {
+            "target": 90,
+            "clerked": 10,
+            "referred": 0
+          },
+          {
+            "target": 74,
+            "clerked": 12,
+            "referred": 0
+          },
+          {
+            "target": 74,
+            "clerked": 12,
+            "referred": 0
+          },
+          {
+            "target": 90,
+            "clerked": 20,
+            "referred": 0
+          },
+          {
+            "target": 97,
+            "clerked": 25,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 33,
+        "sourceName": "Al Khadra",
+        "name": "Al Khadra HC",
+        "wilayat": "As Suwayq",
+        "target": 832,
+        "clerked": 242,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 73,
+            "clerked": 15,
+            "referred": 0
+          },
+          {
+            "target": 53,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 63,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 43,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 86,
+            "clerked": 17,
+            "referred": 0
+          },
+          {
+            "target": 70,
+            "clerked": 7,
+            "referred": 0
+          },
+          {
+            "target": 56,
+            "clerked": 50,
+            "referred": 0
+          },
+          {
+            "target": 78,
+            "clerked": 16,
+            "referred": 0
+          },
+          {
+            "target": 99,
+            "clerked": 37,
+            "referred": 0
+          },
+          {
+            "target": 68,
+            "clerked": 22,
+            "referred": 0
+          },
+          {
+            "target": 70,
+            "clerked": 13,
+            "referred": 0
+          },
+          {
+            "target": 73,
+            "clerked": 55,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 34,
+        "sourceName": "Al Shareesa",
+        "name": "Al Shreesah HC",
+        "wilayat": "As Suwayq",
+        "target": 513,
+        "clerked": 220,
+        "referred": 11,
+        "monthly": [
+          {
+            "target": 44,
+            "clerked": 6,
+            "referred": 4
+          },
+          {
+            "target": 50,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 45,
+            "clerked": 7,
+            "referred": 0
+          },
+          {
+            "target": 24,
+            "clerked": 4,
+            "referred": 0
+          },
+          {
+            "target": 42,
+            "clerked": 94,
+            "referred": 7
+          },
+          {
+            "target": 50,
+            "clerked": 16,
+            "referred": 0
+          },
+          {
+            "target": 51,
+            "clerked": 45,
+            "referred": 6
+          },
+          {
+            "target": 45,
+            "clerked": 26,
+            "referred": 1
+          },
+          {
+            "target": 38,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 54,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 35,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 35,
+            "clerked": 14,
+            "referred": 1
+          }
+        ]
+      },
+      {
+        "sourceRow": 35,
+        "sourceName": "Al Tharmad",
+        "name": "Al Tharmed HC",
+        "wilayat": "As Suwayq",
+        "target": 409,
+        "clerked": 95,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 35,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 29,
+            "clerked": 20,
+            "referred": 0
+          },
+          {
+            "target": 31,
+            "clerked": 12,
+            "referred": 0
+          },
+          {
+            "target": 21,
+            "clerked": 13,
+            "referred": 0
+          },
+          {
+            "target": 31,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 44,
+            "clerked": 7,
+            "referred": 0
+          },
+          {
+            "target": 44,
+            "clerked": 7,
+            "referred": 0
+          },
+          {
+            "target": 39,
+            "clerked": 9,
+            "referred": 0
+          },
+          {
+            "target": 33,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 47,
+            "clerked": 15,
+            "referred": 1
+          },
+          {
+            "target": 26,
+            "clerked": 6,
+            "referred": 0
+          },
+          {
+            "target": 29,
+            "clerked": 1,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 36,
+        "sourceName": "Wadi Jahawer",
+        "name": "Wadi Al Jahawir HC",
+        "wilayat": "As Suwayq",
+        "target": 66,
+        "clerked": 22,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 7,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 3,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 4,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 9,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 5,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 6,
+            "clerked": 1,
+            "referred": 0
+          },
+          {
+            "target": 0,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 5,
+            "clerked": 3,
+            "referred": 0
+          },
+          {
+            "target": 4,
+            "clerked": 0,
+            "referred": 0
+          },
+          {
+            "target": 12,
+            "clerked": 6,
+            "referred": 2
+          },
+          {
+            "target": 2,
+            "clerked": 2,
+            "referred": 0
+          },
+          {
+            "target": 9,
+            "clerked": 4,
+            "referred": 0
+          }
+        ]
+      },
+      {
+        "sourceRow": 37,
+        "sourceName": "Mashaiq",
+        "name": "Al Mashaiq HC",
+        "wilayat": "As Suwayq",
+        "target": 131,
+        "clerked": 125,
+        "referred": 0,
+        "monthly": [
+          {
+            "target": 11,
+            "clerked": 8,
+            "referred": 0
+          },
+          {
+            "target": 10,
+            "clerked": 7,
+            "referred": 0
+          },
+          {
+            "target": 9,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 8,
+            "clerked": 7,
+            "referred": 0
+          },
+          {
+            "target": 9,
+            "clerked": 8,
+            "referred": 0
+          },
+          {
+            "target": 8,
+            "clerked": 6,
+            "referred": 0
+          },
+          {
+            "target": 12,
+            "clerked": 12,
+            "referred": 0
+          },
+          {
+            "target": 19,
+            "clerked": 32,
+            "referred": 3
+          },
+          {
+            "target": 11,
+            "clerked": 18,
+            "referred": 0
+          },
+          {
+            "target": 10,
+            "clerked": 5,
+            "referred": 0
+          },
+          {
+            "target": 14,
+            "clerked": 11,
+            "referred": 0
+          },
+          {
+            "target": 10,
+            "clerked": 6,
+            "referred": 0
+          }
+        ]
+      }
+    ],
+    "statedTotals": {
+      "target": 14666,
+      "clerked": 5244,
+      "referred": 211
+    },
+    "monthlyClerked": [
+      315,
+      271,
+      284,
+      310,
+      507,
+      321,
+      482,
+      788,
+      511,
+      571,
+      416,
+      468
+    ],
+    "flags": [
+      "Governorate: the referred total row says 211; the institutions add to 212.",
+      "Shinas EHC: referred months add to 15, total column says 6.",
+      "Liwa HC: 695 visits against a target of 675 (103%).",
+      "Sohar EHC: referred months add to 16, total column says 8.",
+      "Al Multaqa HC: referred months add to 6, total column says 1.",
+      "Falaj Al Qabail HC: referred months add to 3, total column says 0.",
+      "Al Uwainat HC: referred months add to 3, total column says 0.",
+      "Saham EHC: referred months add to 318, total column says 165.",
+      "Wadi Shafan HC: no figures for Dec.",
+      "Wadi Al Hawasinah Hospital: referred months add to 1, total column says 0.",
+      "Wadi Al Hawasinah Hospital: no figures for Jun.",
+      "Wadi As Sarami Hospital: 22 visits against a target of 21 (105%).",
+      "As Suwayq EHC: no figures for Jun, Jul.",
+      "Al Shreesah HC: referred months add to 19, total column says 11.",
+      "Al Tharmed HC: referred months add to 1, total column says 0.",
+      "Wadi Al Jahawir HC: referred months add to 2, total column says 0.",
+      "Al Mashaiq HC: referred months add to 3, total column says 0."
+    ]
+  }
+}

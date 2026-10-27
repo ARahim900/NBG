@@ -180,9 +180,9 @@ export default function CongenitalAnomalies() {
       </div>
       <section
         aria-labelledby="ca-programme-challenges"
-        className="rounded-2xl border border-[#4E4456]/20 bg-surface p-6 shadow-sm dark:border-[#A4C5BB]/40"
+        className="rounded-2xl border border-navy/20 bg-surface p-6 shadow-sm dark:border-teal/40"
       >
-        <h2 id="ca-programme-challenges" className="text-xl font-semibold text-[#4E4456] dark:text-white">
+        <h2 id="ca-programme-challenges" className="text-xl font-semibold text-heading dark:text-white">
           Programme Challenges
         </h2>
         <p className="mt-4 text-sm leading-relaxed text-ink">

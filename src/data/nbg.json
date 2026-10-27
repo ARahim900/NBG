@@ -969,38 +969,7 @@
         18,
         20
       ]
-    ],
-    "gov_2025": [
-      [
-        "Newly diagnosed cases (2025)",
-        27
-      ],
-      [
-        "Total registered cases",
-        295
-      ],
-      [
-        "Age 0-5",
-        152
-      ],
-      [
-        "Age 6-12",
-        114
-      ],
-      [
-        "Age 13-18",
-        27
-      ],
-      [
-        "Males",
-        154
-      ],
-      [
-        "Females",
-        141
-      ]
-    ],
-    "y2025_note": "2025 data is governorate-aggregate only (per-health-center breakdown not in the source files)."
+    ]
   },
   "md": {
     "by_year": [
@@ -1150,7 +1119,7 @@
         2100.0
       ],
       [
-        "Suhar",
+        "Sohar",
         50,
         107,
         54.35,
@@ -1204,69 +1173,26 @@
         204
       ]
     ],
-    "wilayat_pct": [
-      [
-        "Al Suwaiq",
-        16.3,
-        9.7,
-        19.6
-      ],
-      [
-        "Al Khabourah",
-        3.3,
-        6.6,
-        19.6
-      ],
-      [
-        "Saham",
-        1.1,
-        11.3,
-        0.0
-      ],
-      [
-        "Sohar",
-        54.4,
-        54.9,
-        19.6
-      ],
-      [
-        "Liwa",
-        2.2,
-        1.0,
-        19.6
-      ],
-      [
-        "Shinas",
-        22.8,
-        16.4,
-        19.6
-      ]
-    ],
     "type_pct": [
       [
         "Physical Abuse",
-        26.67,
-        29.9
+        26.67
       ],
       [
         "Neglect",
-        41.03,
-        59.3
+        41.03
       ],
       [
         "Sexual Abuse",
-        6.15,
-        5.8
+        6.15
       ],
       [
         "Emotional Abuse",
-        2.05,
-        2.4
+        2.05
       ],
       [
         "Others",
-        24.1,
-        2.4
+        24.1
       ]
     ]
   },
@@ -1297,7 +1223,7 @@
         -100.0
       ],
       [
-        "Suhar",
+        "Sohar",
         52,
         66,
         63.41,
@@ -1355,7 +1281,7 @@
         0.0
       ],
       [
-        "Suhar Hospital",
+        "Sohar Hospital",
         15,
         17,
         18.29,
@@ -2498,20 +2424,6 @@
         106.0
       ]
     ],
-    "visit_coverage_2025": [
-      [
-        "Three-Year Visits in PHC",
-        14591,
-        5341,
-        36.6
-      ],
-      [
-        "Four-Year Visits in PHC",
-        14666,
-        5244,
-        35.8
-      ]
-    ],
-    "y2025_note": "KPI-deck headline: 3-yr coverage 37%, 4-yr 36%. Newborn hearing 2025 also reported as 103% (deck) / 106% (source file)."
+    "y2025_note": "Newborn hearing 2025 also reported as 103% (deck) / 106% (source file)."
   }
 }

@@ -26,6 +26,7 @@ import {
 } from '../data/population'
 import { ancRateGov, services } from '../data/services'
 import { MAP, PINNED, SEATS, pinnedNames } from '../data/map'
+import { HOSPITALS, hospitalsIn } from '../data/hospitals'
 import { useThemeMode } from '../lib/theme-mode'
 import { useNarrow } from '../lib/useMediaQuery'
 import { int, pct } from '../lib/format'
@@ -115,6 +116,13 @@ const r0 = Math.round
 // ---- geometry --------------------------------------------------------------
 const seatOf = (w: string) => SEATS.find((s) => s.wilayat === w)
 const centresIn = (w: string) => institutionsIn(w).length
+/** Health centres plus any wilayat-wide hospital. */
+const institutionCount = (w: string) => centresIn(w) + hospitalsIn(w).length
+const TOTAL_INSTITUTIONS = INSTITUTIONS.length + HOSPITALS.length
+const placesLabel = (w: string) => {
+  const h = hospitalsIn(w).length
+  return `${centresIn(w)} centres${h ? ` + ${h} hospital${h > 1 ? 's' : ''}` : ''}`
+}
 
 /** Map units per kilometre (1° latitude ≈ 111.32 km). */
 const UNITS_PER_KM = MAP.projection.k / 111.32
@@ -179,14 +187,25 @@ export default function HealthMap() {
   // ---- side panel data (selected wilayat only) ----
   const focusW = selected ? wil(selected) : null
   const focusCentres = selected
-    ? institutionsIn(selected)
-        .map((i) => ({
-          en: i.en,
-          ar: i.ar,
-          total: targetGroups(aggregate([i], 'all')).total,
-          pinned: pinnedNames.has(i.en),
-        }))
-        .sort((a, b) => b.total - a.total)
+    ? [
+        // A wilayat hospital's catchment is the whole wilayat.
+        ...hospitalsIn(selected).map((h) => ({
+          en: h.en,
+          ar: h.ar,
+          total: targetGroups(aggregate(institutionsIn(selected), 'all')).total,
+          pinned: false,
+          hospital: true,
+        })),
+        ...institutionsIn(selected)
+          .map((i) => ({
+            en: i.en,
+            ar: i.ar,
+            total: targetGroups(aggregate([i], 'all')).total,
+            pinned: pinnedNames.has(i.en),
+            hospital: false,
+          }))
+          .sort((a, b) => b.total - a.total),
+      ]
     : []
   const centreMax = Math.max(1, ...focusCentres.map((c) => c.total))
   const ranked = [...values].sort((a, b) => b.value - a.value)
@@ -195,7 +214,7 @@ export default function HealthMap() {
   const govUnder5 = byWilayat.reduce((a, w) => a + w.om.under5, 0)
   const mapSummary = `Map of North Al Batinah: ${metric.long}, by wilayat. ${ranked
     .map((v) => `${v.wilayat} ${metric.kind === 'rate' ? v.value.toFixed(1) : int(r0(v.value))}`)
-    .join(', ')}. ${PINNED.length} of ${INSTITUTIONS.length} health centres have a verified position.`
+    .join(', ')}. ${PINNED.length} of ${TOTAL_INSTITUTIONS} health institutions have a verified position.`
 
   const theme = isDark
     ? { sea: '#081d33', land: '#10243b', uae: '#0c1c2f', coast: '#3d6d9c', text: '#ebf3fd', sub: '#9fb8d3', ring: '#0c1c30' }
@@ -206,11 +225,11 @@ export default function HealthMap() {
       <SectionTitle
         icon={MapIcon}
         title="North Batinah Health Map"
-        subtitle={`${INSTITUTIONS.length} health institutions across ${WILAYATS.length} wilayat — catchment populations from the 2025 estimates`}
+        subtitle={`${TOTAL_INSTITUTIONS} health institutions across ${WILAYATS.length} wilayat — catchment populations from the 2025 estimates`}
       />
 
       <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
-        <KpiCard label="Health institutions" value={int(INSTITUTIONS.length)} icon={Building2} accent="navy" hint="Catchments in the 2025 estimates" />
+        <KpiCard label="Health institutions" value={int(TOTAL_INSTITUTIONS)} icon={Building2} accent="navy" hint={`${INSTITUTIONS.length} health-centre catchments + ${HOSPITALS.length} wilayat hospital`} />
         <KpiCard label="Residents served" value={int(r0(govTotal))} icon={Users} accent="azure" hint={`${pct((govOmani / govTotal) * 100)} Omani`} />
         <KpiCard label="Omani under 5" value={int(r0(govUnder5))} icon={Baby} accent="teal" hint="Children aged 0–4 (2025 estimate)" />
         <KpiCard
@@ -287,7 +306,7 @@ export default function HealthMap() {
                 const rr = radius(value)
                 const on = focus === wilayat
                 const dim = focus !== null && !on
-                const n = centresIn(wilayat)
+                const n = institutionCount(wilayat)
                 return (
                   <g
                     key={wilayat}
@@ -323,7 +342,7 @@ export default function HealthMap() {
                     />
                     <circle cx={seat.x} cy={seat.y} r={4} fill={theme.ring} />
                     {(() => {
-                      const line2 = `${fmt(value)} · ${n} centres`
+                      const line2 = `${fmt(value)} · ${placesLabel(wilayat)}`
                       const at = labelSpot(seat.x, seat.y, rr, wilayat, line2, vx + vw)
                       // Positioned by a CSS transform so the label glides with its circle.
                       return (
@@ -384,12 +403,12 @@ export default function HealthMap() {
                 {PINNED.length ? (
                   <>
                     <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full border-2 border-surface bg-heading" />
-                    Health centre (verified position) · {PINNED.length} of {INSTITUTIONS.length} located
+                    Health institution (verified position) · {PINNED.length} of {TOTAL_INSTITUTIONS} located
                   </>
                 ) : (
                   <>
                     <MapPinOff className="h-3.5 w-3.5 shrink-0" />
-                    {PINNED.length} of {INSTITUTIONS.length} centres located · pins appear once
+                    {PINNED.length} of {TOTAL_INSTITUTIONS} institutions located · pins appear once
                     coordinates are verified
                   </>
                 )}
@@ -431,7 +450,10 @@ export default function HealthMap() {
                   ['Residents', int(r0(focusW.omani + focusW.expat))],
                   ['Omani', pct((focusW.omani / (focusW.omani + focusW.expat)) * 100)],
                   ['Health institutions', String(focusCentres.length)],
-                  [metric.label, fmt(metric.wilayat(selected) ?? 0)],
+                  // Residents is already the first tile; show under-5s instead of repeating it.
+                  metricId === 'pop'
+                    ? ['Omani under 5', int(r0(focusW.om.under5))]
+                    : [metric.label, fmt(metric.wilayat(selected) ?? 0)],
                 ].map(([k, v]) => (
                   <div key={k} className="rounded-control bg-mist/60 px-3 py-2">
                     <dt className="text-eyebrow uppercase text-ink/60">{k}</dt>
@@ -453,6 +475,11 @@ export default function HealthMap() {
                           <MapPinOff className="h-3.5 w-3.5 shrink-0 text-ink/35" aria-label="Location pending" />
                         )}
                         <span className="truncate font-medium text-ink">{c.en}</span>
+                        {c.hospital && (
+                          <span className="shrink-0 rounded-control border border-line/20 px-1.5 text-eyebrow uppercase text-heading/75">
+                            Whole wilayat
+                          </span>
+                        )}
                       </span>
                       <span className="shrink-0 font-semibold tabular-nums text-heading">{int(r0(c.total))}</span>
                     </div>
@@ -494,7 +521,7 @@ export default function HealthMap() {
                         <span className="font-semibold text-ink">
                           {v.wilayat}
                           <span className="ml-2 text-xs font-normal text-ink/55">
-                            {centresIn(v.wilayat)} centres
+                            {placesLabel(v.wilayat)}
                           </span>
                         </span>
                         <span className="font-semibold tabular-nums text-heading">
@@ -538,7 +565,7 @@ export default function HealthMap() {
             rows={SEATS.map((s) => {
               const w = wil(s.wilayat)
               const sv = services.find((x) => x.wilayat === s.wilayat)
-              const n = centresIn(s.wilayat)
+              const n = institutionCount(s.wilayat)
               const located = institutionsIn(s.wilayat).filter((i) => pinnedNames.has(i.en)).length
               return [
                 s.wilayat,
@@ -553,20 +580,27 @@ export default function HealthMap() {
             })}
             total={[
               'GOVERNORATE',
-              int(INSTITUTIONS.length),
+              int(TOTAL_INSTITUTIONS),
               int(r0(govTotal)),
               int(r0(govOmani)),
               int(r0(byWilayat.reduce((a, w) => a + w.om.under5, 0))),
               int(r0(byWilayat.reduce((a, w) => a + w.om.women15to49, 0))),
               ancRateGov.toFixed(1),
-              `${PINNED.length} / ${INSTITUTIONS.length}`,
+              `${PINNED.length} / ${TOTAL_INSTITUTIONS}`,
             ]}
           />
-          <div className="mt-3">
-            <Note tone={PINNED.length < INSTITUTIONS.length ? 'warn' : 'info'} title="Health-centre locations:">
+          <div className="mt-3 space-y-3">
+            {HOSPITALS.map((h) => (
+              <Note key={h.en} title="Wilayat hospital:">
+                {h.en} serves the whole of {h.wilayat}, so its catchment is the wilayat&rsquo;s total
+                population. It is listed with the wilayat&rsquo;s health centres but not added again
+                to the population totals.
+              </Note>
+            ))}
+            <Note tone={PINNED.length < TOTAL_INSTITUTIONS ? 'warn' : 'info'} title="Health-institution locations:">
               {PINNED.length === 0
-                ? 'no verified coordinates have been supplied yet, so health centres are listed by wilayat rather than pinned. '
-                : `${PINNED.length} of ${INSTITUTIONS.length} centres are pinned from verified coordinates. `}
+                ? 'no verified coordinates have been supplied yet, so health institutions are listed by wilayat rather than pinned. '
+                : `${PINNED.length} of ${TOTAL_INSTITUTIONS} institutions are pinned from verified coordinates. `}
               Positions are never estimated: a centre is pinned only when its latitude and
               longitude come from a confirmed source (for example the MOH facility register).
             </Note>

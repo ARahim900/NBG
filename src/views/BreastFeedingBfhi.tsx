@@ -30,7 +30,7 @@ export default function BreastFeedingBfhi() {
           ].map(({ label, value, detail }) => (
             <div key={label} className="card min-w-0 p-4 sm:p-5">
               <dt className="text-caption font-medium text-ink/75">{label}</dt>
-              <dd className="mt-3 text-3xl font-medium tabular-nums text-[#4E4456] dark:text-[#A4C5BB]">{value}</dd>
+              <dd className="mt-3 text-3xl font-medium tabular-nums text-heading dark:text-glow">{value}</dd>
               {detail && <dd className="mt-2 text-caption text-ink/65">{detail}</dd>}
             </div>
           ))}
