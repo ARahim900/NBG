@@ -4,6 +4,7 @@ import KpiCard from '../components/ui/KpiCard'
 import ChartCard from '../components/ui/ChartCard'
 import SectionTitle from '../components/ui/SectionTitle'
 import DataTable from '../components/ui/DataTable'
+import ProgrammeProfile from '../components/ui/ProgrammeProfile'
 import Note from '../components/ui/Note'
 import Segmented from '../components/ui/Segmented'
 import { ComparisonBars, TrendChart } from '../components/charts/Charts'
@@ -26,7 +27,7 @@ const { three, four } = visits2025
 /** Safe Transport of the Critically Ill Child — programme figures supplied by the department. */
 const SAFE_TRANSPORT = [
   { label: 'Workshops conducted', value: 3 },
-  { label: 'Master trainers in North Al Batinah Governorate', value: 2 },
+  { label: 'Master trainers', value: 2, detail: 'North Al Batinah Governorate' },
 ]
 
 const cov = (s: VisitSheet['statedTotals']) => coverage(s.clerked, s.target)
@@ -82,47 +83,6 @@ export default function ExtraChildHealthRegister() {
         title="Extra Child Health Register"
         subtitle="3 & 4-year developmental visits in primary health care (2025) and Safe Transport of the Critically Ill Child — North Batinah. Part of ASD Early Screening."
       />
-
-      <section aria-labelledby="safe-transport-title" className="card p-5">
-        <h3 id="safe-transport-title" className="text-title text-heading">
-          Safe Transport of the Critically Ill Child
-        </h3>
-        <dl className="mt-4 grid grid-cols-2 gap-3.5">
-          {SAFE_TRANSPORT.map(({ label, value }) => (
-            <div key={label} className="rounded-card border border-[rgb(var(--card-border))] p-4">
-              <dt className="text-caption font-medium text-ink/75">{label}</dt>
-              <dd className="mt-3 text-3xl font-medium tabular-nums text-heading">{value}</dd>
-            </div>
-          ))}
-        </dl>
-        <div className="mt-4">
-          <DataTable
-            dense
-            columns={[
-              { label: 'Workshops by year' },
-              ...YEARS.map((y) => ({
-                label: y === '2025' ? '2025 (department update)' : y,
-                align: 'right' as const,
-              })),
-            ]}
-            rows={[
-              [
-                'Safe Transport workshops',
-                dash(safeTransportWorkshops.y2023),
-                dash(safeTransportWorkshops.y2024),
-                int(SAFE_TRANSPORT[0].value),
-              ],
-            ]}
-          />
-        </div>
-        <div className="mt-3">
-          <Note title="Sources:">
-            2023 and 2024 are the 5-year-plan child-health indicators. The 3 workshops and 2 master trainers are the
-            department&apos;s update supplied with the 2025 workbooks; the update does not state a year, so the year of
-            the 3 workshops is to be confirmed by the department. Master trainers are not reported for 2023 or 2024.
-          </Note>
-        </div>
-      </section>
 
       <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
         <KpiCard
@@ -334,6 +294,39 @@ export default function ExtraChildHealthRegister() {
           </div>
         </div>
       </div>
+
+      <ProgrammeProfile
+        id="safe-transport"
+        title="Safe Transport of the Critically Ill Child"
+        caption="Department update supplied with the 2025 workbooks · the update does not state a year"
+        facts={SAFE_TRANSPORT}
+        byYear={
+          <>
+            <DataTable
+              dense
+              columns={[
+                { label: 'Workshops by year' },
+                ...YEARS.map((y) => ({
+                  label: y === '2025' ? '2025 (department update)' : y,
+                  align: 'right' as const,
+                })),
+              ]}
+              rows={[
+                [
+                  'Safe Transport workshops',
+                  dash(safeTransportWorkshops.y2023),
+                  dash(safeTransportWorkshops.y2024),
+                  int(SAFE_TRANSPORT[0].value),
+                ],
+              ]}
+            />
+            <p className="mt-2 text-caption text-ink/60">
+              2023 and 2024 are the 5-year-plan child-health indicators. The year of the 3 workshops is to be confirmed
+              by the department. Master trainers are not reported for 2023 or 2024.
+            </p>
+          </>
+        }
+      />
     </div>
   )
 }

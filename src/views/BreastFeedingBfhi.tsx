@@ -3,6 +3,7 @@ import { Milk } from 'lucide-react'
 import KpiCard from '../components/ui/KpiCard'
 import ChartCard from '../components/ui/ChartCard'
 import SectionTitle from '../components/ui/SectionTitle'
+import ProgrammeProfile from '../components/ui/ProgrammeProfile'
 import DataTable from '../components/ui/DataTable'
 import Note from '../components/ui/Note'
 import Segmented from '../components/ui/Segmented'
@@ -59,24 +60,8 @@ export default function BreastFeedingBfhi() {
       <SectionTitle
         icon={Milk}
         title="Breast Feeding & BFHI"
-        subtitle="Programme capacity and training · infant-feeding indicators for 2023, 2024 & 2025 (2023 and 2024 not reported in the source)"
+        subtitle="Infant-feeding indicators for 2023, 2024 & 2025 (2023 and 2024 not reported in the source) · programme capacity and training"
       />
-
-      <section aria-label="Breastfeeding programme capacity and training">
-        <dl className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,15rem),1fr))] gap-3.5">
-          {[
-            { label: 'Breastfeeding specialists', value: 7, detail: '3 at governorate level · 4 at Sohar Hospital' },
-            { label: 'Nurse-led courses conducted', value: 6, detail: '3 by Sohar Hospital · 3 by Saham Hospital' },
-            { label: 'WHO national assessors', value: 3, detail: null },
-          ].map(({ label, value, detail }) => (
-            <div key={label} className="card min-w-0 p-4 sm:p-5">
-              <dt className="text-caption font-medium text-ink/75">{label}</dt>
-              <dd className="mt-3 text-3xl font-medium tabular-nums text-heading dark:text-glow">{value}</dd>
-              {detail && <dd className="mt-2 text-caption text-ink/65">{detail}</dd>}
-            </div>
-          ))}
-        </dl>
-      </section>
 
       <div className="max-w-sm">
         <KpiCard
@@ -172,6 +157,17 @@ export default function BreastFeedingBfhi() {
           </Note>
         </div>
       </ChartCard>
+
+      <ProgrammeProfile
+        id="bfhi-programme"
+        title="Programme Capacity & Training"
+        caption="Department update · the reporting year is not stated"
+        facts={[
+          { label: 'Breastfeeding specialists', value: 7, detail: '3 at governorate level · 4 at Sohar Hospital' },
+          { label: 'Nurse-led courses conducted', value: 6, detail: '3 by Sohar Hospital · 3 by Saham Hospital' },
+          { label: 'WHO national assessors', value: 3 },
+        ]}
+      />
     </div>
   )
 }

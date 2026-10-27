@@ -2,6 +2,7 @@ import { Activity, Baby, Table2 } from 'lucide-react'
 import KpiCard from '../components/ui/KpiCard'
 import ChartCard from '../components/ui/ChartCard'
 import SectionTitle from '../components/ui/SectionTitle'
+import ProgrammeProfile from '../components/ui/ProgrammeProfile'
 import DataTable from '../components/ui/DataTable'
 import Note from '../components/ui/Note'
 import Mpdsr2025Report from '../components/reports/Mpdsr2025Report'
@@ -50,24 +51,6 @@ export default function StillbirthNeonatal() {
         title="Stillbirth & Neonatal"
         subtitle="Perinatal deaths 2023–2025 · 2023 not reported · 2024 KPI-deck surveillance · 2025 MPDSR workbook (provisional)"
       />
-
-      <section aria-label="Stillbirth and neonatal programme activity">
-        <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
-          {[
-            { label: 'Workshops conducted', value: 1 },
-            { label: 'Master trainers in North Al Batinah Governorate', value: 3 },
-            { label: 'Committee meetings held', value: 21 },
-          ].map(({ label, value }) => (
-            <KpiCard key={label} label={label} value={value} accent="navy" />
-          ))}
-        </div>
-        <p className="mt-2 text-caption text-ink/60">
-          Programme-team counts as supplied; the reporting year is not stated in the source. The
-          2025 KPI presentation separately reports{' '}
-          {countOr(sn.summary2025.find((r) => r.metric.startsWith('Surveillance review'))?.value ?? null)}{' '}
-          surveillance review meetings.
-        </p>
-      </section>
 
       <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
         <KpiCard
@@ -201,29 +184,33 @@ export default function StillbirthNeonatal() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-3">
-        <section aria-labelledby="sn-programme-challenges" className="card p-6">
-          <h2 id="sn-programme-challenges" className="text-title text-heading">Programme Challenges</h2>
-          <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-relaxed text-ink marker:text-teal">
-            <li>Delays in the submission of stillbirth and neonatal death notification forms by institutions.</li>
-            <li>Incomplete information in some death notification forms.</li>
-            <li>Many cases cannot be reviewed within the month in which the death occurred.</li>
-          </ul>
-        </section>
-        <section aria-labelledby="sn-achievements" className="card p-6">
-          <h2 id="sn-achievements" className="text-title text-heading">Achievements</h2>
-          <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-relaxed text-ink marker:text-teal">
-            <li>A catch-up plan has been put in place.</li>
-            <li>Doctors have been provided with a standardised template to ensure consistency in case presentations.</li>
-          </ul>
-        </section>
-        <section aria-labelledby="sn-future-plan" className="card p-6">
-          <h2 id="sn-future-plan" className="text-title text-heading">Future Plan</h2>
-          <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-relaxed text-ink marker:text-teal">
-            <li>Hold monthly case review meetings with the committee to prevent delays in reviewing stillbirths and neonatal deaths.</li>
-          </ul>
-        </section>
-      </div>
+      <ProgrammeProfile
+        id="sn-programme"
+        caption={
+          <>
+            Programme-team counts as supplied; the reporting year is not stated. The 2025 KPI presentation separately
+            reports {countOr(sn.summary2025.find((r) => r.metric.startsWith('Surveillance review'))?.value ?? null)}{' '}
+            surveillance review meetings.
+          </>
+        }
+        facts={[
+          { label: 'Workshops conducted', value: 1 },
+          { label: 'Master trainers', value: 3, detail: 'North Al Batinah Governorate' },
+          { label: 'Committee meetings held', value: 21 },
+        ]}
+        challenges={[
+          'Delays in the submission of stillbirth and neonatal death notification forms by institutions.',
+          'Incomplete information in some death notification forms.',
+          'Many cases cannot be reviewed within the month in which the death occurred.',
+        ]}
+        achievements={[
+          'A catch-up plan has been put in place.',
+          'Doctors have been provided with a standardised template to ensure consistency in case presentations.',
+        ]}
+        plan={[
+          'Hold monthly case review meetings with the committee to prevent delays in reviewing stillbirths and neonatal deaths.',
+        ]}
+      />
     </div>
   )
 }

@@ -6,6 +6,7 @@ import SectionTitle from '../components/ui/SectionTitle'
 import DataTable from '../components/ui/DataTable'
 import Note from '../components/ui/Note'
 import Segmented from '../components/ui/Segmented'
+import ProgrammeProfile from '../components/ui/ProgrammeProfile'
 import { ComparisonBars, TrendChart } from '../components/charts/Charts'
 import { DS_CONDITIONS, ds2025, dsTotals } from '../data/wch2025'
 import {
@@ -79,42 +80,6 @@ export default function DownSyndrome() {
         title="Down Syndrome Registry"
         subtitle="Registered cases by health centre, associated comorbidities and nutrition — 2023, 2024 and 2025"
       />
-
-      <section aria-label="Down syndrome programme capacity">
-        <dl className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 xl:grid-cols-4">
-          {[
-            { label: 'Workshops conducted', value: 2 },
-            { label: 'Awareness campaigns conducted', value: 2 },
-            { label: 'Master trainers in North Al Batinah Governorate', value: 2 },
-          ].map(({ label, value }) => (
-            <div key={label} className="card flex flex-col p-5">
-              <dt className="text-caption font-medium text-ink/75">{label}</dt>
-              <dd className="mt-auto pt-3 text-3xl font-medium tabular-nums text-heading">{value}</dd>
-            </div>
-          ))}
-          <div className="card flex flex-col p-5">
-            <dt className="text-caption font-medium text-ink/75">Focal points in institutions</dt>
-            <dd className="mt-auto flex gap-6 pt-3 text-heading">
-              <span className="flex flex-col gap-1"><span className="text-3xl font-medium tabular-nums">{ds2025.focalPoints.doctors}</span><span className="text-sm">Doctors</span></span>
-              <span className="flex flex-col gap-1"><span className="text-3xl font-medium tabular-nums">{ds2025.focalPoints.nurses}</span><span className="text-sm">Nurses</span></span>
-            </dd>
-          </div>
-        </dl>
-        <div className="mt-4">
-          <DataTable
-            dense
-            columns={[{ label: 'Capacity by year' }, ...YEARS.map((y) => ({ label: y, align: 'right' as const }))]}
-            rows={dsCapacityByYear.map((r) => [r.label, ...YEARS.map((y) => yearCell(r, y, NOT_REPORTED))])}
-          />
-        </div>
-        <div className="mt-3">
-          <Note title="Sources:">
-            2023 and 2024 are the 5-year-plan child-health indicators; the plan has no 2025 figure, so 2025 is shown
-            as “{NOT_REPORTED}”. The workshop, campaign, master-trainer and focal-point cards are the department&apos;s
-            update and do not state a year.
-          </Note>
-        </div>
-      </section>
 
       <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
         <KpiCard
@@ -303,55 +268,82 @@ export default function DownSyndrome() {
         </div>
       </ChartCard>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <section aria-labelledby="ds-programme-challenges" className="card p-6">
-          <h2 id="ds-programme-challenges" className="text-title text-heading">Programme Challenges</h2>
-          <ul className="mt-4 list-disc space-y-3 pl-5 text-body text-ink/80 marker:text-teal">
-            <li>No genetic counsellor is currently available in North Al Batinah Governorate.</li>
-            <li>Social affairs require an IQ test for children with Down syndrome, but only one psychologist is available.</li>
-          </ul>
-        </section>
-        <section aria-labelledby="ds-achievements" className="card p-6">
-          <h2 id="ds-achievements" className="text-title text-heading">Achievements</h2>
-          <ul className="mt-4 list-disc space-y-3 pl-5 text-body text-ink/80 marker:text-teal">
-            <li>
-              Research study: <cite className="not-italic font-medium text-heading">“A Digital Health Approach to Supporting Caregivers of Children with Down Syndrome in Oman: Development of a Web-Based Toolkit”</cite>.
-            </li>
-            <li>A poster presentation on the Basma app won third place at COMHS Research Day.</li>
-            <li>An oral presentation was delivered at a paediatric conference in Taiwan.</li>
-          </ul>
-        </section>
-      </div>
-
-      <section aria-labelledby="ds-future-plan" className="card p-6">
-        <h2 id="ds-future-plan" className="text-title text-heading">Future Plan</h2>
-        <ul className="mt-4 space-y-5 text-body text-ink/80">
-          <li className="grid items-center gap-5 lg:grid-cols-[1fr_auto]">
-            <div>
-              <p className="font-semibold text-heading">Launch the Basma app.</p>
-              <p className="mt-2">BASMAH — Caregiver Toolkit for Down Syndrome</p>
-              <p className="mt-2 text-ink/75">Scan a QR code, or select it to open its link.</p>
-            </div>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <ProgrammeProfile
+        id="ds-programme"
+        caption="Department update · workshops, campaigns, trainers and focal points do not state a year"
+        facts={[
+          { label: 'Workshops conducted', value: 2 },
+          { label: 'Awareness campaigns', value: 2 },
+          { label: 'Master trainers', value: 2, detail: 'North Al Batinah Governorate' },
+          {
+            label: 'Focal points in institutions',
+            value: ds2025.focalPoints.doctors + ds2025.focalPoints.nurses,
+            detail: `${ds2025.focalPoints.doctors} doctors · ${ds2025.focalPoints.nurses} nurses`,
+          },
+        ]}
+        byYear={
+          <>
+            <DataTable
+              dense
+              columns={[{ label: 'Health centres (5-year plan)' }, ...YEARS.map((y) => ({ label: y, align: 'right' as const }))]}
+              rows={dsCapacityByYear.map((r) => [r.label, ...YEARS.map((y) => yearCell(r, y, NOT_REPORTED))])}
+            />
+            <p className="mt-2 text-caption text-ink/60">
+              The 5-year plan gives 2023 and 2024 only; 2025 is shown as “{NOT_REPORTED}”.
+            </p>
+          </>
+        }
+        challenges={[
+          'No genetic counsellor is currently available in North Al Batinah Governorate.',
+          'Social affairs require an IQ test for children with Down syndrome, but only one psychologist is available.',
+        ]}
+        achievements={[
+          <>
+            Research study:{' '}
+            <cite className="not-italic font-medium text-heading">
+              “A Digital Health Approach to Supporting Caregivers of Children with Down Syndrome in Oman: Development of a
+              Web-Based Toolkit”
+            </cite>
+            .
+          </>,
+          'A poster presentation on the Basma app won third place at COMHS Research Day.',
+          'An oral presentation was delivered at a paediatric conference in Taiwan.',
+        ]}
+        plan={[
+          <>
+            <span className="font-semibold text-heading">Launch the Basma app</span> — BASMAH, the caregiver toolkit for
+            Down syndrome. Scan a QR code, or select it to open its link.
+            <span className="mt-3 flex flex-wrap gap-3">
               {[
                 { label: 'Google Play Store', image: '/basma/google-play-qr.png', url: 'https://q.me-qr.com/nh2qqjkk' },
                 { label: 'Apple Store', image: '/basma/apple-store-qr.png', url: 'https://q.me-qr.com/lq6nayae' },
               ].map(({ label, image, url }) => (
-                <a key={label} href={url} target="_blank" rel="noopener noreferrer"
+                <a
+                  key={label}
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={`Open the Basma ${label} QR link (opens in a new tab)`}
-                  className="flex min-w-0 flex-col items-center gap-3 rounded-card border border-[rgb(var(--card-border))] bg-surface p-3 text-center font-semibold text-heading shadow-card transition-shadow hover:shadow-card-hover">
-                  <span className="block w-full max-w-44 rounded-control bg-white p-3">
-                    <img src={image} alt={`Basma QR code labelled ${label} in the supplied PDF`} width={707} height={707}
-                      className="h-auto w-full" loading="lazy" />
+                  className="flex w-28 flex-col items-center gap-1.5 rounded-control border border-[rgb(var(--card-border))] bg-surface p-2 text-center text-caption font-semibold text-heading transition-shadow hover:shadow-card-hover"
+                >
+                  <span className="block w-full rounded-control bg-white p-1.5">
+                    <img
+                      src={image}
+                      alt={`Basma QR code labelled ${label} in the supplied PDF`}
+                      width={707}
+                      height={707}
+                      className="h-auto w-full"
+                      loading="lazy"
+                    />
                   </span>
-                  <span>{label}</span>
+                  {label}
                 </a>
               ))}
-            </div>
-          </li>
-          <li className="border-t border-sky pt-4 dark:border-[rgb(var(--card-border))]">Publish the research paper.</li>
-        </ul>
-      </section>
+            </span>
+          </>,
+          'Publish the research paper.',
+        ]}
+      />
     </div>
   )
 }

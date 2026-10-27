@@ -4,6 +4,7 @@ import KpiCard from '../components/ui/KpiCard'
 import ChartCard from '../components/ui/ChartCard'
 import SectionTitle from '../components/ui/SectionTitle'
 import DataTable from '../components/ui/DataTable'
+import ProgrammeProfile from '../components/ui/ProgrammeProfile'
 import Note from '../components/ui/Note'
 import Segmented from '../components/ui/Segmented'
 import { ComparisonBars, TrendChart } from '../components/charts/Charts'
@@ -104,49 +105,15 @@ export default function Asd({ onNavigate }: ViewProps) {
         subtitle="18 & 24-month developmental (M-CHAT/R) screening — 2023 to 2025 trends, monthly detail for 2024 and 2025"
       />
 
-      <section aria-label="ASD programme capacity">
-        <dl className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          {[
-            { label: 'Workshops conducted', value: 3 },
-            { label: 'Master trainers in North Al Batinah Governorate', value: 3 },
-            { label: 'Nurse focal points in institutions', value: 28 },
-          ].map(({ label, value }) => (
-            <div key={label} className="flex flex-col rounded-2xl border border-teal/60 bg-teal/10 p-5 shadow-sm">
-              <dt className="text-sm font-medium text-heading dark:text-glow">{label}</dt>
-              <dd className="mt-auto pt-3 text-4xl font-semibold tabular-nums text-heading dark:text-white">{value}</dd>
-            </div>
-          ))}
-        </dl>
-        <div className="mt-4">
-          <DataTable
-            dense
-            columns={[{ label: 'Capacity by year' }, ...YEARS.map((y) => ({ label: y, align: 'right' as const }))]}
-            rows={asdCapacityByYear.map((r) => [
-              r.label,
-              ...YEARS.map((y) => {
-                const v = r[`y${y}`]
-                return v === null ? notReported : int(v)
-              }),
-            ])}
-          />
-        </div>
-        <div className="mt-3">
-          <Note title="Sources:">
-            2023 and 2024 are the 5-year-plan child-health indicators; the plan has no 2025 figure, so 2025 is shown
-            as “{NOT_REPORTED}”. The workshop, master-trainer and focal-point cards are the department&apos;s update and
-            do not state a year.
-          </Note>
-        </div>
-        <button
-          type="button"
-          onClick={() => onNavigate('ecr')}
-          className="mt-4 inline-flex min-h-11 items-center gap-2 rounded-control border border-line/20 px-4 py-2 text-label text-heading transition-colors hover:bg-tint/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azure/60"
-        >
-          <ClipboardList className="h-4 w-4" aria-hidden="true" />
-          3 &amp; 4-year developmental visits: open the Extra Child Health Register
-          <ArrowRight className="h-4 w-4" aria-hidden="true" />
-        </button>
-      </section>
+      <button
+        type="button"
+        onClick={() => onNavigate('ecr')}
+        className="inline-flex min-h-11 items-center gap-2 rounded-control border border-line/20 px-4 py-2 text-label text-heading transition-colors hover:bg-tint/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azure/60"
+      >
+        <ClipboardList className="h-4 w-4" aria-hidden="true" />
+        3 &amp; 4-year developmental visits: open the Extra Child Health Register
+        <ArrowRight className="h-4 w-4" aria-hidden="true" />
+      </button>
 
       <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
         <KpiCard
@@ -502,25 +469,49 @@ export default function Asd({ onNavigate }: ViewProps) {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-        <section aria-labelledby="asd-programme-challenges" className="rounded-2xl border border-navy/20 bg-surface p-6 shadow-sm dark:border-teal/40">
-          <h2 id="asd-programme-challenges" className="text-xl font-semibold text-heading dark:text-white">Programme Challenges</h2>
-          <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-relaxed text-ink marker:text-teal">
-            <li>Limited feedback on autism spectrum disorder (ASD) diagnosed cases from tertiary hospitals</li>
-            <li>Logistical requirements for launching the ASD Clinic</li>
-            <li>Tracking the number of ASD cases diagnosed in North Al Batinah for follow-up</li>
-            <li>Some institutions are not integrated with the Sultan Qaboos University system.</li>
-          </ul>
-        </section>
-        <section aria-labelledby="asd-future-plan" className="rounded-2xl border border-teal/60 bg-teal/10 p-6 shadow-sm">
-          <h2 id="asd-future-plan" className="text-xl font-semibold text-heading dark:text-white">Future Plan</h2>
-          <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-relaxed text-ink marker:text-teal">
-            <li>Conduct an ASD workshop for paediatricians on <time dateTime="2026-12-10" className="font-semibold">10 December 2026</time></li>
-            <li>Launch the ASD Clinic in the <span className="font-semibold">first quarter of 2027</span></li>
-            <li>Increase awareness about the ASD Clinic and early rehabilitation services</li>
-          </ul>
-        </section>
-      </div>
+      <ProgrammeProfile
+        id="asd-programme"
+        caption="Department update · workshops, trainers and focal points do not state a year"
+        facts={[
+          { label: 'Workshops conducted', value: 3 },
+          { label: 'Master trainers', value: 3, detail: 'North Al Batinah Governorate' },
+          { label: 'Nurse focal points', value: 28, detail: 'In institutions' },
+        ]}
+        byYear={
+          <>
+            <DataTable
+              dense
+              columns={[{ label: 'Capacity (5-year plan)' }, ...YEARS.map((y) => ({ label: y, align: 'right' as const }))]}
+              rows={asdCapacityByYear.map((r) => [
+                r.label,
+                ...YEARS.map((y) => {
+                  const v = r[`y${y}`]
+                  return v === null ? notReported : int(v)
+                }),
+              ])}
+            />
+            <p className="mt-2 text-caption text-ink/60">
+              The 5-year plan gives 2023 and 2024 only; 2025 is shown as “{NOT_REPORTED}”.
+            </p>
+          </>
+        }
+        challenges={[
+          'Limited feedback on autism spectrum disorder (ASD) diagnosed cases from tertiary hospitals.',
+          'Logistical requirements for launching the ASD Clinic.',
+          'Tracking the number of ASD cases diagnosed in North Al Batinah for follow-up.',
+          'Some institutions are not integrated with the Sultan Qaboos University system.',
+        ]}
+        plan={[
+          <>
+            Conduct an ASD workshop for paediatricians on{' '}
+            <time dateTime="2026-12-10" className="font-semibold">10 December 2026</time>.
+          </>,
+          <>
+            Launch the ASD Clinic in the <span className="font-semibold">first quarter of 2027</span>.
+          </>,
+          'Increase awareness about the ASD Clinic and early rehabilitation services.',
+        ]}
+      />
     </div>
   )
 }

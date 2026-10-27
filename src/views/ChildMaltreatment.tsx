@@ -3,6 +3,7 @@ import { AlertTriangle, Baby, MapPin, ShieldAlert, Table2 } from 'lucide-react'
 import KpiCard from '../components/ui/KpiCard'
 import ChartCard from '../components/ui/ChartCard'
 import SectionTitle from '../components/ui/SectionTitle'
+import ProgrammeProfile from '../components/ui/ProgrammeProfile'
 import DataTable from '../components/ui/DataTable'
 import Note from '../components/ui/Note'
 import Segmented from '../components/ui/Segmented'
@@ -76,20 +77,6 @@ export default function ChildMaltreatment() {
         title="Child Maltreatment Notifications"
         subtitle="2019–2025 trend · 2023–2025 by wilayat · type split 2024–2025 · 2025 by month, age and reporting institution (earlier years not reported)"
       />
-
-      <section aria-label="Child maltreatment programme training">
-        <dl className="grid grid-cols-2 gap-3.5">
-          {[
-            { label: 'Courses conducted', value: 1 },
-            { label: 'Master trainers', value: 3 },
-          ].map(({ label, value }) => (
-            <div key={label} className="card p-4 sm:p-5">
-              <dt className="text-caption font-medium text-ink/75">{label}</dt>
-              <dd className="mt-3 text-3xl font-medium tabular-nums text-heading">{value}</dd>
-            </div>
-          ))}
-        </dl>
-      </section>
 
       <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
         <KpiCard
@@ -296,22 +283,22 @@ export default function ChildMaltreatment() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <section className="card p-5" aria-labelledby="maltreatment-challenges">
-          <h3 id="maltreatment-challenges" className="text-title text-heading">Programme Challenges</h3>
-          <ul className="mt-4 list-disc space-y-3 pl-5 text-body text-ink/80 marker:text-teal">
-            <li>Activating the regional hospital task force committee.</li>
-            <li>Ensuring case follow-up by social affairs services.</li>
-            <li>No paediatric psychologist for child abuse case follow-up.</li>
-          </ul>
-        </section>
-        <section className="card p-5" aria-labelledby="maltreatment-achievements">
-          <h3 id="maltreatment-achievements" className="text-title text-heading">Achievements</h3>
-          <ul className="mt-4 list-disc space-y-3 pl-5 text-body text-ink/80 marker:text-teal">
-            <li>Three doctors successfully completed the course and received master trainer certification.</li>
-          </ul>
-        </section>
-      </div>
+      <ProgrammeProfile
+        id="mt-programme"
+        caption="Department update · the reporting year is not stated"
+        facts={[
+          { label: 'Courses conducted', value: 1 },
+          { label: 'Master trainers', value: 3, detail: 'Certified doctors' },
+        ]}
+        challenges={[
+          'Activating the regional hospital task force committee.',
+          'Ensuring case follow-up by social affairs services.',
+          'No paediatric psychologist for child abuse case follow-up.',
+        ]}
+        achievements={[
+          'Three doctors successfully completed the course and received master trainer certification.',
+        ]}
+      />
     </div>
   )
 }
