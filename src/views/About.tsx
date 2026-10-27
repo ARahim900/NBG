@@ -253,9 +253,8 @@ export default function About({ onNavigate }: ViewProps) {
       <section>
         <div dir="rtl" className="mb-5 text-center font-ar" data-reveal>
           <h2 className="text-2xl font-extrabold text-heading">مهام الأقسام</h2>
-          <p className="text-sm text-ink/55">
-            الأقسام الثلاثة للدائرة وأهدافها الاستراتيجية · Department Sections
-          </p>
+          <p className="text-sm text-ink/70">الأقسام الثلاثة للدائرة وأهدافها الاستراتيجية</p>
+          <p dir="ltr" className="mt-1 font-sans text-sm text-ink/70">Department Sections</p>
         </div>
         <div className="space-y-4">
           {sections.map((s) => {
@@ -263,6 +262,7 @@ export default function About({ onNavigate }: ViewProps) {
             return (
               <article
                 key={s.id}
+                dir="rtl"
                 className="card relative p-6"
               >
                 {/* Section colour bar (starts below the cut corner). */}
@@ -279,31 +279,27 @@ export default function About({ onNavigate }: ViewProps) {
                       >
                         <Icon className="h-6 w-6" />
                       </span>
-                      <div dir="rtl" className="font-ar">
+                      <div className="font-ar">
                         <h3 className="text-xl font-extrabold text-heading">{s.titleAr}</h3>
                         <p className="font-display text-xs font-semibold uppercase tracking-[0.14em] text-azure">
                           {s.titleEn}
                         </p>
                       </div>
                     </div>
-                    <p
-                      dir="rtl"
-                      className="mt-4 font-ar text-[0.92rem] leading-loose text-ink/80"
-                    >
+                    <p className="mt-4 font-ar text-[0.92rem] leading-loose text-ink/80">
                       {s.descAr}
                     </p>
-                    <p className="mt-3 text-xs leading-relaxed text-ink/55">{s.descEn}</p>
+                    <p dir="ltr" className="mt-3 border-t border-line/10 pt-3 text-left text-xs leading-relaxed text-ink/60">
+                      {s.descEn}
+                    </p>
                   </div>
 
                   {/* Objectives */}
                   <div className="lg:col-span-3">
-                    <p
-                      dir="rtl"
-                      className="mb-3 font-ar text-sm font-bold text-heading/80"
-                    >
+                    <p className="mb-3 font-ar text-sm font-bold text-heading/80">
                       الأهداف الاستراتيجية (2026–2030)
                     </p>
-                    <ul dir="rtl" className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
+                    <ul className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
                       {s.objectivesAr.map((obj, i) => (
                         <li
                           key={i}
@@ -379,9 +375,8 @@ export default function About({ onNavigate }: ViewProps) {
       <section>
         <div dir="rtl" className="mb-5 text-center font-ar" data-reveal>
           <h2 className="text-2xl font-extrabold text-heading">ولايات شمال الباطنة</h2>
-          <p className="text-sm text-ink/55">
-            ست ولايات تغطيها خدمات الدائرة · The Six Wilayat of North Batinah
-          </p>
+          <p className="text-sm text-ink/70">ست ولايات تغطيها خدمات الدائرة</p>
+          <p dir="ltr" className="mt-1 font-sans text-sm text-ink/70">The Six Wilayat of North Batinah</p>
         </div>
         <div className="grid grid-cols-2 gap-3.5 md:grid-cols-3 lg:grid-cols-6">
           {wilayats.map((w) => (
