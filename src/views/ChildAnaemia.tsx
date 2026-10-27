@@ -1,171 +1,242 @@
+import { useState } from 'react'
 import { Droplets, Pill, ShieldCheck, Table2 } from 'lucide-react'
 import KpiCard from '../components/ui/KpiCard'
 import ChartCard from '../components/ui/ChartCard'
 import SectionTitle from '../components/ui/SectionTitle'
 import DataTable from '../components/ui/DataTable'
 import Note from '../components/ui/Note'
+import Segmented from '../components/ui/Segmented'
 import { ComparisonBars, TrendChart } from '../components/charts/Charts'
 import { anaemia, anaemiaFollowup } from '../data/nutrition'
+import {
+  NOT_REPORTED,
+  YEAR_OPTIONS,
+  anaemiaCountsByYear,
+  anaemiaGovByYear,
+  anaemiaHeadline,
+  anaemiaRateByWilayat,
+  followupByYear,
+  missingYears,
+  pctCell,
+  ratio,
+  yearCell,
+  yearSeries,
+  type ScreenAge,
+  type Year,
+} from '../data/years/childrenC'
 import { C } from '../lib/theme'
 import { int, pct } from '../lib/format'
 
 const g = anaemia.gov
-const ratio = (a: number, b: number): number => (b ? (a / b) * 100 : 0)
 const fu = anaemiaFollowup.gov
+const gap = missingYears(anaemiaHeadline)
+const gapHint = `${gap}: ${NOT_REPORTED.toLowerCase()}`
 
-const coverage = anaemia.byWilayat.map((w) => ({
-  wilayat: w.wilayat,
-  cov9: ratio(w.s9, w.t9),
-  cov18: ratio(w.s18, w.t18),
-}))
-const prevalence = anaemia.byWilayat.map((w) => ({
-  wilayat: w.wilayat,
-  prev9: ratio(w.a9, w.s9),
-  prev18: ratio(w.a18, w.s18),
-}))
-const counts = anaemia.byWilayat.map((w) => ({
-  wilayat: w.wilayat,
-  screened: w.s9,
-  anaemic: w.a9,
-}))
+const AGE_OPTIONS: { value: ScreenAge; label: string }[] = [
+  { value: '9', label: '9 months' },
+  { value: '18', label: '18 months' },
+]
+
+const prev9 = ratio(g.a9, g.s9)
+const prev18 = ratio(g.a18, g.s18)
+
+const muted = (v: string) => (v === NOT_REPORTED ? <span className="text-ink/50">{v}</span> : v)
+
+/** Placeholder for a year the source does not provide. */
+function NotReported({ year, detail }: { year: Year; detail: string }) {
+  return (
+    <div className="flex min-h-[260px] items-center justify-center rounded-xl border border-dashed border-line/20 px-6 text-center text-body text-ink/65">
+      <p>
+        <span className="font-semibold text-heading">{year}: {NOT_REPORTED}.</span> {detail}
+      </p>
+    </div>
+  )
+}
 
 export default function ChildAnaemia() {
+  const [age, setAge] = useState<ScreenAge>('9')
+  const [countYear, setCountYear] = useState<Year>('2025')
+  const [fuYear, setFuYear] = useState<Year>('2025')
+  const [tableYear, setTableYear] = useState<Year>('2025')
+
+  const prevalence = anaemiaRateByWilayat(age, 'prevalence')
+  const coverage = anaemiaRateByWilayat(age, 'coverage')
+  const counts = anaemiaCountsByYear(age, countYear)
+  const followup = followupByYear[fuYear]
+  const ageLabel = `${age} months`
+
   return (
     <div className="space-y-8">
       <SectionTitle
         icon={Droplets}
         title="Child Anaemia Screening"
-        subtitle="Haemoglobin screening at 9 & 18 months across North Batinah — 2025, by health centre"
+        subtitle="Haemoglobin screening at 9 & 18 months across North Batinah · 2023, 2024 & 2025 (2023 and 2024 not reported in the source)"
       />
 
       <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
         <KpiCard
-          label="9-Month Screening Coverage"
-          value={pct(ratio(g.s9, g.t9))}
+          label="9-Month Screening Coverage (2025)"
+          value={pctCell(ratio(g.s9, g.t9))}
           icon={ShieldCheck}
           accent="navy"
-          hint={`${int(g.s9)} of ${int(g.t9)} target`}
+          hint={`${int(g.s9)} of ${int(g.t9)} target · ${gapHint}`}
         />
         <KpiCard
-          label="9-Month Anaemia Prevalence"
-          value={pct(ratio(g.a9, g.s9))}
+          label="9-Month Anaemia Prevalence (2025)"
+          value={pctCell(prev9)}
           icon={Droplets}
           accent="gold"
-          hint={`${int(g.a9)} children anaemic`}
+          hint={`${int(g.a9)} children anaemic · ${gapHint}`}
         />
         <KpiCard
-          label="18-Month Screening Coverage"
-          value={pct(ratio(g.s18, g.t18))}
+          label="18-Month Screening Coverage (2025)"
+          value={pctCell(ratio(g.s18, g.t18))}
           icon={ShieldCheck}
           accent="azure"
-          hint={`${int(g.s18)} of ${int(g.t18)} target`}
+          hint={`${int(g.s18)} of ${int(g.t18)} target · ${gapHint}`}
         />
         <KpiCard
-          label="18-Month Anaemia Prevalence"
-          value={pct(ratio(g.a18, g.s18))}
+          label="18-Month Anaemia Prevalence (2025)"
+          value={pctCell(prev18)}
           icon={Droplets}
           accent="teal"
-          hint={`${int(g.a18)} children anaemic`}
+          hint={`${int(g.a18)} children anaemic · ${gapHint}`}
         />
+      </div>
+
+      <ChartCard
+        title="Governorate Screening Indicators"
+        subtitle="Coverage (% of target screened) and prevalence (% of screened anaemic) · 2023, 2024 & 2025"
+        footnote={`${gap}: not reported in the source; the bars show 2025 only.`}
+      >
+        <ComparisonBars data={anaemiaHeadline} xKey="indicator" unit="%" series={yearSeries(anaemiaHeadline)} />
+      </ChartCard>
+
+      <div className="flex flex-wrap items-end gap-4">
+        <Segmented label="Screening age" options={AGE_OPTIONS} value={age} onChange={setAge} />
       </div>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ChartCard
-          title="Anaemia Prevalence by Wilayat"
-          subtitle="% of screened children · 9 vs 18 months"
-          footnote="Prevalence eases between 9 and 18 months as iron-rich complementary feeding is established."
+          title={`Anaemia Prevalence by Wilayat (${ageLabel})`}
+          subtitle="% of screened children · 2023, 2024 & 2025"
+          footnote={
+            prev9 !== null && prev18 !== null
+              ? `Governorate 2025: ${pct(prev9)} at 9 months and ${pct(prev18)} at 18 months — prevalence eases as iron-rich complementary feeding is established.`
+              : undefined
+          }
         >
-          <ComparisonBars
-            data={prevalence}
-            xKey="wilayat"
-            unit="%"
-            series={[
-              { key: 'prev9', name: '9 months', color: C.gold },
-              { key: 'prev18', name: '18 months', color: C.teal },
-            ]}
-          />
+          <ComparisonBars data={prevalence} xKey="wilayat" unit="%" series={yearSeries(prevalence)} />
         </ChartCard>
         <ChartCard
-          title="Screening Coverage by Wilayat"
-          subtitle="% of target screened · 9 vs 18 months"
+          title={`Screening Coverage by Wilayat (${ageLabel})`}
+          subtitle="% of target screened · 2023, 2024 & 2025"
+          footnote={`${gap}: not reported in the source.`}
         >
-          <ComparisonBars
-            data={coverage}
-            xKey="wilayat"
-            unit="%"
-            series={[
-              { key: 'cov9', name: '9 months', color: C.navy },
-              { key: 'cov18', name: '18 months', color: C.azure },
-            ]}
-          />
+          <ComparisonBars data={coverage} xKey="wilayat" unit="%" series={yearSeries(coverage)} />
         </ChartCard>
       </div>
 
       <ChartCard
-        title="Screened vs Anaemic Children (9 months)"
+        title={`Screened vs Anaemic Children (${ageLabel}, ${countYear})`}
         subtitle="Counts by wilayat"
+        action={<Segmented label="Year" options={YEAR_OPTIONS} value={countYear} onChange={setCountYear} />}
       >
-        <ComparisonBars
-          data={counts}
-          xKey="wilayat"
-          series={[
-            { key: 'screened', name: 'Screened', color: C.azure },
-            { key: 'anaemic', name: 'Anaemic', color: C.alert },
-          ]}
-        />
+        {counts ? (
+          <ComparisonBars
+            data={counts}
+            xKey="wilayat"
+            series={[
+              { key: 'screened', name: 'Screened', color: C.azure },
+              { key: 'anaemic', name: 'Anaemic', color: C.alert },
+            ]}
+          />
+        ) : (
+          <NotReported year={countYear} detail="The source gives screening counts by wilayat for 2025 only." />
+        )}
       </ChartCard>
 
       <div>
         <SectionTitle
           icon={Table2}
-          title="Detailed Table"
-          subtitle="By wilayat · 9 & 18-month screening"
+          title="Detailed Tables"
+          subtitle="Governorate indicators 2023–2025 · 2025 by wilayat, 9 & 18-month screening"
         />
-        <ChartCard title="Anaemia Screening by Wilayat (2025)" subtitle="">
-          <DataTable
-            columns={[
-              { label: 'Wilayat' },
-              { label: '9m Target', align: 'right' },
-              { label: '9m Screened', align: 'right' },
-              { label: '9m Anaemic', align: 'right' },
-              { label: '9m %', align: 'right' },
-              { label: '18m Target', align: 'right' },
-              { label: '18m Screened', align: 'right' },
-              { label: '18m Anaemic', align: 'right' },
-              { label: '18m %', align: 'right' },
-            ]}
-            rows={anaemia.byWilayat.map((w) => [
-              w.wilayat,
-              int(w.t9),
-              int(w.s9),
-              int(w.a9),
-              pct(ratio(w.a9, w.s9)),
-              int(w.t18),
-              int(w.s18),
-              int(w.a18),
-              pct(ratio(w.a18, w.s18)),
-            ])}
-            total={[
-              'GOVERNORATE',
-              int(g.t9),
-              int(g.s9),
-              int(g.a9),
-              pct(ratio(g.a9, g.s9)),
-              int(g.t18),
-              int(g.s18),
-              int(g.a18),
-              pct(ratio(g.a18, g.s18)),
-            ]}
-            dense
-          />
-          <div className="mt-3">
-            <Note title="Validated:">
-              Governorate totals reconcile exactly to the source workbook's own
-              TOTAL row (9-month: 10,427 screened / 4,988 anaemic; 18-month:
-              9,926 / 3,837). "%" = anaemic among those screened.
-            </Note>
-          </div>
-        </ChartCard>
+        <div className="space-y-4">
+          <ChartCard title="Governorate Anaemia Indicators (2023–2025)" subtitle="">
+            <DataTable
+              columns={[
+                { label: 'Indicator' },
+                { label: '2023', align: 'right' },
+                { label: '2024', align: 'right' },
+                { label: '2025', align: 'right' },
+              ]}
+              rows={anaemiaGovByYear.map((r) => {
+                const fmt = r.unit === '%' ? pctCell : (v: number | null) => yearCell(v)
+                return [r.indicator, muted(fmt(r.v.y2023)), muted(fmt(r.v.y2024)), muted(fmt(r.v.y2025))]
+              })}
+              dense
+            />
+          </ChartCard>
+          <ChartCard
+            title={`Anaemia Screening by Wilayat (${tableYear})`}
+            subtitle=""
+            action={<Segmented label="Table year" options={YEAR_OPTIONS} value={tableYear} onChange={setTableYear} />}
+          >
+            {tableYear === '2025' ? (
+              <DataTable
+                columns={[
+                  { label: 'Wilayat' },
+                  { label: '9m Target', align: 'right' },
+                  { label: '9m Screened', align: 'right' },
+                  { label: '9m Anaemic', align: 'right' },
+                  { label: '9m %', align: 'right' },
+                  { label: '18m Target', align: 'right' },
+                  { label: '18m Screened', align: 'right' },
+                  { label: '18m Anaemic', align: 'right' },
+                  { label: '18m %', align: 'right' },
+                ]}
+                rows={anaemia.byWilayat.map((w) => [
+                  w.wilayat,
+                  int(w.t9),
+                  int(w.s9),
+                  int(w.a9),
+                  pctCell(ratio(w.a9, w.s9)),
+                  int(w.t18),
+                  int(w.s18),
+                  int(w.a18),
+                  pctCell(ratio(w.a18, w.s18)),
+                ])}
+                total={[
+                  'GOVERNORATE',
+                  int(g.t9),
+                  int(g.s9),
+                  int(g.a9),
+                  pctCell(prev9),
+                  int(g.t18),
+                  int(g.s18),
+                  int(g.a18),
+                  pctCell(prev18),
+                ]}
+                dense
+              />
+            ) : (
+              <NotReported year={tableYear} detail="The source gives screening by wilayat for 2025 only." />
+            )}
+            <div className="mt-3 space-y-3">
+              <Note title="Validated:">
+                Governorate totals reconcile exactly to the source workbook's own TOTAL row
+                (9-month: {int(g.s9)} screened / {int(g.a9)} anaemic; 18-month: {int(g.s18)} /{' '}
+                {int(g.a18)}). "%" = anaemic among those screened.
+              </Note>
+              <Note title="Not reported:" tone="warn">
+                The source data hold no child anaemia screening or follow-up figures for {gap}. Those
+                years are shown as “Not reported” rather than zero. Anaemia in pregnancy (2019–2025)
+                is a separate maternal indicator on the Maternal Care page.
+              </Note>
+            </div>
+          </ChartCard>
+        </div>
       </div>
 
       {/* ===== Treatment follow-up ===== */}
@@ -173,103 +244,115 @@ export default function ChildAnaemia() {
         <SectionTitle
           icon={Pill}
           title="Anaemia Treatment Follow-up"
-          subtitle="Iron treatment, 3-month continuation & improvement among anaemic children (9-month cohort)"
+          subtitle="Iron treatment, 3-month continuation & improvement among anaemic children (9-month cohort) · 2023, 2024 & 2025"
         />
         <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
           <KpiCard
-            label="Anaemic Cases Followed"
+            label="Anaemic Cases Followed (2025)"
             value={int(fu.cases)}
             icon={Pill}
             accent="navy"
-            hint="On the follow-up register"
+            hint={`On the follow-up register · ${gapHint}`}
           />
           <KpiCard
-            label="Received Iron"
-            value={pct(ratio(fu.iron, fu.cases))}
+            label="Received Iron (2025)"
+            value={pctCell(ratio(fu.iron, fu.cases))}
             icon={Pill}
             accent="azure"
-            hint={`${int(fu.iron)} children treated`}
+            hint={`${int(fu.iron)} children treated · ${gapHint}`}
           />
           <KpiCard
-            label="Continued Iron 3 Months"
-            value={pct(ratio(fu.cont3, fu.iron))}
+            label="Continued Iron 3 Months (2025)"
+            value={pctCell(ratio(fu.cont3, fu.iron))}
             icon={Pill}
             accent="teal"
-            hint={`${int(fu.cont3)} of those treated`}
+            hint={`${int(fu.cont3)} of those treated · ${gapHint}`}
           />
           <KpiCard
-            label="Improved"
-            value={pct(ratio(fu.improved, fu.cases))}
+            label="Improved (2025)"
+            value={pctCell(ratio(fu.improved, fu.cases))}
             icon={Pill}
             accent="good"
-            hint={`${int(fu.improved)} children`}
+            hint={`${int(fu.improved)} children · ${gapHint}`}
           />
         </div>
 
+        <div className="mt-4">
+          <Segmented label="Follow-up year" options={YEAR_OPTIONS} value={fuYear} onChange={setFuYear} />
+        </div>
+
         <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-2">
-          <ChartCard
-            title="Treatment Cascade by Wilayat"
-            subtitle="Cases → on iron → improved"
-          >
-            <ComparisonBars
-              data={anaemiaFollowup.byWilayat}
-              xKey="wilayat"
-              series={[
-                { key: 'cases', name: 'Cases', color: C.navy },
-                { key: 'iron', name: 'On iron', color: C.azure },
-                { key: 'improved', name: 'Improved', color: C.good },
-              ]}
-            />
+          <ChartCard title={`Treatment Cascade by Wilayat (${fuYear})`} subtitle="Cases → on iron → improved">
+            {followup ? (
+              <ComparisonBars
+                data={followup.byWilayat}
+                xKey="wilayat"
+                series={[
+                  { key: 'cases', name: 'Cases', color: C.navy },
+                  { key: 'iron', name: 'On iron', color: C.azure },
+                  { key: 'improved', name: 'Improved', color: C.good },
+                ]}
+              />
+            ) : (
+              <NotReported year={fuYear} detail="The follow-up register covers 2025 only." />
+            )}
           </ChartCard>
-          <ChartCard title="Monthly Cases vs Improved" subtitle="Across 2025">
-            <TrendChart
-              data={anaemiaFollowup.monthly}
-              xKey="month"
-              series={[
-                { key: 'cases', name: 'New cases', color: C.gold },
-                { key: 'improved', name: 'Improved', color: C.good },
-              ]}
-            />
+          <ChartCard title={`Monthly Cases vs Improved (${fuYear})`} subtitle="By month of the year">
+            {followup ? (
+              <TrendChart
+                data={followup.monthly}
+                xKey="month"
+                series={[
+                  { key: 'cases', name: 'New cases', color: C.gold },
+                  { key: 'improved', name: 'Improved', color: C.good },
+                ]}
+              />
+            ) : (
+              <NotReported year={fuYear} detail="The follow-up register covers 2025 only." />
+            )}
           </ChartCard>
         </div>
 
         <div className="mt-4">
-          <ChartCard title="Treatment Follow-up by Wilayat (2025)" subtitle="">
-            <DataTable
-              columns={[
-                { label: 'Wilayat' },
-                { label: 'Cases', align: 'right' },
-                { label: 'On Iron', align: 'right' },
-                { label: 'Iron %', align: 'right' },
-                { label: 'Continued 3mo', align: 'right' },
-                { label: 'Improved', align: 'right' },
-                { label: 'Improved %', align: 'right' },
-              ]}
-              rows={anaemiaFollowup.byWilayat.map((w) => [
-                w.wilayat,
-                int(w.cases),
-                int(w.iron),
-                pct(ratio(w.iron, w.cases)),
-                int(w.cont3),
-                int(w.improved),
-                pct(ratio(w.improved, w.cases)),
-              ])}
-              total={[
-                'GOVERNORATE',
-                int(fu.cases),
-                int(fu.iron),
-                pct(ratio(fu.iron, fu.cases)),
-                int(fu.cont3),
-                int(fu.improved),
-                pct(ratio(fu.improved, fu.cases)),
-              ]}
-              dense
-            />
+          <ChartCard title={`Treatment Follow-up by Wilayat (${fuYear})`} subtitle="">
+            {followup ? (
+              <DataTable
+                columns={[
+                  { label: 'Wilayat' },
+                  { label: 'Cases', align: 'right' },
+                  { label: 'On Iron', align: 'right' },
+                  { label: 'Iron %', align: 'right' },
+                  { label: 'Continued 3mo', align: 'right' },
+                  { label: 'Improved', align: 'right' },
+                  { label: 'Improved %', align: 'right' },
+                ]}
+                rows={followup.byWilayat.map((w) => [
+                  w.wilayat,
+                  int(w.cases),
+                  int(w.iron),
+                  pctCell(ratio(w.iron, w.cases)),
+                  int(w.cont3),
+                  int(w.improved),
+                  pctCell(ratio(w.improved, w.cases)),
+                ])}
+                total={[
+                  'GOVERNORATE',
+                  int(followup.gov.cases),
+                  int(followup.gov.iron),
+                  pctCell(ratio(followup.gov.iron, followup.gov.cases)),
+                  int(followup.gov.cont3),
+                  int(followup.gov.improved),
+                  pctCell(ratio(followup.gov.improved, followup.gov.cases)),
+                ]}
+                dense
+              />
+            ) : (
+              <NotReported year={fuYear} detail="The follow-up register covers 2025 only." />
+            )}
             <div className="mt-3">
               <Note title="Source:">
-                Anaemia follow-up register (9-month cohort). Governorate totals
-                reconcile to the workbook's TOTAL (3,867 cases). "Improved %" is
-                among all followed cases.
+                Anaemia follow-up register (9-month cohort), 2025. Governorate totals reconcile to the
+                workbook's TOTAL ({int(fu.cases)} cases). "Improved %" is among all followed cases.
               </Note>
             </div>
           </ChartCard>

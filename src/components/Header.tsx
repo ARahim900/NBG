@@ -14,6 +14,23 @@ interface HeaderProps {
 
 const wilayatCount = meta.wilayats.length
 
+/**
+ * Pages whose charts do not use the 2023 / 2024 / 2025 year colours: 2025
+ * population estimates (with the map), the team chart, the gallery, the Extra
+ * Child Health Register (2025 only; its series are the 3- and 4-year visits)
+ * and the 2026 extended-screening report. Breastfeeding and Stillbirth &
+ * Neonatal now compare years in YEAR_COLORS, so they show the key. Listed by
+ * id, so a sub-page's key does not depend on its parent page.
+ */
+const NO_YEAR_KEY = new Set<ViewId>([
+  'pop',
+  'map',
+  'wch-team',
+  'gallery',
+  'ecr',
+  'children/newborn-screening/extended-newborn-screening-2026',
+])
+
 export default function Header({ active, onOpenMenu }: HeaderProps) {
   const item = NAV_BY_ID[active]
   const titleRef = useRef<HTMLHeadingElement>(null)
@@ -29,6 +46,7 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
   }, [])
 
   const group = NAV_GROUPS.find((g) => g.id === item.group)
+  const parent = item.parentId ? NAV_BY_ID[item.parentId] : null
   // Phones get a shorter Home title so it never needs a third line.
   const title =
     active === 'about' ? (
@@ -76,6 +94,7 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
             <p className="text-[0.66rem] font-semibold uppercase tracking-[0.22em] text-[#7c8ba0] dark:text-ink/60">
               <span className="hidden sm:inline">Ministry of Health · </span>
               {group ? group.label : item.name}
+              {parent && ` · ${parent.name}`}
             </p>
             {/* Scale to the title column; long titles remain fully readable. */}
             <h1
@@ -87,8 +106,8 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
             <span className="accent-tab mt-2 bg-azure" aria-hidden="true" />
           </div>
 
-          {/* Population charts use nationality and sex legends within each chart. */}
-          {active !== 'pop' && active !== 'wch-team' && active !== 'gallery' && active !== 'sn' && active !== 'bfhi' && !item.parentId && (
+          {/* Year colour key, hidden where charts do not use year colours (NO_YEAR_KEY). */}
+          {!NO_YEAR_KEY.has(active) && (
             <div
               className="order-last hidden w-full cursor-default select-none items-center justify-end gap-3 md:flex 2xl:order-none 2xl:w-auto"
               role="note"

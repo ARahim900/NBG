@@ -7,9 +7,11 @@ import { C } from '../../lib/theme'
 
 const chartStyle = '[&_h3]:text-heading dark:[&_h3]:text-glow'
 const rateLabel = (value: number | null) => value === null ? 'Not available' : pct(value, 2)
+/** App-wide spelling "Sohar"; the workbook's sourceName is unchanged. */
+const displayName = (name: string) => name.replace(/^Suhar\b/, 'Sohar')
 const chartData = institutions.map((row) => ({
   ...row,
-  institution: row.name.replace(' Hospital', '').replace(' Polyclinic', ' PC'),
+  institution: displayName(row.name).replace(' Hospital', '').replace(' Polyclinic', ' PC'),
   rejectionRate: rejectionRate(row.received, row.rejected),
 }))
 const metrics = [
@@ -22,7 +24,7 @@ const programmeSections = [
   {
     title: 'Programme Challenges',
     items: [
-      'Discharge of newborns from Suhar Hospital before 24 hours of age.',
+      'Discharge of newborns from Sohar Hospital before 24 hours of age.',
       'Continued rejection of dried blood spot (DBS) cards by the laboratory.',
       'Challenges in ensuring follow-up for newborns diagnosed with congenital hypothyroidism.',
       'Lack of regular monthly feedback to the governorate on positive screening results.',
@@ -109,14 +111,14 @@ export default function ExtendedNewbornScreening2026() {
           { label: 'Non-Omani deliveries', align: 'right' }, { label: 'Total deliveries', align: 'right' },
           { label: 'Omani screened', align: 'right' }, { label: 'Non-Omani screened', align: 'right' },
           { label: 'Total screened', align: 'right' }, { label: 'Omani screening ratio', align: 'right' },
-        ]} rows={institutions.map((row) => [row.name, int(row.omaniDeliveries), int(row.nonOmaniDeliveries), int(row.deliveries), int(row.omaniScreened), int(row.nonOmaniScreened), int(row.screened), rateLabel(row.omaniScreeningRatio)])}
+        ]} rows={institutions.map((row) => [displayName(row.name), int(row.omaniDeliveries), int(row.nonOmaniDeliveries), int(row.deliveries), int(row.omaniScreened), int(row.nonOmaniScreened), int(row.screened), rateLabel(row.omaniScreeningRatio)])}
           total={['REPORTED TOTAL', int(newbornTotals.omaniDeliveries), int(newbornTotals.nonOmaniDeliveries), int(newbornTotals.deliveries), int(newbornTotals.omaniScreened), int(newbornTotals.nonOmaniScreened), int(newbornTotals.screened), 'Not verified']} />
       </ChartCard>
 
       <ChartCard className={chartStyle} title="Laboratory sample summary" subtitle="Samples received and rejected · not unique newborns"
         footnote="The total rejection rate uses summed rejected and received samples, not an average of institution percentages. Sample receipts and newborn screening totals are not directly interchangeable.">
         <DataTable dense columns={[{ label: 'Institution' }, { label: 'Received', align: 'right' }, { label: 'Rejected', align: 'right' }, { label: 'Rejection rate', align: 'right' }]}
-          rows={institutions.map((row) => [row.name, int(row.received), int(row.rejected), rateLabel(rejectionRate(row.received, row.rejected))])}
+          rows={institutions.map((row) => [displayName(row.name), int(row.received), int(row.rejected), rateLabel(rejectionRate(row.received, row.rejected))])}
           total={['REPORTED TOTAL', int(newbornTotals.received), int(newbornTotals.rejected), rateLabel(rejectionRate(newbornTotals.received, newbornTotals.rejected))]} />
       </ChartCard>
 

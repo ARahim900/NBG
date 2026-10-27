@@ -24,6 +24,7 @@ import {
   type Nationality,
 } from '../data/population'
 import { anaemia } from '../data/nutrition'
+import { HOSPITALS, hospitalCatchment, hospitalsIn, wilayatName } from '../data/hospitals'
 import {
   FLAG_BELOW,
   ancGov,
@@ -58,6 +59,10 @@ const opt = (v: number | null, f: (n: number) => string): string =>
   v === null ? '—' : f(v)
 const one = (v: number): string => v.toFixed(1)
 
+/** Wilayat with no 2025 figure: their bars are left blank, never drawn as 0. */
+const noTarget9 = services.filter((s) => s.target9 === null).map((s) => s.wilayat)
+const noAncRate = services.filter((s) => s.ancRate === null).map((s) => s.wilayat)
+
 export default function Population() {
   const [wilayat, setWilayat] = useState<string>('all')
   const [nat, setNat] = useState<Nationality>('all')
@@ -71,6 +76,19 @@ export default function Population() {
 
   const place = wilayat === 'all' ? 'North Batinah' : wilayat
   const natLabel = NAT_OPTIONS.find((o) => o.value === nat)?.label ?? ''
+
+  // Wilayat-wide hospitals (Al Suwaiq Hospital): catchment = the whole wilayat.
+  // Listed beside the health centres, never added to any total.
+  const hospitals = wilayat === 'all' ? HOSPITALS : hospitalsIn(wilayat)
+  const hospitalRows = hospitals.map((h) => {
+    const o = targetGroups(hospitalCatchment(h, 'omani'))
+    const e = targetGroups(hospitalCatchment(h, 'expat'))
+    const t = targetGroups(hospitalCatchment(h, nat))
+    return { h, omani: o.total, expat: e.total, total: o.total + e.total, t }
+  })
+  const catchmentCount = `${list.length} health-centre catchments${
+    hospitals.length ? ` + ${hospitals.length} wilayat hospital${hospitals.length > 1 ? 's' : ''}` : ''
+  }`
 
   // Pyramid: stack Omani + expatriate on each side when showing everyone.
   const pyramid = AGE_BANDS.map((band, i) => ({
@@ -93,11 +111,18 @@ export default function Population() {
   const composition =
     wilayat === 'all'
       ? byWilayat.map((w) => ({ name: w.wilayat, omani: r(w.omani), expat: r(w.expat) }))
-      : list.map((inst) => ({
-          name: inst.en,
-          omani: r(targetGroups(aggregate([inst], 'omani')).total),
-          expat: r(targetGroups(aggregate([inst], 'expat')).total),
-        }))
+      : [
+          ...hospitalRows.map((x) => ({
+            name: `${x.h.en} (whole wilayat)`,
+            omani: r(x.omani),
+            expat: r(x.expat),
+          })),
+          ...list.map((inst) => ({
+            name: inst.en,
+            omani: r(targetGroups(aggregate([inst], 'omani')).total),
+            expat: r(targetGroups(aggregate([inst], 'expat')).total),
+          })),
+        ]
 
   // Institution table follows both filters; target groups follow nationality.
   const tableRows = list
@@ -118,6 +143,7 @@ export default function Population() {
         'Institution',
         'Institution (Arabic)',
         'Wilayat',
+        'Catchment',
         'Omani',
         'Expatriate',
         'Total',
@@ -125,17 +151,33 @@ export default function Population() {
         `Women 15-49 (${natLabel})`,
         `Aged 60+ (${natLabel})`,
       ],
-      tableRows.map((x) => [
-        x.inst.en,
-        x.inst.ar,
-        x.inst.wilayat,
-        r(x.omani),
-        r(x.expat),
-        r(x.total),
-        r(x.t.under5),
-        r(x.t.women15to49),
-        r(x.t.adults60plus),
-      ]),
+      [
+        // Hospital rows overlap the centres below them: never sum this column.
+        ...hospitalRows.map((x) => [
+          x.h.en,
+          x.h.ar,
+          x.h.wilayat,
+          'Whole wilayat - not added to totals',
+          r(x.omani),
+          r(x.expat),
+          r(x.total),
+          r(x.t.under5),
+          r(x.t.women15to49),
+          r(x.t.adults60plus),
+        ]),
+        ...tableRows.map((x) => [
+          x.inst.en,
+          x.inst.ar,
+          x.inst.wilayat,
+          'Health-centre catchment',
+          r(x.omani),
+          r(x.expat),
+          r(x.total),
+          r(x.t.under5),
+          r(x.t.women15to49),
+          r(x.t.adults60plus),
+        ]),
+      ],
     )
 
   const detailTotal = govOmani.total + targetGroups(aggregate(INSTITUTIONS, 'expat')).total
@@ -149,7 +191,8 @@ export default function Population() {
             Population estimates
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink/80">
-            End-year 2025 · {INSTITUTIONS.length} health-institution catchments across North Batinah.
+            End-year 2025 · {INSTITUTIONS.length} health-centre catchments across North Batinah, plus{' '}
+            {HOSPITALS.map((h) => `${h.en} (catchment: all of ${wilayatName(h)})`).join(', ')}.
           </p>
           <p lang="ar" dir="rtl" className="mt-1 text-left font-ar text-sm text-ink/80">
             {popMeta.titleAr}
@@ -199,7 +242,7 @@ export default function Population() {
           </fieldset>
         </div>
         <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-line/10 pt-3">
-          <p role="status" className="text-sm text-ink/80">{place} · {natLabel} · {list.length} catchments</p>
+          <p role="status" className="text-sm text-ink/80">{place} · {natLabel} · {catchmentCount}</p>
           {(wilayat !== 'all' || nat !== 'all') && (
             <button type="button" onClick={() => { setWilayat('all'); setNat('all') }}
               className="min-h-11 rounded-lg px-3 text-sm font-medium text-heading underline underline-offset-4 hover:bg-mist">
@@ -239,6 +282,11 @@ export default function Population() {
           className="xl:col-span-2"
           title={wilayat === 'all' ? 'Population by Wilayat' : `Catchments in ${wilayat}`}
           subtitle="Omani and expatriate residents"
+          footnote={
+            hospitalRows.length > 0 && wilayat !== 'all'
+              ? `${hospitalRows.map((x) => x.h.en).join(', ')} covers the whole wilayat, so its bar equals the sum of the health-centre bars below it.`
+              : undefined
+          }
         >
           <ComparisonBars
             data={composition}
@@ -264,7 +312,7 @@ export default function Population() {
         />
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           <ChartCard
-            title="Birth Cohort vs 9-Month Screening Target"
+            title="Birth Cohort vs 9-Month Screening Target (2025)"
             subtitle="Estimated Omani births per year (under-5 ÷ 5) vs anaemia-screening target"
             footnote={`Governorate: target ${int(anaemia.gov.t9)} against an estimated cohort of ${int(r(cohortGov))} (${pct(targetPctGov)}). A target well below the cohort means coverage percentages look better than reality.`}
           >
@@ -272,7 +320,7 @@ export default function Population() {
               data={services.map((s) => ({
                 wilayat: s.wilayat,
                 cohort: r(s.cohort),
-                target: s.target9 ?? 0,
+                target: s.target9,
               }))}
               xKey="wilayat"
               layout="vertical"
@@ -281,18 +329,34 @@ export default function Population() {
                 { key: 'target', name: '9-month target', color: C.navy },
               ]}
             />
+            {noTarget9.length > 0 && (
+              <div className="mt-3">
+                <Note title="Not reported:">
+                  no 2025 9-month target for {noTarget9.join(', ')}; the bar is left blank,
+                  not shown as zero.
+                </Note>
+              </div>
+            )}
           </ChartCard>
           <ChartCard
-            title="New Antenatal Registrations per 1,000 Women"
+            title="New Antenatal Registrations per 1,000 Women (2025)"
             subtitle="New ANC registrations 2025 per 1,000 Omani women aged 15–49"
             footnote={`Governorate rate: ${one(ancRateGov)} per 1,000 (${int(ancGov)} registrations). Broadly tracks the fertility rate, so large gaps between wilayat point to denominator or reporting issues.`}
           >
             <ComparisonBars
-              data={services.map((s) => ({ wilayat: s.wilayat, rate: s.ancRate ?? 0 }))}
+              data={services.map((s) => ({ wilayat: s.wilayat, rate: s.ancRate }))}
               xKey="wilayat"
               showLegend={false}
               series={[{ key: 'rate', name: 'Per 1,000 women', color: C.azure }]}
             />
+            {noAncRate.length > 0 && (
+              <div className="mt-3">
+                <Note title="Not reported:">
+                  no 2025 ANC registrations for {noAncRate.join(', ')}; the bar is left blank,
+                  not shown as zero.
+                </Note>
+              </div>
+            )}
           </ChartCard>
         </div>
 
@@ -376,7 +440,7 @@ export default function Population() {
         />
         <ChartCard
           title="Population by Health Institution (2025)"
-          subtitle="Largest catchment first"
+          subtitle={hospitalRows.length > 0 ? 'Wilayat hospital first (not added to the total), then health centres by size' : 'Largest catchment first'}
           action={
             <button
               type="button"
@@ -401,7 +465,29 @@ export default function Population() {
               { label: 'Women 15–49', align: 'right' },
               { label: '60+', align: 'right' },
             ]}
-            rows={tableRows.map((x) => [
+            rows={[
+              ...hospitalRows.map((x) => [
+                <span className="block">
+                  {x.h.en}
+                  <span className="ml-1.5 rounded-control border border-line/20 px-1.5 text-eyebrow uppercase text-heading/75">
+                    Whole wilayat
+                  </span>
+                  <span lang="ar" dir="rtl" className="block font-ar text-[0.72rem] font-normal text-ink/50">
+                    {x.h.ar}
+                  </span>
+                </span>,
+                <span className="inline-flex items-center gap-1 text-ink/70">
+                  <MapPin className="h-3 w-3 text-teal-600" />
+                  {x.h.wilayat}
+                </span>,
+                int(r(x.omani)),
+                int(r(x.expat)),
+                int(r(x.total)),
+                int(r(x.t.under5)),
+                int(r(x.t.women15to49)),
+                int(r(x.t.adults60plus)),
+              ]),
+              ...tableRows.map((x) => [
               <span className="block">
                 {x.inst.en}
                 <span lang="ar" dir="rtl" className="block font-ar text-[0.72rem] font-normal text-ink/50">
@@ -418,7 +504,8 @@ export default function Population() {
               int(r(x.t.under5)),
               int(r(x.t.women15to49)),
               int(r(x.t.adults60plus)),
-            ])}
+              ]),
+            ]}
             total={[
               wilayat === 'all' ? 'GOVERNORATE' : wilayat.toUpperCase(),
               '',
@@ -436,6 +523,19 @@ export default function Population() {
       {/* ===== Data notes ===== */}
       <ChartCard title="About These Estimates" subtitle="Source and method">
         <div className="space-y-2">
+          <Note title="Years:">
+            The source workbook gives end-year 2025 estimates only; 2023 and 2024 population
+            estimates are not in the source files, so this page shows 2025. The service ratios
+            use 2025 volumes by wilayat; 2023 and 2024 volumes by wilayat are not reported.
+            Governorate totals for 2023, 2024 and 2025 are on the Overview and each dashboard.
+          </Note>
+          {HOSPITALS.map((h) => (
+            <Note key={h.en} title="Wilayat hospital:">
+              {h.en} serves the whole wilayat of {wilayatName(h)}, so its catchment is the
+              wilayat&rsquo;s total population. It is listed alongside {h.wilayat} EHC and the
+              other health centres but never added again to the totals.
+            </Note>
+          ))}
           <Note title="Source:">
             {popMeta.source}. {popMeta.reference}. Figures are modelled estimates with
             decimals; they are rounded for display, so a column may differ from its total

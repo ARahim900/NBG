@@ -61,6 +61,15 @@ const preload = (id: ViewId): Promise<void> =>
       /* offline or mid-deploy — the view reports it via its error boundary */
     })
 
+/**
+ * Footer reporting period for pages outside the 2023–2025 dashboards. Keyed by
+ * view (not by parent page), so moving a sub-page — such as the Extra Child
+ * Health Register under ASD — never changes its period by accident.
+ */
+const FOOTER_YEARS: Partial<Record<ViewId, string>> = {
+  'children/newborn-screening/extended-newborn-screening-2026': '2026',
+}
+
 const DEFAULT_VIEW: ViewId = 'about'
 const BASE_TITLE = document.title
 
@@ -280,7 +289,7 @@ export default function App() {
         <footer className="mx-4 flex flex-col items-center gap-1 border-t border-sky py-4 text-center text-[0.7rem] text-[#7c8ba0] dark:border-[rgb(var(--card-border))] dark:text-ink/55 sm:mx-6 sm:flex-row sm:justify-between sm:gap-4 sm:text-left lg:mx-8">
           <span>Ministry of Health — Sultanate of Oman</span>
           <span className="hidden md:inline">
-            Women &amp; Child Health Department · {active === 'gallery' ? 'Gallery' : active === 'wch-team' ? 'Team Structure' : `Health Monitoring Dashboards ${NAV_BY_ID[active].parentId === 'ns' ? '2026' : '2023–2025'}`}
+            Women &amp; Child Health Department · {active === 'gallery' ? 'Gallery' : active === 'wch-team' ? 'Team Structure' : `Health Monitoring Dashboards ${FOOTER_YEARS[active] ?? '2023–2025'}`}
           </span>
           <span className="italic">
             DGHS · North Al Batinah · {NAV_BY_ID[active].short ?? NAV_BY_ID[active].name}

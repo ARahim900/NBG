@@ -1,6 +1,7 @@
 import base from './map-base.json'
 import locations from './facility-locations.json'
 import { INSTITUTIONS } from './population'
+import { HOSPITALS } from './hospitals'
 
 /**
  * Geography for the North Batinah map.
@@ -32,12 +33,14 @@ interface Location {
 
 const inWindow = (x: number, y: number): boolean => x >= 0 && x <= MAP_W && y >= 0 && y <= MAP_H
 
-/** Institutions with a usable, in-bounds position. */
+/** Every name a location may use: health-centre catchments and wilayat hospitals. */
+const KNOWN = new Set([...INSTITUTIONS.map((i) => i.en), ...HOSPITALS.map((h) => h.en)])
+
+/** Institutions (centres and wilayat hospitals) with a usable, in-bounds position. */
 export const PINNED = (locations.facilities as Location[]).flatMap((f) => {
   if (f.lat === null || f.lon === null) return []
-  const inst = INSTITUTIONS.find((i) => i.en === f.en)
-  if (!inst) {
-    console.warn(`[map] facility-locations: "${f.en}" is not in population.json`)
+  if (!KNOWN.has(f.en)) {
+    console.warn(`[map] facility-locations: "${f.en}" is not in population.json or hospitals.ts`)
     return []
   }
   const [x, y] = project(f.lat, f.lon)

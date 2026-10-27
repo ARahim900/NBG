@@ -16,6 +16,10 @@ and Arabic uses **Cairo**. Colours come only from the theme tokens in
 `tailwind.config.js` and `src/lib/theme.ts` — no hard-coded brand hex in views; all fonts are self-hosted, so they load
 with no external request and work offline.
 
+**Every chart covers 2023, 2024 and 2025** wherever the source data has that year.
+A year the sources do not provide stays visible as "Not reported" (never 0), with a
+note naming the missing year. Shared year helpers live in `src/data/years/`.
+
 **Figures are never animated.** KPI values render at their final figure (no
 count-ups) and charts draw without an entrance, so a screenshot or printout can
 never capture an interim number. Bar and shaded-area charts start at zero with
@@ -47,7 +51,7 @@ bookmarked, shared, refreshed or reached with the Back button.
 | CA  | `#/ca`  | Congenital Anomalies | By facility and sector, MOH-vs-private split |
 | SN  | `#/sn`  | Stillbirth & Neonatal | Monthly perinatal mortality, ICD-PM coding, 2025 summary |
 | NS  | `#/ns`  | Newborn Screening | TSH and neonatal hearing screening |
-| ECR | `#/ecr` | Extra Child Health Register | 3 & 4-year developmental visits by institution (2025), Safe Transport of the Critically Ill Child workshops |
+| ECR | `#/ecr` | Extra Child Health Register (sub-page of ASD) | Every 3 & 4-year visit record by institution and month (2025) with CSV export, annual totals, Safe Transport of the Critically Ill Child workshops |
 | CM  | `#/mt`  | Child Maltreatment | 2019–2025 trend; 2025 by wilayat, type, month, age and reporting institution |
 | CN  | `#/cn`  | Child Nutrition | Malnutrition categories, infant feeding curve |
 | AN  | `#/an`  | Child Anaemia | 9 & 18-month screening coverage and prevalence, treatment follow-up |

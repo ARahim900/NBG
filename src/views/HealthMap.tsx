@@ -26,7 +26,7 @@ import {
 } from '../data/population'
 import { ancRateGov, services } from '../data/services'
 import { MAP, PINNED, SEATS, pinnedNames } from '../data/map'
-import { HOSPITALS, hospitalsIn } from '../data/hospitals'
+import { HOSPITALS, hospitalCatchment, hospitalsIn, wilayatName } from '../data/hospitals'
 import { useThemeMode } from '../lib/theme-mode'
 import { useNarrow } from '../lib/useMediaQuery'
 import { int, pct } from '../lib/format'
@@ -192,8 +192,8 @@ export default function HealthMap() {
         ...hospitalsIn(selected).map((h) => ({
           en: h.en,
           ar: h.ar,
-          total: targetGroups(aggregate(institutionsIn(selected), 'all')).total,
-          pinned: false,
+          total: targetGroups(hospitalCatchment(h, 'all')).total,
+          pinned: pinnedNames.has(h.en),
           hospital: true,
         })),
         ...institutionsIn(selected)
@@ -566,7 +566,9 @@ export default function HealthMap() {
               const w = wil(s.wilayat)
               const sv = services.find((x) => x.wilayat === s.wilayat)
               const n = institutionCount(s.wilayat)
-              const located = institutionsIn(s.wilayat).filter((i) => pinnedNames.has(i.en)).length
+              const located = [...institutionsIn(s.wilayat), ...hospitalsIn(s.wilayat)].filter((i) =>
+                pinnedNames.has(i.en),
+              ).length
               return [
                 s.wilayat,
                 int(n),
@@ -592,11 +594,18 @@ export default function HealthMap() {
           <div className="mt-3 space-y-3">
             {HOSPITALS.map((h) => (
               <Note key={h.en} title="Wilayat hospital:">
-                {h.en} serves the whole of {h.wilayat}, so its catchment is the wilayat&rsquo;s total
-                population. It is listed with the wilayat&rsquo;s health centres but not added again
-                to the population totals.
+                {h.en} serves the whole wilayat of {wilayatName(h)}, so its catchment is the
+                wilayat&rsquo;s total population. It is listed alongside the wilayat&rsquo;s health
+                centres, including {h.wilayat} EHC, but not added again to the population totals.
               </Note>
             ))}
+            <Note title="Years shown:">
+              The map and this table use the 2025 population estimates, the only population
+              year in the source files. ANC per 1,000 uses 2025 registrations by wilayat; 2023
+              and 2024 ANC by wilayat are not reported in the source files, so no earlier rate is
+              shown. Governorate ANC totals for 2023, 2024 and 2025 are on the Overview and
+              Maternal Care dashboards.
+            </Note>
             <Note tone={PINNED.length < TOTAL_INSTITUTIONS ? 'warn' : 'info'} title="Health-institution locations:">
               {PINNED.length === 0
                 ? 'no verified coordinates have been supplied yet, so health institutions are listed by wilayat rather than pinned. '

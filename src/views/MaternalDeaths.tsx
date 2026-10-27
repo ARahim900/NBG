@@ -6,19 +6,41 @@ import DataTable from '../components/ui/DataTable'
 import Note from '../components/ui/Note'
 import { ComparisonBars, DonutChart } from '../components/charts/Charts'
 import { md, sumBy } from '../data/nbg'
+import { mdByYear, mdCause, mdDeaths, ukLabel, type Year } from '../data/years/women'
 import { C, SERIES } from '../lib/theme'
 import { int } from '../lib/format'
 
+const firstYear = md.byYear[0]?.year ?? ''
+const lastYear = md.byYear[md.byYear.length - 1]?.year ?? ''
 const total10yr = sumBy(md.byYear, (r) => r.deaths)
+const causesTotal = sumBy(md.causesCount, (r) => r.deaths)
 const peak = md.byYear.reduce((a, b) => (b.deaths > a.deaths ? b : a))
-const deaths2024 = md.byYear.find((r) => r.year === '2024')?.deaths ?? 0
-const deaths2023 = md.byYear.find((r) => r.year === '2023')?.deaths ?? 0
 
 const causeSlices = md.causesCount.map((r, i) => ({
-  name: r.cause,
+  name: ukLabel(r.cause),
   value: r.deaths,
   color: SERIES[i % SERIES.length],
 }))
+
+/** KPI card for one of the three reporting years; a missing year says so. */
+const yearCard = (year: Year, icon: typeof HeartPulse, accent: 'navy' | 'azure' | 'teal') => {
+  const deaths = mdDeaths(year)
+  const cause = mdCause(year)
+  return (
+    <KpiCard
+      key={year}
+      label={`Deaths (${year})`}
+      value={deaths == null ? '—' : int(deaths)}
+      icon={icon}
+      accent={accent}
+      hint={
+        deaths == null
+          ? 'Not reported — no count in any 2025 source'
+          : cause ?? 'Cause not recorded'
+      }
+    />
+  )
+}
 
 export default function MaternalDeaths() {
   return (
@@ -26,48 +48,30 @@ export default function MaternalDeaths() {
       <SectionTitle
         icon={HeartPulse}
         title="Maternal Deaths — 10-Year Surveillance"
-        subtitle="Deaths by year (2015–2024), causes and recent records"
+        subtitle={`Deaths by year (${firstYear}–${lastYear}; 2025 not reported), causes and recent records`}
       />
 
       <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
-        <KpiCard
-          label="Deaths (2024)"
-          value={int(deaths2024)}
-          icon={HeartPulse}
-          accent="navy"
-          hint="Latest surveillance year"
-        />
-        <KpiCard
-          label="Deaths (2023)"
-          value={int(deaths2023)}
-          icon={Activity}
-          accent="azure"
-          hint="Prior year"
-        />
+        {yearCard('2023', Activity, 'azure')}
+        {yearCard('2024', HeartPulse, 'navy')}
+        {yearCard('2025', CalendarX, 'teal')}
         <KpiCard
           label="10-Year Total"
           value={int(total10yr)}
           icon={Sigma}
           accent="gold"
-          hint="2015–2024 cumulative"
-        />
-        <KpiCard
-          label="Peak Year"
-          value={peak.year}
-          icon={CalendarX}
-          accent="navy"
-          hint={`${peak.deaths} deaths (COVID-19 era)`}
+          hint={`${firstYear}–${lastYear} · peak ${peak.year} (${peak.deaths} deaths, COVID-19 era)`}
         />
       </div>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ChartCard
           title="Maternal Deaths by Year"
-          subtitle="2015–2024"
-          footnote="The 2020–2021 spike coincides with the COVID-19 pandemic; 2023–2024 returned to 1 death/year."
+          subtitle={`${firstYear}–2025 · 2025 not reported`}
+          footnote="The 2020–2021 spike coincides with the COVID-19 pandemic; 2023 and 2024 recorded 1 death each. 2025 has no bar because no count was reported."
         >
           <ComparisonBars
-            data={md.byYear}
+            data={mdByYear}
             xKey="year"
             height={300}
             series={[{ key: 'deaths', name: 'Deaths', color: C.navy }]}
@@ -76,8 +80,8 @@ export default function MaternalDeaths() {
         </ChartCard>
         <ChartCard
           title="Causes of Death"
-          subtitle="Cumulative count"
-          footnote="Brought-dead and postpartum haemorrhage together account for ~43% of the 30 recorded deaths."
+          subtitle="Cumulative count · period not stated in the source · 2025 not reported"
+          footnote={`Brought-dead and postpartum haemorrhage together account for ~43% of the ${causesTotal} recorded deaths.`}
         >
           <DonutChart data={causeSlices} height={300} />
         </ChartCard>
@@ -90,17 +94,17 @@ export default function MaternalDeaths() {
           subtitle="Causes and recent cases"
         />
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <ChartCard title="Causes of Death" subtitle="Count by cause">
+          <ChartCard title="Causes of Death" subtitle="Count by cause · period not stated">
             <DataTable
               columns={[
                 { label: 'Cause' },
                 { label: 'Deaths', align: 'right' },
               ]}
-              rows={md.causesCount.map((r) => [r.cause, int(r.deaths)])}
-              total={['TOTAL', int(sumBy(md.causesCount, (r) => r.deaths))]}
+              rows={md.causesCount.map((r) => [ukLabel(r.cause), int(r.deaths)])}
+              total={['TOTAL', int(causesTotal)]}
             />
           </ChartCard>
-          <ChartCard title="Recent Death Records" subtitle="Most recent cases">
+          <ChartCard title="Recent Death Records" subtitle="Most recent cases · none reported for 2025">
             <DataTable
               columns={[
                 { label: 'Year' },
@@ -114,7 +118,11 @@ export default function MaternalDeaths() {
         </div>
       </div>
 
-      <Note title="2025:">{md.note2025}</Note>
+      <Note title="Not reported:">
+        {md.note2025} The causes table totals {int(causesTotal)} deaths while the
+        by-year series sums to {int(total10yr)}; the source does not state the
+        period the causes cover, so both are shown as reported.
+      </Note>
     </div>
   )
 }

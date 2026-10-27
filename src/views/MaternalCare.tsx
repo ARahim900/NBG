@@ -1,13 +1,22 @@
 import { Activity, Baby, Droplets, MapPin, Stethoscope } from 'lucide-react'
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import KpiCard from '../components/ui/KpiCard'
 import ChartCard from '../components/ui/ChartCard'
 import SectionTitle from '../components/ui/SectionTitle'
 import DataTable from '../components/ui/DataTable'
 import Note from '../components/ui/Note'
-import { ComparisonBars, DonutChart, TrendChart } from '../components/charts/Charts'
-import { mc, sumBy } from '../data/nbg'
-import { C } from '../lib/theme'
+import Segmented from '../components/ui/Segmented'
+import { ComparisonBars, TrendChart } from '../components/charts/Charts'
+import { mc } from '../data/nbg'
+import {
+  YEAR_OPTIONS,
+  mcByWilayat,
+  mcDeliveries,
+  priorYearsHint,
+  ukLabel,
+  type Year,
+} from '../data/years/women'
+import { C, YEAR_COLORS } from '../lib/theme'
 import { deltaPct, int, pct } from '../lib/format'
 
 const lastV = (a: { value: number }[]): number => a[a.length - 1]?.value ?? 0
@@ -18,10 +27,9 @@ const booking2025 = lastV(mc.bookingTrend)
 const anaemia2025 = lastV(mc.anaemiaTrend)
 const gdm2025 = lastV(mc.gdmTrend)
 
-const deliveryDonut = [
-  { name: 'Normal delivery', value: mc.deliveryMethods2024[0]?.count ?? 0, color: C.navy },
-  { name: 'Cesarean section', value: mc.deliveryMethods2024[1]?.count ?? 0, color: C.teal },
-]
+const pct1 = (v: number): string => pct(v)
+
+const outside2024 = mc.deliveryMethods2024.find((r) => r.method === 'Outside Health Facility')
 
 // Combined anaemia + GDM trend (intersect on shared years from 2022)
 const riskTrend = mc.anaemiaTrend
@@ -32,30 +40,41 @@ const riskTrend = mc.anaemiaTrend
     gdm: mc.gdmTrend.find((g) => g.year === r.year)?.value ?? null,
   }))
 
-const w = mc.byWilayat2025
-const wTotals = {
-  newAnc: sumBy(w, (r) => r.newAnc),
-  firstTri: sumBy(w, (r) => r.firstTri),
-  anaemia: sumBy(w, (r) => r.anaemia),
-  pnc2: sumBy(w, (r) => r.pnc2),
-  pnc6: sumBy(w, (r) => r.pnc6),
-  pih: sumBy(w, (r) => r.pih),
-  infertility: sumBy(w, (r) => r.infertility),
-  influenza: sumBy(w, (r) => r.influenza),
-}
+const YEAR_SERIES = [
+  { key: 'y2023', name: '2023', color: YEAR_COLORS['2023'] },
+  { key: 'y2024', name: '2024', color: YEAR_COLORS['2024'] },
+  { key: 'y2025', name: '2025', color: YEAR_COLORS['2025'] },
+]
+
+/** Blank cells read as "not reported", never as zero. */
+const dash = <span className="text-ink/35">—</span>
 
 const fmtCell = (indicator: string, v: number | null): ReactNode => {
-  if (v == null) return <span className="text-ink/35">—</span>
+  if (v == null) return dash
   return indicator.includes('%') ? pct(v) : int(v)
 }
 
+const intCell = (v: number | null): ReactNode => (v == null ? dash : int(v))
+
+/**
+ * 2025 "tested" counts that nbg.json derives from 100% screening coverage ×
+ * ANC bookings rather than a reported count; marked † in the indicator table.
+ */
+const DERIVED_2025 = new Set(['HIV Screening (tested)', 'Syphilis Screening (tested)'])
+const cell2025 = (indicator: string, v: number | null): ReactNode =>
+  v != null && DERIVED_2025.has(indicator) ? `${int(v)} †` : fmtCell(indicator, v)
+
 export default function MaternalCare() {
+  const [year, setYear] = useState<Year>('2025')
+  const w = mcByWilayat(year)
+  const byWilayat = year === '2025'
+
   return (
     <div className="space-y-8">
       <SectionTitle
         icon={Stethoscope}
         title="Maternal Care — Antenatal, Screening & Delivery"
-        subtitle="Indicators across 2023–2025 with 2019–2025 trends and 2025 detail by wilayat"
+        subtitle="Indicators for 2023, 2024 and 2025 with 2019–2025 trends; wilayat detail by year"
       />
 
       <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
@@ -65,7 +84,7 @@ export default function MaternalCare() {
           icon={Stethoscope}
           accent="navy"
           delta={deltaPct(anc2025, prevV(mc.ancTrend))}
-          hint="Registered pregnant women"
+          hint={priorYearsHint(mc.ancTrend, int)}
         />
         <KpiCard
           label="1st-Trimester Booking (2025)"
@@ -73,7 +92,7 @@ export default function MaternalCare() {
           icon={Activity}
           accent="azure"
           delta={deltaPct(booking2025, prevV(mc.bookingTrend))}
-          hint="Booked within first trimester"
+          hint={priorYearsHint(mc.bookingTrend, pct1)}
         />
         <KpiCard
           label="Anaemia in Pregnancy (2025)"
@@ -82,7 +101,7 @@ export default function MaternalCare() {
           accent="good"
           deltaTone="down"
           delta={deltaPct(anaemia2025, prevV(mc.anaemiaTrend))}
-          hint="Lower is better"
+          hint={`${priorYearsHint(mc.anaemiaTrend, pct1)} · lower is better`}
         />
         <KpiCard
           label="Gestational Diabetes (2025)"
@@ -91,7 +110,7 @@ export default function MaternalCare() {
           accent="gold"
           deltaTone="down"
           delta={deltaPct(gdm2025, prevV(mc.gdmTrend))}
-          hint="GDM prevalence"
+          hint={`${priorYearsHint(mc.gdmTrend, pct1)} · lower is better`}
         />
       </div>
 
@@ -137,37 +156,80 @@ export default function MaternalCare() {
           />
         </ChartCard>
         <ChartCard
-          title="Delivery Methods (2024)"
-          subtitle="Normal vs cesarean"
-          footnote="957 deliveries (11.2%) occurred outside a health facility."
+          title="Deliveries by Method (2023 / 2024 / 2025)"
+          subtitle="Counts · a missing bar means not reported that year"
+          footnote={
+            outside2024
+              ? `2024: ${int(outside2024.count)} deliveries (${pct(outside2024.pct)}) occurred outside a health facility.`
+              : undefined
+          }
         >
-          <DonutChart data={deliveryDonut} />
+          <ComparisonBars data={mcDeliveries} xKey="label" series={YEAR_SERIES} />
+          <div className="mt-3">
+            <Note title="Not reported:">
+              2025 — no delivery figures in the 2025 antenatal workbook. 2023 —
+              normal deliveries and deliveries outside a health facility. In the
+              2024 source, normal and caesarean counts together exceed the
+              total-deliveries figure; all values are shown as reported.
+            </Note>
+          </div>
         </ChartCard>
       </div>
 
       <div>
         <SectionTitle
           icon={MapPin}
-          title="2025 Maternal Care by Wilayat"
-          subtitle="Jan–Dec totals summed across health centres"
+          title={`${year} Maternal Care by Wilayat`}
+          subtitle="Jan–Dec totals summed across health centres · wilayat breakdown reported for 2025 only"
         />
         <ChartCard
-          title="ANC Registration & 1st-Trimester Booking by Wilayat (2025)"
+          title={`ANC Registration & 1st-Trimester Booking by Wilayat (${year})`}
           subtitle="New registrations vs first-trimester bookings"
+          action={
+            <Segmented
+              label="Wilayat detail year"
+              options={YEAR_OPTIONS}
+              value={year}
+              onChange={setYear}
+            />
+          }
         >
-          <ComparisonBars
-            data={w}
-            xKey="wilayat"
-            series={[
-              { key: 'newAnc', name: 'New ANC reg.', color: C.navy },
-              { key: 'firstTri', name: '1st trimester', color: C.teal },
-            ]}
-          />
+          {byWilayat ? (
+            <ComparisonBars
+              data={w.rows}
+              xKey="wilayat"
+              series={[
+                { key: 'newAnc', name: 'New ANC reg.', color: C.navy },
+                { key: 'firstTri', name: '1st trimester', color: C.teal },
+              ]}
+            />
+          ) : (
+            <Note title={`${year} not reported by wilayat.`}>
+              The {year} source gives governorate totals only:{' '}
+              {w.total.newAnc == null ? 'not reported' : int(w.total.newAnc)} new ANC
+              registrations and{' '}
+              {w.total.firstTri == null ? 'not reported' : int(w.total.firstTri)}{' '}
+              first-trimester bookings. The table below keeps every wilayat row as
+              not reported.
+            </Note>
+          )}
         </ChartCard>
       </div>
 
       <div className="grid grid-cols-1 gap-4">
-        <ChartCard title="2025 Maternal Care Indicators by Wilayat" subtitle="">
+        <ChartCard
+          title={`${year} Maternal Care Indicators by Wilayat`}
+          subtitle={
+            byWilayat
+              ? 'Sum of health-centre returns'
+              : '— = not reported · governorate row from the indicator table'
+          }
+          footnote={
+            byWilayat
+              ? undefined
+              : `${year} governorate totals: new ANC = registered pregnant women, 1st Tri = first-trimester bookings, anaemia = anaemia cases. PNC, PIH, infertility and influenza are not reported for ${year}.`
+          }
+        >
           <DataTable
             columns={[
               { label: 'Wilayat' },
@@ -180,33 +242,33 @@ export default function MaternalCare() {
               { label: 'Infert.', align: 'right' },
               { label: 'Influenza', align: 'right' },
             ]}
-            rows={w.map((r) => [
+            rows={w.rows.map((r) => [
               r.wilayat,
-              int(r.newAnc),
-              int(r.firstTri),
-              int(r.anaemia),
-              int(r.pnc2),
-              int(r.pnc6),
-              int(r.pih),
-              int(r.infertility),
-              int(r.influenza),
+              intCell(r.newAnc),
+              intCell(r.firstTri),
+              intCell(r.anaemia),
+              intCell(r.pnc2),
+              intCell(r.pnc6),
+              intCell(r.pih),
+              intCell(r.infertility),
+              intCell(r.influenza),
             ])}
             total={[
-              'GOVERNORATE',
-              int(wTotals.newAnc),
-              int(wTotals.firstTri),
-              int(wTotals.anaemia),
-              int(wTotals.pnc2),
-              int(wTotals.pnc6),
-              int(wTotals.pih),
-              int(wTotals.infertility),
-              int(wTotals.influenza),
+              w.total.wilayat,
+              intCell(w.total.newAnc),
+              intCell(w.total.firstTri),
+              intCell(w.total.anaemia),
+              intCell(w.total.pnc2),
+              intCell(w.total.pnc6),
+              intCell(w.total.pih),
+              intCell(w.total.infertility),
+              intCell(w.total.influenza),
             ]}
             dense
           />
         </ChartCard>
 
-        <ChartCard title="Maternal Care Indicators (2023 / 2024 / 2025)" subtitle="Blank = not reported that year">
+        <ChartCard title="Maternal Care Indicators (2023 / 2024 / 2025)" subtitle="— = not reported that year · † = derived, not a reported count">
           <DataTable
             columns={[
               { label: 'Indicator' },
@@ -215,10 +277,10 @@ export default function MaternalCare() {
               { label: '2025', align: 'right' },
             ]}
             rows={mc.indicators.map((r) => [
-              r.indicator,
+              ukLabel(r.indicator),
               fmtCell(r.indicator, r.y2023),
               fmtCell(r.indicator, r.y2024),
-              fmtCell(r.indicator, r.y2025),
+              cell2025(r.indicator, r.y2025),
             ])}
             dense
           />
@@ -227,14 +289,17 @@ export default function MaternalCare() {
               2025 antenatal figures (1st-trimester bookings, total ANC visits,
               anaemia cases) are taken from the North Batinah MCH&nbsp;2025
               workbook — 28 health centres across the 6 wilayat — and reconcile
-              with the by-wilayat table above. HIV &amp; syphilis &ldquo;tested&rdquo;
-              2025 are derived from the 100% screening coverage recorded that year.
+              with the by-wilayat table above. &dagger; HIV &amp; syphilis &ldquo;tested&rdquo;
+              2025 are derived from the 100% screening coverage recorded that
+              year, not a reported count.
               2025 delivery, congenital-screening positives (HIV/syphilis),
               teenage-pregnancy and out-of-facility delivery figures are not in
               the antenatal workbook and remain blank pending the maternity/lab
-              source. ANC 2025 is 12,433 (deck headline) vs 12,488 (sum of
-              centres); ANC 2024 12,753 (web) / 12,754 (deck); anaemia 2024
-              34.0% / 34.4%.
+              source. The KPI cards and trend charts use the KPI-deck series,
+              which differs slightly from this table: ANC 2025 12,433 (deck
+              headline) vs 12,488 (sum of centres); ANC 2024 12,753 (web) /
+              12,754 (deck); 1st-trimester booking 2023 94.4% / 94.5% and 2024
+              95.0% / 95.4%; anaemia 2023 34.0% / 33.9% and 2024 34.0% / 34.4%.
             </Note>
           </div>
         </ChartCard>

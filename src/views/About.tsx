@@ -61,8 +61,9 @@ const SECTION_ICONBG: Record<Section['accent'], string> = {
   teal: 'bg-teal/15 text-teal-700 ring-1 ring-teal/30 dark:text-teal',
 }
 
-const ancFor = (key: string): number =>
-  mc.byWilayat2025.find((w) => w.wilayat === key)?.newAnc ?? 0
+/** New ANC registrations for a wilayat in 2025, or null when the source has none. */
+const ancFor = (key: string): number | null =>
+  mc.byWilayat2025.find((w) => w.wilayat === key)?.newAnc ?? null
 
 /** Core-value tile. */
 function ValueCard({ v }: { v: (typeof values)[number] }) {
@@ -75,7 +76,7 @@ function ValueCard({ v }: { v: (typeof values)[number] }) {
       <h3 dir="rtl" className="mt-3 font-ar text-lg font-bold text-heading">
         {v.ar}
       </h3>
-      <p className="text-eyebrow uppercase text-azure">
+      <p dir="ltr" className="text-right text-eyebrow uppercase text-azure">
         {v.en}
       </p>
       <p dir="rtl" className="mt-2 font-ar text-[0.8rem] leading-relaxed text-ink/65">
@@ -87,6 +88,7 @@ function ValueCard({ v }: { v: (typeof values)[number] }) {
 
 /** Wilayat tile with its live ANC counter. */
 function WilayatCard({ w }: { w: (typeof wilayats)[number] }) {
+  const anc = ancFor(w.dataKey)
   return (
     <article className="card card-lift group p-4 text-center">
       <span className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-mist text-heading ring-1 ring-glow/25 transition-all duration-300 group-hover:text-glow">
@@ -101,7 +103,7 @@ function WilayatCard({ w }: { w: (typeof wilayats)[number] }) {
       </p>
       <div className="mt-3 border-t border-line/10 pt-2">
         <p className="font-display text-base font-bold tabular-nums text-azure">
-          {int(ancFor(w.dataKey))}
+          {anc === null ? <span className="text-sm font-semibold text-ink/50">Not reported</span> : int(anc)}
         </p>
         <p className="text-[0.62rem] font-medium uppercase tracking-wide text-ink/45">
           ANC 2025
@@ -178,47 +180,49 @@ export default function About({ onNavigate }: ViewProps) {
       {/* ===== Vision & Mission ===== */}
       <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <article className="card p-6">
-          <div className="flex items-center gap-3">
+          <div dir="rtl" className="flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-tint/10 text-heading ring-1 ring-azure/25">
               <Eye className="h-5 w-5" />
             </span>
-            <div dir="rtl" className="font-ar">
-              <h2 className="text-xl font-extrabold text-heading">الرؤية</h2>
-              <p className="font-display text-xs font-semibold uppercase tracking-[0.14em] text-azure">
+            <div className="font-ar">
+              <h2 lang="ar" className="text-xl font-extrabold text-heading">الرؤية</h2>
+              <p dir="ltr" className="text-right font-display text-xs font-semibold uppercase tracking-[0.14em] text-azure">
                 Vision
               </p>
             </div>
           </div>
           <p
             dir="rtl"
+            lang="ar"
             className="mt-4 font-ar text-lg font-semibold leading-relaxed text-ink"
           >
             {vision.ar}
           </p>
-          <p className="mt-3 border-t border-line/10 pt-3 text-sm leading-relaxed text-ink/60">
+          <p dir="ltr" className="mt-3 border-t border-line/10 pt-3 text-left text-sm leading-relaxed text-ink/60">
             {vision.en}
           </p>
         </article>
 
         <article className="card p-6">
-          <div className="flex items-center gap-3">
+          <div dir="rtl" className="flex items-center gap-3">
             <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal/15 text-teal-700 ring-1 ring-teal/30 dark:text-teal">
               <Compass className="h-5 w-5" />
             </span>
-            <div dir="rtl" className="font-ar">
-              <h2 className="text-xl font-extrabold text-heading">الرسالة</h2>
-              <p className="font-display text-xs font-semibold uppercase tracking-[0.14em] text-azure">
+            <div className="font-ar">
+              <h2 lang="ar" className="text-xl font-extrabold text-heading">الرسالة</h2>
+              <p dir="ltr" className="text-right font-display text-xs font-semibold uppercase tracking-[0.14em] text-azure">
                 Mission
               </p>
             </div>
           </div>
           <p
             dir="rtl"
+            lang="ar"
             className="mt-4 font-ar text-[0.98rem] font-medium leading-loose text-ink"
           >
             {mission.ar}
           </p>
-          <p className="mt-3 border-t border-line/10 pt-3 text-sm leading-relaxed text-ink/60">
+          <p dir="ltr" className="mt-3 border-t border-line/10 pt-3 text-left text-sm leading-relaxed text-ink/60">
             {mission.en}
           </p>
         </article>
@@ -237,7 +241,7 @@ export default function About({ onNavigate }: ViewProps) {
             <h2 lang="ar" className="font-ar text-2xl font-bold">
               القِيَم
             </h2>
-            <p className="mt-1 font-sans text-lg">Our Core Values</p>
+            <p dir="ltr" className="mt-1 text-right font-sans text-lg">Our Core Values</p>
             <span className="accent-tab mt-3 bg-glow" aria-hidden="true" />
             <p lang="ar" className="mt-3 font-ar text-[0.8rem] leading-relaxed text-white/75">
               القيم المؤسسية الموجِّهة للعمل
@@ -281,7 +285,7 @@ export default function About({ onNavigate }: ViewProps) {
                       </span>
                       <div className="font-ar">
                         <h3 className="text-xl font-extrabold text-heading">{s.titleAr}</h3>
-                        <p className="font-display text-xs font-semibold uppercase tracking-[0.14em] text-azure">
+                        <p dir="ltr" className="text-right font-display text-xs font-semibold uppercase tracking-[0.14em] text-azure">
                           {s.titleEn}
                         </p>
                       </div>
@@ -383,6 +387,10 @@ export default function About({ onNavigate }: ViewProps) {
             <WilayatCard key={w.en} w={w} />
           ))}
         </div>
+        <p className="mt-3 text-center text-caption text-ink/60">
+          ANC by wilayat is reported for 2025 only; 2023 and 2024 wilayat figures are not in the
+          source files. Governorate ANC for all three years is on the Overview.
+        </p>
       </section>
 
       {/* ===== CTA finale ===== */}
@@ -391,18 +399,22 @@ export default function About({ onNavigate }: ViewProps) {
         data-reveal
       >
         <div className="relative">
-          <h2 dir="rtl" className="font-ar text-2xl font-extrabold">
+          <h2 dir="rtl" lang="ar" className="font-ar text-2xl font-extrabold">
             المؤشرات الصحية للأعوام 2023 و2024 و2025
           </h2>
           <p className="mx-auto mt-2 max-w-xl text-sm text-white/65">
-            Explore the monitoring dashboards — screening, maternal care, perinatal
-            outcomes and family planning — across the six wilayat of North Batinah.
+            Explore the 2023, 2024 and 2025 monitoring dashboards — screening, maternal
+            care, perinatal outcomes and family planning — across the six wilayat of North
+            Batinah.
           </p>
           <button
+            type="button"
             onClick={() => onNavigate('overview')}
             className="btn-glow mt-6"
           >
-            استعراض لوحات المؤشرات · Open Dashboards
+            <span lang="ar" dir="rtl" className="font-ar">استعراض لوحات المؤشرات</span>
+            <span aria-hidden="true">·</span>
+            <span>Open Dashboards</span>
           </button>
         </div>
       </section>
