@@ -32,10 +32,10 @@ export const teamDepartments: TeamDepartment[] = [
     lead: { name: 'Dr. Wujood Al Shibli', nameAr: 'د. وجود الشبلي', photo: '/team/wajud-al-shibli.jpg' },
     member: {
       name: 'Dr. Khalid Al Raisi',
-      nameAr: 'د. خالد الرئيسي',
+      nameAr: 'د. خالد الريسي',
       role: 'Child Protection Committee',
       roleAr: 'عضو لجنة حماية الطفل',
-      photo: null,
+      photo: '/team/khalid-al-raisi.jpg',
     },
   },
   {
