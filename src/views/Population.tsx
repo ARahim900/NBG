@@ -24,7 +24,7 @@ import {
   type Nationality,
 } from '../data/population'
 import { anaemia } from '../data/nutrition'
-import { HOSPITALS, hospitalCatchment, hospitalsIn, wilayatName } from '../data/hospitals'
+import { WILAYAT_HOSPITALS, hospitalCatchment, wilayatHospitalsIn, wilayatName } from '../data/hospitals'
 import {
   FLAG_BELOW,
   ancGov,
@@ -37,7 +37,7 @@ import {
   share,
   targetPctGov,
 } from '../data/services'
-import { C } from '../lib/theme'
+import { METRIC } from '../lib/theme'
 import { int, pct } from '../lib/format'
 import { downloadCsv } from '../lib/csv'
 
@@ -79,7 +79,7 @@ export default function Population() {
 
   // Wilayat-wide hospitals (Al Suwaiq Hospital): catchment = the whole wilayat.
   // Listed beside the health centres, never added to any total.
-  const hospitals = wilayat === 'all' ? HOSPITALS : hospitalsIn(wilayat)
+  const hospitals = wilayat === 'all' ? WILAYAT_HOSPITALS : wilayatHospitalsIn(wilayat)
   const hospitalRows = hospitals.map((h) => {
     const o = targetGroups(hospitalCatchment(h, 'omani'))
     const e = targetGroups(hospitalCatchment(h, 'expat'))
@@ -99,12 +99,12 @@ export default function Population() {
     exF: ex.female[i],
   }))
   const maleSeries = [
-    ...(nat !== 'expat' ? [{ key: 'omM', name: 'Omani male', color: C.navy }] : []),
-    ...(nat !== 'omani' ? [{ key: 'exM', name: 'Expatriate male', color: C.azure }] : []),
+    ...(nat !== 'expat' ? [{ key: 'omM', name: 'Omani male', color: METRIC[0] }] : []),
+    ...(nat !== 'omani' ? [{ key: 'exM', name: 'Expatriate male', color: METRIC[1] }] : []),
   ]
   const femaleSeries = [
-    ...(nat !== 'expat' ? [{ key: 'omF', name: 'Omani female', color: C.tealDeep }] : []),
-    ...(nat !== 'omani' ? [{ key: 'exF', name: 'Expatriate female', color: C.teal }] : []),
+    ...(nat !== 'expat' ? [{ key: 'omF', name: 'Omani female', color: METRIC[0] }] : []),
+    ...(nat !== 'omani' ? [{ key: 'exF', name: 'Expatriate female', color: METRIC[1] }] : []),
   ]
 
   // Composition: wilayat across the governorate, or institutions within one.
@@ -184,7 +184,7 @@ export default function Population() {
   const summaryTotal = popMeta.summarySheet.omani + popMeta.summarySheet.expatriate
 
   return (
-    <div className="space-y-6 [&_.card]:rounded-xl [&_.card]:border [&_.card]:border-line/15 [&_.card]:bg-surface [&_.card]:[filter:none] [&_.card]:shadow-card [&_.card]:before:hidden [&_.card]:after:hidden [&_h3]:text-heading">
+    <div className="space-y-8">
       <section aria-labelledby="population-title" className="space-y-4">
         <div>
           <h2 id="population-title" className="text-2xl font-semibold tracking-tight text-heading sm:text-3xl">
@@ -192,14 +192,14 @@ export default function Population() {
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink/80">
             End-year 2025 · {INSTITUTIONS.length} health-centre catchments across North Batinah, plus{' '}
-            {HOSPITALS.map((h) => `${h.en} (catchment: all of ${wilayatName(h)})`).join(', ')}.
+            {WILAYAT_HOSPITALS.map((h) => `${h.en} (catchment: all of ${wilayatName(h)})`).join(', ')}.
           </p>
           <p lang="ar" dir="rtl" className="mt-1 text-left font-ar text-sm text-ink/80">
             {popMeta.titleAr}
           </p>
         </div>
         {notInSummary.length > 0 && (
-          <details className="rounded-xl border border-line/20 bg-surface px-4">
+          <details className="card px-4">
             <summary className="min-h-11 cursor-pointer py-3 text-sm font-medium text-heading">
               Population totals need reconciliation
             </summary>
@@ -213,7 +213,7 @@ export default function Population() {
         )}
       </section>
 
-      <section aria-label="Population filters" className="rounded-xl border border-line/15 bg-surface p-4 shadow-card sm:p-6">
+      <section aria-label="Population filters" className="card p-4 sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-end">
           <label className="block min-w-0 sm:flex-1">
             <span className="mb-2 block text-sm font-medium text-heading">Wilayat</span>
@@ -252,7 +252,7 @@ export default function Population() {
         </div>
       </section>
 
-      <dl className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <dl className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
         {[
           { label: `Population · ${place}`, value: int(r(tg.total)), hint: nat === 'all'
             ? `${pct(share(omTotal, omTotal + exTotal))} Omani · ${pct(share(exTotal, omTotal + exTotal))} expatriate`
@@ -261,7 +261,7 @@ export default function Population() {
           { label: 'Women aged 15–49', value: int(r(tg.women15to49)), hint: `${pct(share(tg.women15to49, tg.total))} of population · reproductive age` },
           { label: 'Aged 60 and over', value: int(r(tg.adults60plus)), hint: `${pct(share(tg.adults60plus, tg.total))} of population` },
         ].map((metric) => (
-          <div key={metric.label} className="rounded-xl border border-line/15 bg-surface p-4 shadow-card sm:p-6">
+          <div key={metric.label} className="card p-4 sm:p-6">
             <dt className="text-sm font-medium leading-5 text-ink/80">{metric.label}</dt>
             <dd className="mt-2 text-2xl font-semibold tracking-tight tabular-nums text-heading sm:text-3xl">{metric.value}</dd>
             <dd className="mt-2 text-xs leading-5 text-ink/80">{metric.hint}</dd>
@@ -269,19 +269,19 @@ export default function Population() {
         ))}
       </dl>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-5">
+      {/* Pyramid full width; the composition bars follow full width too, since the
+          two service charts below already make the natural by-wilayat pair. */}
+      <div className="space-y-4">
         <ChartCard
-          className="xl:col-span-3"
           title={`Age & Sex Structure · ${place}`}
-          subtitle={`${natLabel} · five-year age bands · males left, females right`}
+          subtitle={`Residents · 2025 · ${natLabel} · five-year age bands, males left and females right`}
           footnote="The expatriate population is concentrated in working-age men (25–49), so the combined pyramid is heavily male in the middle bands. Maternal and child indicators should use the Omani pyramid."
         >
           <PyramidChart data={pyramid} bandKey="band" male={maleSeries} female={femaleSeries} />
         </ChartCard>
         <ChartCard
-          className="xl:col-span-2"
           title={wilayat === 'all' ? 'Population by Wilayat' : `Catchments in ${wilayat}`}
-          subtitle="Omani and expatriate residents"
+          subtitle="Residents · 2025 · Omani and expatriate"
           footnote={
             hospitalRows.length > 0 && wilayat !== 'all'
               ? `${hospitalRows.map((x) => x.h.en).join(', ')} covers the whole wilayat, so its bar equals the sum of the health-centre bars below it.`
@@ -294,10 +294,10 @@ export default function Population() {
             layout="vertical"
             stacked
             categoryWidth={wilayat === 'all' ? 92 : 150}
-            height={Math.max(280, composition.length * 44)}
+            height={Math.max(260, composition.length * 44)}
             series={[
-              { key: 'omani', name: 'Omani', color: C.navy },
-              { key: 'expat', name: 'Expatriate', color: C.teal },
+              { key: 'omani', name: 'Omani', color: METRIC[0] },
+              { key: 'expat', name: 'Expatriate', color: METRIC[1] },
             ]}
           />
         </ChartCard>
@@ -310,60 +310,62 @@ export default function Population() {
           title="Services Relative to Population"
           subtitle="2025 service volumes by wilayat against Omani denominators from these estimates"
         />
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-          <ChartCard
-            title="Birth Cohort vs 9-Month Screening Target (2025)"
-            subtitle="Estimated Omani births per year (under-5 ÷ 5) vs anaemia-screening target"
-            footnote={`Governorate: target ${int(anaemia.gov.t9)} against an estimated cohort of ${int(r(cohortGov))} (${pct(targetPctGov)}). A target well below the cohort means coverage percentages look better than reality.`}
-          >
-            <ComparisonBars
-              data={services.map((s) => ({
-                wilayat: s.wilayat,
-                cohort: r(s.cohort),
-                target: s.target9,
-              }))}
-              xKey="wilayat"
-              layout="vertical"
-              series={[
-                { key: 'cohort', name: 'Estimated cohort', color: C.teal },
-                { key: 'target', name: '9-month target', color: C.navy },
-              ]}
-            />
-            {noTarget9.length > 0 && (
-              <div className="mt-3">
-                <Note title="Not reported:">
-                  no 2025 9-month target for {noTarget9.join(', ')}; the bar is left blank,
-                  not shown as zero.
-                </Note>
-              </div>
-            )}
-          </ChartCard>
-          <ChartCard
-            title="New Antenatal Registrations per 1,000 Women (2025)"
-            subtitle="New ANC registrations 2025 per 1,000 Omani women aged 15–49"
-            footnote={`Governorate rate: ${one(ancRateGov)} per 1,000 (${int(ancGov)} registrations). Broadly tracks the fertility rate, so large gaps between wilayat point to denominator or reporting issues.`}
-          >
-            <ComparisonBars
-              data={services.map((s) => ({ wilayat: s.wilayat, rate: s.ancRate }))}
-              xKey="wilayat"
-              showLegend={false}
-              series={[{ key: 'rate', name: 'Per 1,000 women', color: C.azure }]}
-            />
-            {noAncRate.length > 0 && (
-              <div className="mt-3">
-                <Note title="Not reported:">
-                  no 2025 ANC registrations for {noAncRate.join(', ')}; the bar is left blank,
-                  not shown as zero.
-                </Note>
-              </div>
-            )}
-          </ChartCard>
-        </div>
+        <div className="space-y-4">
+          {/* Paired: the child-side and the maternal-side denominator check, both by wilayat. */}
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+            <ChartCard
+              title="Birth Cohort vs 9-Month Screening Target (2025)"
+              subtitle="Count · 2025 · estimated Omani births per year (under-5 ÷ 5) and the anaemia-screening target"
+              footnote={`Governorate: target ${int(anaemia.gov.t9)} against an estimated cohort of ${int(r(cohortGov))} (${pct(targetPctGov)}). A target well below the cohort means coverage percentages look better than reality.`}
+            >
+              <ComparisonBars
+                data={services.map((s) => ({
+                  wilayat: s.wilayat,
+                  cohort: r(s.cohort),
+                  target: s.target9,
+                }))}
+                xKey="wilayat"
+                height={300}
+                series={[
+                  { key: 'cohort', name: 'Estimated cohort', color: METRIC[0] },
+                  { key: 'target', name: '9-month target', color: METRIC[1] },
+                ]}
+              />
+              {noTarget9.length > 0 && (
+                <div className="mt-3">
+                  <Note title="No data supplied:">
+                    2025 9-month target for {noTarget9.join(', ')}; the bar is left blank, not
+                    shown as zero.
+                  </Note>
+                </div>
+              )}
+            </ChartCard>
+            <ChartCard
+              title="New Antenatal Registrations per 1,000 Women (2025)"
+              subtitle="Rate per 1,000 Omani women aged 15–49 · 2025"
+              footnote={`Governorate rate: ${one(ancRateGov)} per 1,000 (${int(ancGov)} registrations). Broadly tracks the fertility rate, so large gaps between wilayat point to denominator or reporting issues.`}
+            >
+              <ComparisonBars
+                data={services.map((s) => ({ wilayat: s.wilayat, rate: s.ancRate }))}
+                xKey="wilayat"
+                height={300}
+                showLegend={false}
+                series={[{ key: 'rate', name: 'Per 1,000 women', color: METRIC[0] }]}
+              />
+              {noAncRate.length > 0 && (
+                <div className="mt-3">
+                  <Note title="No data supplied:">
+                    2025 ANC registrations for {noAncRate.join(', ')}; the bar is left blank, not
+                    shown as zero.
+                  </Note>
+                </div>
+              )}
+            </ChartCard>
+          </div>
 
-        <div className="mt-4">
           <ChartCard
             title="Service Ratios by Wilayat (2025)"
-            subtitle={`"Check" marks a ratio more than ${r((1 - FLAG_BELOW) * 100)}% below the benchmark`}
+            subtitle={`Ratios · 2025 · "Check" marks a ratio more than ${r((1 - FLAG_BELOW) * 100)}% below the benchmark`}
           >
             <p className="mb-3 text-xs text-ink/80 sm:hidden">Swipe the table sideways to see more columns.</p>
             <DataTable
@@ -391,7 +393,7 @@ export default function Population() {
                 opt(s.ancRate, one),
                 opt(s.bsRate, one),
                 s.flagged ? (
-                  <span className="chip bg-warn/15 text-[#7a5a12] dark:text-warn">Check</span>
+                  <span className="chip bg-warn/15 text-heading">Check</span>
                 ) : (
                   <span className="chip bg-good/10 text-good">OK</span>
                 ),
@@ -440,7 +442,7 @@ export default function Population() {
         />
         <ChartCard
           title="Population by Health Institution (2025)"
-          subtitle={hospitalRows.length > 0 ? 'Wilayat hospital first (not added to the total), then health centres by size' : 'Largest catchment first'}
+          subtitle={hospitalRows.length > 0 ? 'Residents · 2025 · wilayat hospital first (not added to the total), then health centres by size' : 'Residents · 2025 · largest catchment first'}
           action={
             <button
               type="button"
@@ -477,7 +479,7 @@ export default function Population() {
                   </span>
                 </span>,
                 <span className="inline-flex items-center gap-1 text-ink/70">
-                  <MapPin className="h-3 w-3 text-teal-600" />
+                  <MapPin className="h-3 w-3 text-ink/50" aria-hidden="true" />
                   {x.h.wilayat}
                 </span>,
                 int(r(x.omani)),
@@ -495,7 +497,7 @@ export default function Population() {
                 </span>
               </span>,
               <span className="inline-flex items-center gap-1 text-ink/70">
-                <MapPin className="h-3 w-3 text-teal-600" />
+                <MapPin className="h-3 w-3 text-ink/50" aria-hidden="true" />
                 {x.inst.wilayat}
               </span>,
               int(r(x.omani)),
@@ -526,10 +528,10 @@ export default function Population() {
           <Note title="Years:">
             The source workbook gives end-year 2025 estimates only; 2023 and 2024 population
             estimates are not in the source files, so this page shows 2025. The service ratios
-            use 2025 volumes by wilayat; 2023 and 2024 volumes by wilayat are not reported.
+            use 2025 volumes by wilayat; no data supplied for 2023 and 2024 volumes by wilayat.
             Governorate totals for 2023, 2024 and 2025 are on the Overview and each dashboard.
           </Note>
-          {HOSPITALS.map((h) => (
+          {WILAYAT_HOSPITALS.map((h) => (
             <Note key={h.en} title="Wilayat hospital:">
               {h.en} serves the whole wilayat of {wilayatName(h)}, so its catchment is the
               wilayat&rsquo;s total population. It is listed alongside {h.wilayat} EHC and the

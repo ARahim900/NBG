@@ -11,6 +11,8 @@ import { ComparisonBars, TrendChart } from '../components/charts/Charts'
 import { MONTHS, coverage, visits2025, visitsByWilayat, type VisitSheet } from '../data/wch2025'
 import {
   NOT_REPORTED,
+  SAFE_TRANSPORT_2025_LABEL,
+  SAFE_TRANSPORT_WORKSHOPS_TOTAL,
   VISIT_METRIC_OPTIONS,
   YEARS,
   monthFigure,
@@ -19,14 +21,14 @@ import {
   type VisitMetric,
 } from '../data/years/childrenA'
 import { downloadCsv } from '../lib/csv'
-import { C } from '../lib/theme'
+import { METRIC } from '../lib/theme'
 import { int, pct } from '../lib/format'
 
 const { three, four } = visits2025
 
 /** Safe Transport of the Critically Ill Child — programme figures supplied by the department. */
 const SAFE_TRANSPORT = [
-  { label: 'Workshops conducted', value: 3 },
+  { label: 'Workshops conducted', value: SAFE_TRANSPORT_WORKSHOPS_TOTAL, detail: '2023–2025 · 1 each year' },
   { label: 'Master trainers', value: 2, detail: 'North Al Batinah Governorate' },
 ]
 
@@ -52,6 +54,9 @@ const byWilayat = w3.map((r) => {
     four: f ? oneDecimal(coverage(f.clerked, f.target)) : null,
   }
 })
+
+/** Month trend beside vertical wilayat bars: both use the taller height so the cards line up. */
+const VISIT_ROW_HEIGHT = Math.max(300, 44 * byWilayat.length)
 
 type VisitAge = 'three' | 'four'
 const AGE_OPTIONS: { value: VisitAge; label: string }[] = [
@@ -81,7 +86,7 @@ export default function ExtraChildHealthRegister() {
       <SectionTitle
         icon={ClipboardList}
         title="Extra Child Health Register"
-        subtitle="3 & 4-year developmental visits in primary health care (2025) and Safe Transport of the Critically Ill Child — North Batinah. Part of ASD Early Screening."
+        subtitle="3 & 4-year developmental visits in primary health care (2025) and Safe Transport of the Critically Ill Child — North Batinah. ASD Early Screening is part of this register."
       />
 
       <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
@@ -90,14 +95,14 @@ export default function ExtraChildHealthRegister() {
           value={fmtCov(cov(three.statedTotals))}
           icon={CalendarCheck}
           accent="navy"
-          hint={`${int(three.statedTotals.clerked)} of ${int(three.statedTotals.target)} children · 2023–2024 not reported`}
+          hint={`${int(three.statedTotals.clerked)} of ${int(three.statedTotals.target)} children · 2023–2024 no data supplied`}
         />
         <KpiCard
           label="4-Year Visit Coverage (2025)"
           value={fmtCov(cov(four.statedTotals))}
           icon={CalendarCheck}
           accent="azure"
-          hint={`${int(four.statedTotals.clerked)} of ${int(four.statedTotals.target)} children · 2023–2024 not reported`}
+          hint={`${int(four.statedTotals.clerked)} of ${int(four.statedTotals.target)} children · 2023–2024 no data supplied`}
         />
         <KpiCard
           label="Referred at 3 Years (2025)"
@@ -115,7 +120,44 @@ export default function ExtraChildHealthRegister() {
         />
       </div>
 
-      <ChartCard title="3 & 4-Year Visits by Year, 2023–2025" subtitle="Governorate totals — target cohort, children seen, coverage and referrals">
+      <div>
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          <ChartCard title="Visits by Month (2025 Only)" subtitle="Count of children seen at the 3 and 4-year visits, all institutions · 2025">
+            <TrendChart
+              data={monthly}
+              xKey="month"
+              unit=""
+              height={VISIT_ROW_HEIGHT}
+              series={[
+                { key: 'three', name: '3-year visit', color: METRIC[0] },
+                { key: 'four', name: '4-year visit', color: METRIC[1] },
+              ]}
+            />
+          </ChartCard>
+          <ChartCard title="Coverage by Wilayat (2025 Only)" subtitle="% of the target cohort seen · 2025">
+            <ComparisonBars
+              data={byWilayat}
+              xKey="wilayat"
+              unit="%"
+              layout="vertical"
+              height={VISIT_ROW_HEIGHT}
+              categoryWidth={104}
+              series={[
+                { key: 'three', name: '3-year visit', color: METRIC[0] },
+                { key: 'four', name: '4-year visit', color: METRIC[1] },
+              ]}
+            />
+          </ChartCard>
+        </div>
+        <div className="mt-3">
+          <Note title="No data supplied:">
+            Monthly and wilayat figures exist for {visits2025.year} only ({visits2025.source.filename}); no data was
+            supplied for 2023 and 2024, so these two charts are not year comparisons.
+          </Note>
+        </div>
+      </div>
+
+      <ChartCard title="3 & 4-Year Visits by Year, 2023–2025" subtitle="Governorate totals — target cohort, children seen, coverage and referrals · 2023, 2024 and 2025">
         <DataTable
           dense
           columns={[
@@ -144,7 +186,7 @@ export default function ExtraChildHealthRegister() {
           )}
         />
         <div className="mt-3">
-          <Note title="Not reported:">
+          <Note title="No data supplied:">
             The register holds the {visits2025.year} workbook only ({visits2025.source.filename}). No 3 or 4-year visit
             figures for 2023 or 2024 exist in the dashboard data, so those years are shown as “{NOT_REPORTED}”, not zero.
           </Note>
@@ -152,45 +194,14 @@ export default function ExtraChildHealthRegister() {
       </ChartCard>
 
       <div>
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-          <ChartCard title="Visits by Month (2025 only)" subtitle="Children seen at the 3 and 4-year visits, all institutions">
-            <TrendChart
-              data={monthly}
-              xKey="month"
-              unit=""
-              series={[
-                { key: 'three', name: '3-year visit', color: C.navy },
-                { key: 'four', name: '4-year visit', color: C.azure },
-              ]}
-            />
-          </ChartCard>
-          <ChartCard title="Coverage by Wilayat (2025 only)" subtitle="Visits as % of the target cohort">
-            <ComparisonBars
-              data={byWilayat}
-              xKey="wilayat"
-              unit="%"
-              series={[
-                { key: 'three', name: '3-year visit', color: C.navy },
-                { key: 'four', name: '4-year visit', color: C.azure },
-              ]}
-            />
-          </ChartCard>
-        </div>
-        <div className="mt-3">
-          <Note title="Not reported:">
-            Monthly and wilayat figures exist for {visits2025.year} only ({visits2025.source.filename}); 2023 and 2024
-            are not reported, so these two charts are not year comparisons.
-          </Note>
-        </div>
-      </div>
-
-      <div>
         <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
-          <SectionTitle
-            icon={Table2}
-            title="Visits by Health Institution (2025)"
-            subtitle="Annual totals and the full monthly records for every institution — choose the visit"
-          />
+          <div className="min-w-[16rem] flex-1">
+            <SectionTitle
+              icon={Table2}
+              title="Visits by Health Institution (2025)"
+              subtitle="Annual totals and the full monthly records for every institution — choose the visit"
+            />
+          </div>
           <div className="mb-4">
             <Segmented label="Visit" options={AGE_OPTIONS} value={age} onChange={setAge} />
           </div>
@@ -199,7 +210,7 @@ export default function ExtraChildHealthRegister() {
         <div className="space-y-4">
           <ChartCard
             title={`${ageShort}-Year Developmental Visit by Institution — Annual Totals`}
-            subtitle="Grouped by wilayat, north to south"
+            subtitle="Grouped by wilayat, north to south · 2025"
           >
             <DataTable
               dense
@@ -280,7 +291,7 @@ export default function ExtraChildHealthRegister() {
               100% and the items below are shown as reported, not corrected.
             </Note>
             {sheet.flags.length > 0 && (
-              <details className="rounded-xl border border-warn/30 bg-warn/[0.08] px-3.5 py-3 text-xs leading-relaxed text-heading/80 dark:text-warn">
+              <details className="card px-3.5 py-3 text-caption leading-relaxed text-heading/80">
                 <summary className="cursor-pointer font-bold">
                   Data notes for the {ageShort}-year sheet ({sheet.flags.length}) — to verify with the source
                 </summary>
@@ -298,31 +309,24 @@ export default function ExtraChildHealthRegister() {
       <ProgrammeProfile
         id="safe-transport"
         title="Safe Transport of the Critically Ill Child"
-        caption="Department update supplied with the 2025 workbooks · the update does not state a year"
+        caption="2023–2025"
         facts={SAFE_TRANSPORT}
         byYear={
           <>
             <DataTable
               dense
-              columns={[
-                { label: 'Workshops by year' },
-                ...YEARS.map((y) => ({
-                  label: y === '2025' ? '2025 (department update)' : y,
-                  align: 'right' as const,
-                })),
-              ]}
+              columns={[{ label: 'Workshops by year' }, ...YEARS.map((y) => ({ label: y, align: 'right' as const }))]}
               rows={[
                 [
                   'Safe Transport workshops',
                   dash(safeTransportWorkshops.y2023),
                   dash(safeTransportWorkshops.y2024),
-                  int(SAFE_TRANSPORT[0].value),
+                  SAFE_TRANSPORT_2025_LABEL,
                 ],
               ]}
             />
             <p className="mt-2 text-caption text-ink/60">
-              2023 and 2024 are the 5-year-plan child-health indicators. The year of the 3 workshops is to be confirmed
-              by the department. Master trainers are not reported for 2023 or 2024.
+              2023 and 2024 are from the 5-year plan; 2025 was confirmed by the department. Master trainers: 2.
             </p>
           </>
         }

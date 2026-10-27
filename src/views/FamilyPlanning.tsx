@@ -16,7 +16,7 @@ import {
   priorYearsHint,
   type Year,
 } from '../data/years/women'
-import { C } from '../lib/theme'
+import { METRIC } from '../lib/theme'
 import { cell, deltaPct, int, pct } from '../lib/format'
 
 const lastV = (a: { value: number }[]): number => a[a.length - 1]?.value ?? 0
@@ -36,7 +36,7 @@ const contraTrend = fp.iucdTrend.map((r) => ({
   implanon: fp.implanonTrend.find((i) => i.year === r.year)?.value ?? null,
 }))
 
-/** Blank cells read as "not reported", never as zero. */
+/** Blank cells read as "no data supplied", never as zero. */
 const dash = <span className="text-ink/35">—</span>
 const intCell = (v: number | null): ReactNode => (v == null ? dash : int(v))
 
@@ -88,18 +88,17 @@ export default function FamilyPlanning() {
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ChartCard
           title="Birth-Spacing Registered Cases"
-          subtitle="2019–2025"
+          subtitle="Count · 2019–2025"
         >
           <TrendChart
             data={fp.birthSpacingTrend}
             xKey="year"
-            variant="area"
             unit=""
-            height={260}
-            series={[{ key: 'value', name: 'Cases', color: C.teal }]}
+            height={300}
+            series={[{ key: 'value', name: 'Cases', color: METRIC[0] }]}
           />
         </ChartCard>
         <ChartCard
@@ -110,102 +109,109 @@ export default function FamilyPlanning() {
             data={contraTrend}
             xKey="year"
             unit="%"
-            height={260}
+            height={300}
             series={[
-              { key: 'iucd', name: 'IUCD', color: C.navy },
-              { key: 'implanon', name: 'Implanon', color: C.azure },
+              { key: 'iucd', name: 'IUCD', color: METRIC[0] },
+              { key: 'implanon', name: 'Implanon', color: METRIC[1] },
             ]}
-          />
-        </ChartCard>
-        <ChartCard
-          title="Premarital Screening"
-          subtitle="Couples screened · 2019–2025"
-        >
-          <ComparisonBars
-            data={fp.premaritalTrend}
-            xKey="year"
-            unit=""
-            height={260}
-            series={[{ key: 'value', name: 'Screened', color: C.azure }]}
-            showLegend={false}
           />
         </ChartCard>
       </div>
 
-      <div>
-        <SectionTitle
-          icon={MapPin}
-          title={`${year} Contraceptive Uptake by Wilayat`}
-          subtitle="IUCD, Implanon & birth-spacing first visits · wilayat breakdown reported for 2025 only"
+      <ChartCard
+        title="Premarital Screening"
+        subtitle="Couples screened (count) · 2019–2025"
+      >
+        <TrendChart
+          data={fp.premaritalTrend}
+          xKey="year"
+          unit=""
+          height={300}
+          series={[{ key: 'value', name: 'Screened', color: METRIC[0] }]}
+          showLegend={false}
         />
-        <ChartCard
-          title={`Contraceptive Method Uptake by Wilayat (${year})`}
-          subtitle="Counts per method"
-          action={
+      </ChartCard>
+
+      <div>
+        <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
+          <div className="min-w-[16rem] flex-1">
+            <SectionTitle
+              icon={MapPin}
+              title={`${year} Contraceptive Uptake by Wilayat`}
+              subtitle="IUCD, Implanon & birth-spacing first visits · wilayat breakdown reported for 2025 only"
+            />
+          </div>
+          <div className="mb-4">
             <Segmented
               label="Contraceptive detail year"
               options={YEAR_OPTIONS}
               value={year}
               onChange={setYear}
             />
-          }
-        >
-          {byWilayat ? (
-            <ComparisonBars
-              data={c.rows}
-              xKey="wilayat"
-              series={[
-                { key: 'birthSpacing', name: 'Birth spacing', color: C.navy },
-                { key: 'implanon', name: 'Implanon', color: C.azure },
-                { key: 'iucd', name: 'IUCD', color: C.teal },
+          </div>
+        </div>
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          <ChartCard
+            title={`Contraceptive Method Uptake by Wilayat (${year})`}
+            subtitle={`Count · ${year} · per method`}
+          >
+            {byWilayat ? (
+              <ComparisonBars
+                data={c.rows}
+                xKey="wilayat"
+                height={300}
+                series={[
+                  { key: 'birthSpacing', name: 'Birth spacing', color: METRIC[0] },
+                  { key: 'implanon', name: 'Implanon', color: METRIC[1] },
+                  { key: 'iucd', name: 'IUCD', color: METRIC[2] },
+                ]}
+              />
+            ) : (
+              <Note title={`No data supplied by wilayat for ${year}.`}>
+                The {year} source gives a governorate birth-spacing total only (
+                {c.total.birthSpacing == null ? 'no data supplied' : int(c.total.birthSpacing)}{' '}
+                cases). No data supplied for IUCD or Implanon counts in {year}; the
+                table below shows every wilayat row as no data supplied.
+              </Note>
+            )}
+          </ChartCard>
+          <ChartCard
+            title={`Contraceptive Uptake by Wilayat (${year})`}
+            subtitle={
+              byWilayat
+                ? 'Sum of health-centre returns'
+                : '— = no data supplied · governorate birth spacing from the 2019–2025 trend'
+            }
+            footnote={
+              byWilayat
+                ? 'The 2025 birth-spacing total equals the 2025 value of the birth-spacing trend above.'
+                : undefined
+            }
+          >
+            <DataTable
+              columns={[
+                { label: 'Wilayat' },
+                { label: 'IUCD', align: 'right' },
+                { label: 'Implanon', align: 'right' },
+                { label: 'Birth Spacing', align: 'right' },
               ]}
+              rows={c.rows.map((r) => [
+                r.wilayat,
+                intCell(r.iucd),
+                intCell(r.implanon),
+                intCell(r.birthSpacing),
+              ])}
+              total={[
+                c.total.wilayat,
+                intCell(c.total.iucd),
+                intCell(c.total.implanon),
+                intCell(c.total.birthSpacing),
+              ]}
+              dense
             />
-          ) : (
-            <Note title={`${year} not reported by wilayat.`}>
-              The {year} source gives a governorate birth-spacing total only (
-              {c.total.birthSpacing == null ? 'not reported' : int(c.total.birthSpacing)}{' '}
-              cases). IUCD and Implanon counts are not reported for {year}; the
-              table below keeps every wilayat row as not reported.
-            </Note>
-          )}
-        </ChartCard>
+          </ChartCard>
+        </div>
       </div>
-
-      <ChartCard
-        title={`Contraceptive Uptake by Wilayat (${year})`}
-        subtitle={
-          byWilayat
-            ? 'Sum of health-centre returns'
-            : '— = not reported · governorate birth spacing from the 2019–2025 trend'
-        }
-        footnote={
-          byWilayat
-            ? 'The 2025 birth-spacing total equals the 2025 value of the birth-spacing trend above.'
-            : undefined
-        }
-      >
-        <DataTable
-          columns={[
-            { label: 'Wilayat' },
-            { label: 'IUCD', align: 'right' },
-            { label: 'Implanon', align: 'right' },
-            { label: 'Birth Spacing', align: 'right' },
-          ]}
-          rows={c.rows.map((r) => [
-            r.wilayat,
-            intCell(r.iucd),
-            intCell(r.implanon),
-            intCell(r.birthSpacing),
-          ])}
-          total={[
-            c.total.wilayat,
-            intCell(c.total.iucd),
-            intCell(c.total.implanon),
-            intCell(c.total.birthSpacing),
-          ]}
-          dense
-        />
-      </ChartCard>
 
       <div>
         <SectionTitle
@@ -214,8 +220,8 @@ export default function FamilyPlanning() {
           subtitle="Service readiness & screening · 2023, 2024 and 2025"
         />
         <ChartCard
-          title="Family Planning / 5-Year-Plan Indicators (2023 / 2024 / 2025)"
-          subtitle="— = not reported that year"
+          title="Family Planning and Five-Year-Plan Indicators"
+          subtitle="2023, 2024 and 2025 · — = no data supplied that year"
         >
           <DataTable
             columns={[
@@ -233,7 +239,7 @@ export default function FamilyPlanning() {
             dense
           />
           <div className="mt-3">
-            <Note title="Not reported:">
+            <Note title="No data supplied:">
               None of the 2025 source files gives these five-year-plan
               indicators, so the 2025 column is blank. &ldquo;N/A&rdquo; is the
               source&rsquo;s own entry for 2023 and 2024. HIV and syphilis

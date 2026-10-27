@@ -24,7 +24,7 @@ import {
   type ScreenAge,
   type Year,
 } from '../data/years/childrenC'
-import { C } from '../lib/theme'
+import { METRIC, STATUS } from '../lib/theme'
 import { int, pct } from '../lib/format'
 
 const g = anaemia.gov
@@ -45,7 +45,7 @@ const muted = (v: string) => (v === NOT_REPORTED ? <span className="text-ink/50"
 /** Placeholder for a year the source does not provide. */
 function NotReported({ year, detail }: { year: Year; detail: string }) {
   return (
-    <div className="flex min-h-[260px] items-center justify-center rounded-xl border border-dashed border-line/20 px-6 text-center text-body text-ink/65">
+    <div className="flex min-h-[260px] items-center justify-center px-6 text-center text-body text-ink/65">
       <p>
         <span className="font-semibold text-heading">{year}: {NOT_REPORTED}.</span> {detail}
       </p>
@@ -70,7 +70,7 @@ export default function ChildAnaemia() {
       <SectionTitle
         icon={Droplets}
         title="Child Anaemia Screening"
-        subtitle="Haemoglobin screening at 9 & 18 months across North Batinah · 2023, 2024 & 2025 (2023 and 2024 not reported in the source)"
+        subtitle="Haemoglobin screening at 9 and 18 months across North Batinah · 2023, 2024 and 2025 (no data supplied for 2023 and 2024)"
       />
 
       <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
@@ -106,10 +106,10 @@ export default function ChildAnaemia() {
 
       <ChartCard
         title="Governorate Screening Indicators"
-        subtitle="Coverage (% of target screened) and prevalence (% of screened anaemic) · 2023, 2024 & 2025"
-        footnote={`${gap}: not reported in the source; the bars show 2025 only.`}
+        subtitle="Coverage (% of target screened) and prevalence (% of screened anaemic) · 2023, 2024 and 2025"
+        footnote={`${gap}: no data supplied; the bars show 2025 only.`}
       >
-        <ComparisonBars data={anaemiaHeadline} xKey="indicator" unit="%" series={yearSeries(anaemiaHeadline)} />
+        <ComparisonBars data={anaemiaHeadline} xKey="indicator" height={300} unit="%" series={yearSeries(anaemiaHeadline)} />
       </ChartCard>
 
       <div className="flex flex-wrap items-end gap-4">
@@ -119,36 +119,37 @@ export default function ChildAnaemia() {
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ChartCard
           title={`Anaemia Prevalence by Wilayat (${ageLabel})`}
-          subtitle="% of screened children · 2023, 2024 & 2025"
+          subtitle="% of screened children · 2023, 2024 and 2025"
           footnote={
             prev9 !== null && prev18 !== null
               ? `Governorate 2025: ${pct(prev9)} at 9 months and ${pct(prev18)} at 18 months — prevalence eases as iron-rich complementary feeding is established.`
               : undefined
           }
         >
-          <ComparisonBars data={prevalence} xKey="wilayat" unit="%" series={yearSeries(prevalence)} />
+          <ComparisonBars data={prevalence} xKey="wilayat" height={300} unit="%" series={yearSeries(prevalence)} />
         </ChartCard>
         <ChartCard
           title={`Screening Coverage by Wilayat (${ageLabel})`}
-          subtitle="% of target screened · 2023, 2024 & 2025"
-          footnote={`${gap}: not reported in the source.`}
+          subtitle="% of target screened · 2023, 2024 and 2025"
+          footnote={`${gap}: no data supplied.`}
         >
-          <ComparisonBars data={coverage} xKey="wilayat" unit="%" series={yearSeries(coverage)} />
+          <ComparisonBars data={coverage} xKey="wilayat" height={300} unit="%" series={yearSeries(coverage)} />
         </ChartCard>
       </div>
 
       <ChartCard
         title={`Screened vs Anaemic Children (${ageLabel}, ${countYear})`}
-        subtitle="Counts by wilayat"
+        subtitle={counts ? `Count by wilayat · ${countYear}` : 'Count by wilayat'}
         action={<Segmented label="Year" options={YEAR_OPTIONS} value={countYear} onChange={setCountYear} />}
       >
         {counts ? (
           <ComparisonBars
             data={counts}
             xKey="wilayat"
+            height={300}
             series={[
-              { key: 'screened', name: 'Screened', color: C.azure },
-              { key: 'anaemic', name: 'Anaemic', color: C.alert },
+              { key: 'screened', name: 'Screened', color: METRIC[0] },
+              { key: 'anaemic', name: 'Anaemic', color: METRIC[1] },
             ]}
           />
         ) : (
@@ -160,7 +161,7 @@ export default function ChildAnaemia() {
         <SectionTitle
           icon={Table2}
           title="Detailed Tables"
-          subtitle="Governorate indicators 2023–2025 · 2025 by wilayat, 9 & 18-month screening"
+          subtitle="Governorate indicators 2023, 2024 and 2025 · 2025 by wilayat, 9 and 18-month screening"
         />
         <div className="space-y-4">
           <ChartCard title="Governorate Anaemia Indicators (2023–2025)" subtitle="">
@@ -229,9 +230,9 @@ export default function ChildAnaemia() {
                 (9-month: {int(g.s9)} screened / {int(g.a9)} anaemic; 18-month: {int(g.s18)} /{' '}
                 {int(g.a18)}). "%" = anaemic among those screened.
               </Note>
-              <Note title="Not reported:" tone="warn">
+              <Note title="No data supplied:" tone="warn">
                 The source data hold no child anaemia screening or follow-up figures for {gap}. Those
-                years are shown as “Not reported” rather than zero. Anaemia in pregnancy (2019–2025)
+                years are shown as “No data supplied” rather than zero. Anaemia in pregnancy (2019–2025)
                 is a separate maternal indicator on the Maternal Care page.
               </Note>
             </div>
@@ -244,7 +245,7 @@ export default function ChildAnaemia() {
         <SectionTitle
           icon={Pill}
           title="Anaemia Treatment Follow-up"
-          subtitle="Iron treatment, 3-month continuation & improvement among anaemic children (9-month cohort) · 2023, 2024 & 2025"
+          subtitle="Iron treatment, 3-month continuation and improvement among anaemic children (9-month cohort) · 2023, 2024 and 2025"
         />
         <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
           <KpiCard
@@ -282,29 +283,31 @@ export default function ChildAnaemia() {
         </div>
 
         <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-2">
-          <ChartCard title={`Treatment Cascade by Wilayat (${fuYear})`} subtitle="Cases → on iron → improved">
+          <ChartCard title={`Treatment Cascade by Wilayat (${fuYear})`} subtitle={followup ? `Count of children: cases, on iron and improved · ${fuYear}` : 'Count of children: cases, on iron and improved'}>
             {followup ? (
               <ComparisonBars
                 data={followup.byWilayat}
                 xKey="wilayat"
+                height={300}
                 series={[
-                  { key: 'cases', name: 'Cases', color: C.navy },
-                  { key: 'iron', name: 'On iron', color: C.azure },
-                  { key: 'improved', name: 'Improved', color: C.good },
+                  { key: 'cases', name: 'Cases', color: METRIC[0] },
+                  { key: 'iron', name: 'On iron', color: METRIC[1] },
+                  { key: 'improved', name: 'Improved', color: STATUS.good },
                 ]}
               />
             ) : (
               <NotReported year={fuYear} detail="The follow-up register covers 2025 only." />
             )}
           </ChartCard>
-          <ChartCard title={`Monthly Cases vs Improved (${fuYear})`} subtitle="By month of the year">
+          <ChartCard title={`Monthly Cases vs Improved (${fuYear})`} subtitle={followup ? `Count of children by month · ${fuYear}` : 'Count of children by month'}>
             {followup ? (
               <TrendChart
                 data={followup.monthly}
                 xKey="month"
+                height={300}
                 series={[
-                  { key: 'cases', name: 'New cases', color: C.gold },
-                  { key: 'improved', name: 'Improved', color: C.good },
+                  { key: 'cases', name: 'New cases', color: METRIC[0] },
+                  { key: 'improved', name: 'Improved', color: STATUS.good },
                 ]}
               />
             ) : (

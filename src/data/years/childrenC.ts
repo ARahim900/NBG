@@ -9,7 +9,7 @@ import { anaemia, anaemiaFollowup, nutrition } from '../nutrition'
  * 2023 / 2024 / 2025 views for the Children department pages (maltreatment,
  * nutrition, breastfeeding, anaemia). Every chart and table on those pages
  * shows all three years; a year the repository has no figure for is `null`
- * and is labelled "Not reported" — never 0, never estimated.
+ * and is labelled "No data supplied" — never 0, never estimated.
  *
  * What the repository holds:
  *   • Maltreatment — totals 2019–2025 and wilayat counts 2023–2025 (nbg.json +
@@ -23,7 +23,7 @@ export type Year = (typeof YEARS)[number]
 export type YearKey = `y${Year}`
 export type ByYear = Record<YearKey, number | null>
 
-export const NOT_REPORTED = 'Not reported'
+export const NOT_REPORTED = 'No data supplied'
 export const YEAR_OPTIONS = YEARS.map((y) => ({ value: y, label: y }))
 
 export const yearKey = (y: Year): YearKey => `y${y}`
@@ -38,7 +38,7 @@ export const ratio = (a: number, b: number): number | null => (b ? (a / b) * 100
 export const yearCell = (v: number | null, fmt: (n: number) => string = int): string =>
   v === null ? NOT_REPORTED : fmt(v)
 
-/** Percentage cell with one decimal, or "Not reported". */
+/** Percentage cell with one decimal, or "No data supplied". */
 export const pctCell = (v: number | null): string => yearCell(v, (x) => pct(x))
 
 /** Years that carry at least one figure in these rows. */
@@ -46,8 +46,9 @@ export const reportedYears = (rows: ByYear[]): Year[] =>
   YEARS.filter((y) => rows.some((r) => r[yearKey(y)] !== null))
 
 /**
- * One grouped-bar / line series per year in YEAR_COLORS. A year with no figure
- * stays in the legend, named "… not reported", so the gap is visible.
+ * One grouped-bar / line series per year in YEAR_COLORS (2023, 2024, 2025). A
+ * year with no figure stays in the legend, named "… no data supplied", so the
+ * gap is visible.
  */
 export function yearSeries(rows: ByYear[]): Series[] {
   const have = reportedYears(rows)

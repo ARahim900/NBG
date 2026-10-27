@@ -8,7 +8,7 @@ import type { ViewId } from '../../lib/dashboards'
 /**
  * Three-year (2023 · 2024 · 2025) views of the governorate headline
  * indicators, read from the existing year series in nbg.json. A year the
- * source does not provide is null ("Not reported") — never 0 and never
+ * source does not provide is null ("No data supplied") — never 0 and never
  * estimated.
  */
 

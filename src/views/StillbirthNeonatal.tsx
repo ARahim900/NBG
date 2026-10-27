@@ -6,7 +6,7 @@ import ProgrammeProfile from '../components/ui/ProgrammeProfile'
 import DataTable from '../components/ui/DataTable'
 import Note from '../components/ui/Note'
 import Mpdsr2025Report from '../components/reports/Mpdsr2025Report'
-import { ComparisonBars } from '../components/charts/Charts'
+import { ComparisonBars, TrendChart } from '../components/charts/Charts'
 import { sn } from '../data/nbg'
 import {
   cohortB,
@@ -16,10 +16,10 @@ import {
   perinatalMonthly3y,
   perinatalTotals,
 } from '../data/years/childrenB'
-import { C, YEAR_COLORS } from '../lib/theme'
+import { METRIC, YEAR_COLORS } from '../lib/theme'
 import { int } from '../lib/format'
 
-const NR = 'Not reported'
+const NR = 'No data supplied'
 const countOr = (v: number | null): string => (v === null ? NR : int(v))
 
 const earlyNeonatal2025 =
@@ -28,9 +28,9 @@ const earlyNeonatal2025 =
 const cohortBars = sn.yearTotals.filter((r) => r.category !== 'TOTAL')
 const cohortTotal = sn.yearTotals.find((r) => r.category === 'TOTAL')
 
-/** Grouped-bar series for 2023–2025; 2023 has no source, so its legend says so. */
+/** Year series for 2023–2025; 2023 has no source, so its legend says so. */
 const YEAR_SERIES = [
-  { key: 'y2023', name: '2023 (not reported)', color: YEAR_COLORS['2023'] },
+  { key: 'y2023', name: '2023 (no data supplied)', color: YEAR_COLORS['2023'] },
   { key: 'y2024', name: '2024', color: YEAR_COLORS['2024'] },
   { key: 'y2025', name: '2025 (provisional)', color: YEAR_COLORS['2025'] },
 ]
@@ -49,10 +49,10 @@ export default function StillbirthNeonatal() {
       <SectionTitle
         icon={Baby}
         title="Stillbirth & Neonatal"
-        subtitle="Perinatal deaths 2023–2025 · 2023 not reported · 2024 KPI-deck surveillance · 2025 MPDSR workbook (provisional)"
+        subtitle="Perinatal deaths 2023–2025 · 2023: no data supplied · 2024 KPI-deck surveillance · 2025 MPDSR workbook (provisional)"
       />
 
-      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-3">
         <KpiCard
           label="Perinatal Deaths — KPI Headline (2025)"
           value={countOr(perinatalHeadline2025)}
@@ -76,11 +76,12 @@ export default function StillbirthNeonatal() {
         />
       </div>
 
+      {/* The same deaths by category two ways: by year, and by the two source cohorts. */}
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ChartCard
           title="Perinatal Deaths by Category"
-          subtitle="Count · 2023, 2024 & 2025"
-          footnote="2023 is not reported in the sources. 2025 counts are provisional MPDSR workbook records (unreconciled), so no year-on-year change is calculated."
+          subtitle="Count · 2023, 2024 and 2025"
+          footnote="2023: no data supplied. 2025 counts are provisional MPDSR workbook records (unreconciled), so no year-on-year change is calculated."
         >
           <ComparisonBars
             data={perinatalByCategory3y}
@@ -90,23 +91,6 @@ export default function StillbirthNeonatal() {
           />
         </ChartCard>
         <ChartCard
-          title="Perinatal Deaths by Month"
-          subtitle="Monthly total · 2023, 2024 & 2025"
-          footnote="2024: KPI-deck surveillance. 2025: provisional workbook records by reporting month, not death date. 2023: not reported. Different sources, shown side by side; no change is calculated. The 2025 review below has the monthly breakdown by category for each year."
-        >
-          <ComparisonBars
-            data={perinatalMonthly3y}
-            xKey="month"
-            height={300}
-            series={YEAR_SERIES}
-          />
-        </ChartCard>
-      </div>
-
-      <Mpdsr2025Report />
-
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <ChartCard
           title="Annual Cohort Comparison"
           subtitle={`Two surveillance cohorts in the source (${countOr(cohortTotal?.cohortA ?? null)} vs ${countOr(cohortTotal?.cohortB ?? null)})`}
           footnote={`Cohort A matches the 2024 KPI-deck monthly table exactly, so it is shown as 2024. Cohort B matches the 2025 MPDSR workbook for stillbirth (${countOr(cohortB('Stillbirth'))}) and late neonatal (${countOr(cohortB('Late Neonatal Death'))}) but not early neonatal (${countOr(cohortB('Early Neonatal Death'))} vs ${countOr(earlyNeonatal2025)}), and was previously shown on this page as 2024; its year needs confirmation, so it is kept out of every year column.`}
@@ -114,34 +98,48 @@ export default function StillbirthNeonatal() {
           <ComparisonBars
             data={cohortBars}
             xKey="category"
-            layout="vertical"
-            height={250}
-            categoryWidth={120}
+            height={300}
             series={[
-              { key: 'cohortA', name: 'Cohort A (2024)', color: YEAR_COLORS['2024'] },
-              { key: 'cohortB', name: 'Cohort B (year not confirmed)', color: C.muted },
+              { key: 'cohortA', name: 'Cohort A (2024)', color: METRIC[0] },
+              { key: 'cohortB', name: 'Cohort B (year not confirmed)', color: METRIC[1] },
             ]}
           />
         </ChartCard>
-        <div className="space-y-3">
-          <Note tone="warn" title="Years covered:">
-            2023 perinatal-death figures are not reported in any source used by this dashboard.
-            2024 figures come from the KPI-deck final surveillance (total{' '}
-            {countOr(perinatalTotals.y2024)}). 2025 figures come from the provisional MPDSR review
-            workbook ({countOr(perinatalTotals.y2025)} records; the KPI presentation headline is{' '}
-            {countOr(perinatalHeadline2025)}). The 2024 and 2025 sources differ in method, so the
-            counts are shown side by side without a percentage change.
-          </Note>
-        </div>
       </div>
+
+      {/* Twelve months by three years: full width so every month label reads. */}
+      <ChartCard
+        title="Perinatal Deaths by Month"
+        subtitle="Monthly count · 2023, 2024 and 2025"
+        footnote="2024: KPI-deck surveillance. 2025: provisional workbook records by reporting month, not death date. 2023: no data supplied. Different sources, shown side by side; no change is calculated. The 2025 review below has the monthly breakdown by category for each year."
+      >
+        <TrendChart
+          data={perinatalMonthly3y}
+          xKey="month"
+          unit=""
+          height={300}
+          series={YEAR_SERIES}
+        />
+      </ChartCard>
+
+      <Note tone="warn" title="Years covered:">
+        2023 perinatal-death figures: no data supplied in any source used by this dashboard.
+        2024 figures come from the KPI-deck final surveillance (total{' '}
+        {countOr(perinatalTotals.y2024)}). 2025 figures come from the provisional MPDSR review
+        workbook ({countOr(perinatalTotals.y2025)} records; the KPI presentation headline is{' '}
+        {countOr(perinatalHeadline2025)}). The 2024 and 2025 sources differ in method, so the
+        counts are shown side by side without a percentage change.
+      </Note>
+
+      <Mpdsr2025Report />
 
       <div>
         <SectionTitle
           icon={Table2}
           title="2024 ICD-PM Codes Matched to 2025 by Definition"
-          subtitle="Perinatal-death cause coding · 2023 not reported · 2024 ICD-PM · 2025 workbook final code"
+          subtitle="Perinatal-death cause coding · 2023: no data supplied · 2024 ICD-PM · 2025 workbook final code"
         />
-        <div className="mb-4">
+        <div className="space-y-4">
           <Note title="Years covered:">
             The ICD-PM table in the 2025 review above lists every 2025 code and shows a 2024 count
             only where both years define that code the same way. These tables start from the 2024
@@ -152,13 +150,11 @@ export default function StillbirthNeonatal() {
             N10) are not matched and show —. No 2023 ICD-PM coding is held in the sources. 2024 and
             2025 are different review cycles, so no change is calculated.
           </Note>
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {icdTables3y.map((t) => (
             <ChartCard
               key={t.title}
               title={t.title}
-              subtitle="2024 code · 2023, 2024 & 2025 · * = 2025 code differs"
+              subtitle="Count by 2024 code · 2023, 2024 and 2025 · * = 2025 code differs"
             >
               <DataTable
                 columns={[

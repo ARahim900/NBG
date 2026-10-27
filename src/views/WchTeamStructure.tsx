@@ -7,7 +7,7 @@ function Portrait({ member }: { member: TeamMember }) {
       className="h-24 w-24 shrink-0 rounded-full border-2 border-teal object-cover" />
   ) : (
     <span role="img" aria-label={`Photograph not yet supplied for ${member.name}`}
-      className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full border-2 border-teal bg-teal/15 text-heading dark:text-glow">
+      className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full border-2 border-teal bg-mist text-heading dark:text-glow">
       <UserRound className="h-7 w-7" aria-hidden="true" />
     </span>
   )
@@ -43,14 +43,14 @@ export default function WchTeamStructure() {
       <div role="region" aria-label="Team structure diagram" aria-describedby="team-chart-help" tabIndex={0} className="overflow-x-auto rounded-xl pb-4 outline-none focus-visible:ring-2 focus-visible:ring-azure">
         <div className="min-w-[640px] px-1 pt-2">
           <div className="grid items-center gap-6 grid-cols-4">
-            <div className="relative rounded-2xl border border-navy/25 bg-navy/5 p-6 shadow-sm dark:border-teal/30 dark:bg-navy/20 col-span-2 col-start-2">
+            <div className="card col-span-2 col-start-2 p-6">
               <h2 className="text-center text-xl font-semibold leading-snug text-heading dark:text-white">Women and Child Health Department</h2>
               <p lang="ar" dir="rtl" className="mt-2 text-center font-ar text-base text-heading/80 dark:text-white/75">دائرة صحة المرأة والطفل</p>
               <p className="mb-3 mt-5 text-center text-sm font-medium text-heading/75 dark:text-glow">Director · <span lang="ar" dir="rtl" className="font-ar">مديرة الدائرة</span></p>
               <Person member={director} />
               <span aria-hidden="true" className="absolute -bottom-8 left-1/2 h-8 border-l-2 border-teal" />
             </div>
-            <aside aria-label="Coordination, linked to the department director" className="relative mx-auto w-full max-w-sm rounded-xl border border-teal bg-surface px-4 py-5 text-center col-start-4">
+            <aside aria-label="Coordination, linked to the department director" className="card col-start-4 mx-auto w-full max-w-sm px-4 py-5 text-center">
               <ArrowRight aria-hidden="true" className="absolute -left-6 top-1/2 h-5 w-6 -translate-y-1/2 text-teal" />
               <h3 className="font-semibold text-heading dark:text-white">Coordination</h3>
               <p lang="ar" dir="rtl" className="mt-1 font-ar text-sm text-heading/75 dark:text-white/75">التنسيق</p>
@@ -64,14 +64,14 @@ export default function WchTeamStructure() {
               <li key={department.id} className="relative min-w-0">
                 <span aria-hidden="true" className="absolute -top-8 left-1/2 h-8 border-l-2 border-teal" />
                 <section aria-labelledby={`team-${department.id}`}>
-                  <div className="rounded-2xl border border-teal min-h-[332px] bg-teal/15 px-3 py-5 shadow-sm xl:min-h-[268px] xl:px-5">
+                  <div className="card min-h-[332px] px-3 py-5 xl:min-h-[268px] xl:px-5">
                     <h3 id={`team-${department.id}`} className="flex min-h-12 items-center justify-center text-center text-base font-semibold xl:min-h-0 xl:text-lg text-heading dark:text-white">{department.name}</h3>
                     <p lang="ar" dir="rtl" className="mb-5 mt-1 text-center font-ar text-sm text-heading/80 dark:text-white/75">{department.nameAr}</p>
                     <Person member={department.lead} />
                   </div>
                   <DownConnector />
                   {department.member ? (
-                    <div className="rounded-xl border border-navy/20 bg-surface p-5 shadow-sm dark:border-teal/40">
+                    <div className="card p-5">
                       <Person member={department.member} />
                       <p className="mt-3 text-center text-sm font-medium text-heading/80 dark:text-white/80">{department.member.role}</p>
                       <p lang="ar" dir="rtl" className="mt-1 text-center font-ar text-sm text-heading/75 dark:text-white/75">{department.member.roleAr}</p>

@@ -57,8 +57,8 @@ const SECTION_BAR: Record<Section['accent'], string> = {
 }
 const SECTION_ICONBG: Record<Section['accent'], string> = {
   navy: 'bg-tint/10 text-heading ring-1 ring-azure/25',
-  azure: 'bg-azure/10 text-azure ring-1 ring-azure/30',
-  teal: 'bg-teal/15 text-teal-700 ring-1 ring-teal/30 dark:text-teal',
+  azure: 'bg-tint/10 text-heading ring-1 ring-azure/25',
+  teal: 'bg-tint/10 text-heading ring-1 ring-azure/25',
 }
 
 /** New ANC registrations for a wilayat in 2025, or null when the source has none. */
@@ -103,7 +103,7 @@ function WilayatCard({ w }: { w: (typeof wilayats)[number] }) {
       </p>
       <div className="mt-3 border-t border-line/10 pt-2">
         <p className="font-display text-base font-bold tabular-nums text-azure">
-          {anc === null ? <span className="text-sm font-semibold text-ink/50">Not reported</span> : int(anc)}
+          {anc === null ? <span className="text-sm font-semibold text-ink/50">No data supplied</span> : int(anc)}
         </p>
         <p className="text-[0.62rem] font-medium uppercase tracking-wide text-ink/45">
           ANC 2025
@@ -115,7 +115,7 @@ function WilayatCard({ w }: { w: (typeof wilayats)[number] }) {
 
 export default function About({ onNavigate }: ViewProps) {
   return (
-    <div className="space-y-12">
+    <div className="space-y-8">
       <section
         aria-labelledby="home-hero-title"
         className="overflow-hidden rounded-xl border border-line/15"
@@ -205,7 +205,7 @@ export default function About({ onNavigate }: ViewProps) {
 
         <article className="card p-6">
           <div dir="rtl" className="flex items-center gap-3">
-            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-teal/15 text-teal-700 ring-1 ring-teal/30 dark:text-teal">
+            <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-tint/10 text-heading ring-1 ring-azure/25">
               <Compass className="h-5 w-5" />
             </span>
             <div className="font-ar">
@@ -234,7 +234,7 @@ export default function About({ onNavigate }: ViewProps) {
         <div dir="rtl" className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
           <div
             dir="rtl"
-            className="flex flex-col justify-center rounded-[4px] bg-navy p-5 text-white dark:bg-[#0b2235]"
+            className="flex flex-col justify-center rounded-[4px] bg-navy p-5 text-white dark:bg-navy-900"
             style={{ clipPath: 'polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%)' }}
             data-reveal
           >
@@ -395,7 +395,7 @@ export default function About({ onNavigate }: ViewProps) {
 
       {/* ===== CTA finale ===== */}
       <section
-        className="relative overflow-hidden rounded-[4px] bg-navy p-8 text-center text-white dark:bg-[#0b2235] sm:p-10"
+        className="relative overflow-hidden rounded-[4px] bg-navy p-8 text-center text-white dark:bg-navy-900 sm:p-10"
         data-reveal
       >
         <div className="relative">

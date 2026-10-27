@@ -25,7 +25,7 @@ import {
   yearSeries,
   type Year,
 } from '../data/years/childrenC'
-import { C, SERIES } from '../lib/theme'
+import { METRIC } from '../lib/theme'
 import { deltaPct, int, pct } from '../lib/format'
 
 const n2023 = mtTotals.y2023
@@ -43,7 +43,8 @@ const under5 = mt2025.byAge.filter((a) => a.band === 'Under 1' || a.band === '1�
 const male = mt2025.bySex.find((s) => s.sex === 'Male')?.count ?? 0
 const female = mt2025.bySex.find((s) => s.sex === 'Female')?.count ?? 0
 
-const typeSeries = mt2025.types.map((t, i) => ({ key: t, name: t, color: SERIES[i] }))
+/** One type at a time: five parts are too many to stack or colour apart. */
+const TYPE_OPTIONS = mt2025.types.map((t) => ({ value: t, label: t }))
 
 /** Sum of a year column; null when no wilayat reports that year. */
 const columnTotal = (k: 'y2023' | 'y2024' | 'y2025'): number | null =>
@@ -59,7 +60,7 @@ const muted = (v: string) => (v === NOT_REPORTED ? <span className="text-ink/50"
 /** Placeholder for a year the source does not break down. */
 function NotReported({ year, detail }: { year: Year; detail: string }) {
   return (
-    <div className="flex min-h-[260px] items-center justify-center rounded-xl border border-dashed border-line/20 px-6 text-center text-body text-ink/65">
+    <div className="flex min-h-[260px] items-center justify-center px-6 text-center text-body text-ink/65">
       <p>
         <span className="font-semibold text-heading">{year}: {NOT_REPORTED}.</span> {detail}
       </p>
@@ -69,13 +70,14 @@ function NotReported({ year, detail }: { year: Year; detail: string }) {
 
 export default function ChildMaltreatment() {
   const [typeYear, setTypeYear] = useState<Year>('2025')
+  const [typeName, setTypeName] = useState<string>(mt2025.types[0] ?? '')
 
   return (
     <div className="space-y-8">
       <SectionTitle
         icon={ShieldAlert}
         title="Child Maltreatment Notifications"
-        subtitle="2019–2025 trend · 2023–2025 by wilayat · type split 2024–2025 · 2025 by month, age and reporting institution (earlier years not reported)"
+        subtitle="Trend 2019 to 2025 · wilayat 2023, 2024 and 2025 · type 2024 and 2025 · month, age and reporting institution 2025 (no data supplied for earlier years)"
       />
 
       <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
@@ -115,28 +117,28 @@ export default function ChildMaltreatment() {
           value={pct(share2025(under5), 0)}
           icon={Baby}
           accent="gold"
-          hint={`${int(under5)} of ${int(mt2025.total)} · ${male} boys, ${female} girls · age not reported for 2023–2024`}
+          hint={`${int(under5)} of ${int(mt2025.total)} · ${male} boys, ${female} girls · age: no data supplied for 2023–2024`}
         />
       </div>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-5">
         <ChartCard
           title="Total Notifications Trend"
-          subtitle="2019–2025"
+          subtitle="Count · 2019 to 2025"
           className="xl:col-span-3"
           footnote={`Notifications rose from ${yearCell(n2023)} in 2023 to ${yearCell(n2024)} in 2024 and ${int(n2025)} in 2025. The 2023→2024 rise reflects strengthened reporting and case detection.`}
         >
           <TrendChart
             data={mt.totalTrend}
             xKey="year"
-            variant="area"
+            height={300}
             unit=""
-            series={[{ key: 'value', name: 'Notifications', color: C.navy }]}
+            series={[{ key: 'value', name: 'Notifications', color: METRIC[0] }]}
           />
         </ChartCard>
         <ChartCard
           title="Maltreatment Type"
-          subtitle="% of each year's notifications · 2023, 2024 & 2025"
+          subtitle="% of each year's notifications · 2023, 2024 and 2025"
           className="xl:col-span-2"
           footnote={`2024 shares are the KPI deck's own percentages; 2025 shares are counts over the ${int(mt2025.total)} notifications in the register. The source has no 2023 type split.`}
         >
@@ -144,7 +146,7 @@ export default function ChildMaltreatment() {
             data={mtTypePct}
             xKey="type"
             layout="vertical"
-            height={300}
+            height={Math.max(260, 44 * mtTypePct.length)}
             unit="%"
             categoryWidth={110}
             series={yearSeries(mtTypePct)}
@@ -152,34 +154,42 @@ export default function ChildMaltreatment() {
         </ChartCard>
       </div>
 
-      <ChartCard title="Notifications by Wilayat" subtitle="Counts · 2023, 2024 & 2025">
-        <ComparisonBars data={mtByWilayat} xKey="wilayat" series={yearSeries(mtByWilayat)} />
+      <ChartCard title="Notifications by Wilayat" subtitle="Count · 2023, 2024 and 2025">
+        <ComparisonBars data={mtByWilayat} xKey="wilayat" height={300} series={yearSeries(mtByWilayat)} />
       </ChartCard>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ChartCard
           title="Notifications by Month"
-          subtitle="By notification date · 2023, 2024 & 2025"
-          footnote="Monthly counts are available for 2025 only; 2023 and 2024 are not reported by month."
+          subtitle="Count by notification date · 2023, 2024 and 2025"
+          footnote="Monthly counts are available for 2025 only; no data supplied by month for 2023 and 2024."
         >
-          <TrendChart data={mtMonthly} xKey="month" unit="" series={yearSeries(mtMonthly)} />
+          <TrendChart data={mtMonthly} xKey="month" height={300} unit="" series={yearSeries(mtMonthly)} />
         </ChartCard>
         <ChartCard
           title="Age of Child"
-          subtitle="Years at notification · 2023, 2024 & 2025"
-          footnote="Age bands are available for 2025 only; 2023 and 2024 are not reported by age."
+          subtitle="Count by age in years at notification · 2023, 2024 and 2025"
+          footnote="Age bands are available for 2025 only; no data supplied by age for 2023 and 2024."
         >
-          <ComparisonBars data={mtByAge} xKey="band" series={yearSeries(mtByAge)} />
+          <ComparisonBars data={mtByAge} xKey="band" height={300} series={yearSeries(mtByAge)} />
         </ChartCard>
       </div>
 
       <ChartCard
         title={`Maltreatment Type by Wilayat (${typeYear})`}
-        subtitle="Counts"
+        subtitle={typeYear === '2025' ? `Count of ${typeName.toLowerCase()} notifications · 2025` : 'Count'}
         action={<Segmented label="Year" options={YEAR_OPTIONS} value={typeYear} onChange={setTypeYear} />}
       >
         {typeYear === '2025' ? (
-          <ComparisonBars data={mt2025.byWilayat} xKey="wilayat" stacked series={typeSeries} />
+          <div className="space-y-4">
+            <Segmented label="Type" options={TYPE_OPTIONS} value={typeName} onChange={setTypeName} />
+            <ComparisonBars
+              data={mt2025.byWilayat}
+              xKey="wilayat"
+              height={300}
+              series={[{ key: typeName, name: typeName, color: METRIC[0] }]}
+            />
+          </div>
         ) : (
           <NotReported
             year={typeYear}
@@ -192,7 +202,7 @@ export default function ChildMaltreatment() {
         <SectionTitle
           icon={Table2}
           title="Detailed Tables"
-          subtitle="By wilayat and by type for 2023, 2024 & 2025, and by reporting institution"
+          subtitle="By wilayat and by type for 2023, 2024 and 2025, and by reporting institution"
         />
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           <ChartCard title="Notifications by Wilayat (2023–2025)" subtitle="">
@@ -275,10 +285,10 @@ export default function ChildMaltreatment() {
             notifications dated January–December 2025 ({int(mt2025.omani)} Omani children). Only
             totals are published here; no individual records are stored in the dashboard.
           </Note>
-          <Note title="Not reported:" tone="warn">
+          <Note title="No data supplied:" tone="warn">
             The source has no 2023 type split, and no month, age, sex, type-by-wilayat or
-            reporting-institution breakdown for 2023 or 2024. Those years are shown as “Not
-            reported” rather than zero.
+            reporting-institution breakdown for 2023 or 2024. Those years are shown as “No data
+            supplied” rather than zero.
           </Note>
         </div>
       </div>

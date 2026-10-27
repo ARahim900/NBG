@@ -160,6 +160,16 @@ export const NAV: NavItem[] = [
   },
 
   // ── Children's Health ──
+  // Extra Child Health Register: its own entry; ASD Early Screening sits under it.
+  {
+    id: 'ecr',
+    code: 'ECR',
+    name: 'Extra Child Health Register',
+    short: 'Child Register',
+    blurb: '3 & 4-year developmental visits, ASD early screening and Safe Transport workshops',
+    icon: ClipboardList,
+    group: 'children',
+  },
   {
     id: 'asd',
     code: 'ASD',
@@ -167,17 +177,7 @@ export const NAV: NavItem[] = [
     blurb: '18 & 24-month developmental (M-CHAT/R) screening, 2023–2025',
     icon: Brain,
     group: 'children',
-  },
-  // Sub-page of ASD Early Screening, with its own icon.
-  {
-    id: 'ecr',
-    code: 'ECR',
-    name: 'Extra Child Health Register',
-    short: 'Child Register',
-    blurb: '3 & 4-year developmental visits (2025), full monthly records and Safe Transport workshops',
-    icon: ClipboardList,
-    group: 'children',
-    parentId: 'asd',
+    parentId: 'ecr',
   },
   {
     id: 'ds',

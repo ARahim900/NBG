@@ -29,7 +29,7 @@ import {
   type DsYearRow,
   type Year,
 } from '../data/years/childrenA'
-import { C, YEAR_COLORS } from '../lib/theme'
+import { METRIC, YEAR_COLORS } from '../lib/theme'
 import { deltaPct, int, pct } from '../lib/format'
 
 const T = dsYearTotals
@@ -39,15 +39,14 @@ const share = (v: number, year: Year) => pct((v / T[year].registered) * 100, 0)
 /** One bar per year, 2023 → 2025, in the shared year colours. */
 const YEAR_SERIES = YEARS.map((y) => ({ key: `y${y}`, name: y, color: YEAR_COLORS[y] }))
 
-/** Monthly activity exists for 2024 only; the other years stay in the legend as not reported. */
+/** Monthly activity exists for 2024 only; the other years stay in the legend marked "no data supplied". */
 const MONTHLY_SERIES = YEARS.map((y) => ({
   key: `y${y}`,
-  name: y === '2024' ? y : `${y} (not reported)`,
+  name: y === '2024' ? y : `${y} (${NOT_REPORTED.toLowerCase()})`,
   color: YEAR_COLORS[y],
 }))
 
-const NOT_RECORDED = 'Not recorded'
-const yearCell = (row: DsYearRow, y: Year, missing: string = NOT_RECORDED) => {
+const yearCell = (row: DsYearRow, y: Year, missing: string = NOT_REPORTED) => {
   const v = row[`y${y}`]
   return v === null ? <span className="text-ink/55">{missing}</span> : int(v)
 }
@@ -64,6 +63,9 @@ const weighed = (y: Year) => dsNutritionByYear.reduce((a, r) => a + (r[`y${y}`] 
 const weighedText = YEARS.map((y) => `${int(weighed(y))} for ${int(T[y].registered)} registered in ${y}`).join(', ')
 
 const MORBIDITY_TABLE_KEYS = [...DS_CONDITIONS.map((c) => c.key), 'underweight', 'overweight'] as const
+
+/** Row 1 pairs vertical centre bars with a trend; both use the taller height so the cards line up. */
+const CENTRE_ROW_HEIGHT = Math.max(300, 44 * dsRegisteredByCentre.length)
 
 const priorHint = (field: 'registered' | 'newCases' | 'age0to5') =>
   `2024: ${int(T['2024'][field])} · 2023: ${int(T['2023'][field])}`
@@ -117,57 +119,58 @@ export default function DownSyndrome() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <ChartCard title="Registered Cases by Health Centre" subtitle="2023, 2024 and 2025">
+        <ChartCard title="Registered Cases by Health Centre" subtitle="Count · 2023, 2024 and 2025">
           <ComparisonBars
             data={dsRegisteredByCentre}
             xKey="center"
             layout="vertical"
-            height={380}
+            height={CENTRE_ROW_HEIGHT}
             categoryWidth={112}
             series={YEAR_SERIES}
           />
         </ChartCard>
         <ChartCard
           title="Registry Size & New Diagnoses by Year"
-          subtitle="All six health-centre clinics, 2023–2025"
+          subtitle="Count · all six health-centre clinics · 2023, 2024 and 2025"
           footnote={`Registered children: ${dsRegistryTrend.map((r) => `${int(r.registered)} (${r.year})`).join(', ')}.`}
         >
-          <ComparisonBars
+          <TrendChart
             data={dsRegistryTrend}
             xKey="year"
-            height={380}
+            unit=""
+            height={CENTRE_ROW_HEIGHT}
             series={[
-              { key: 'registered', name: 'Registered', color: C.navy },
-              { key: 'newCases', name: 'Newly diagnosed', color: C.teal },
+              { key: 'registered', name: 'Registered', color: METRIC[0] },
+              { key: 'newCases', name: 'Newly diagnosed', color: METRIC[1] },
             ]}
           />
         </ChartCard>
       </div>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <ChartCard title="Age Distribution by Year" subtitle="Registered children per age group, 2023–2025">
-          <ComparisonBars data={dsAgeByYear} xKey="band" height={320} series={YEAR_SERIES} />
+        <ChartCard title="Age Distribution by Year" subtitle="Count of registered children per age group · 2023, 2024 and 2025">
+          <ComparisonBars data={dsAgeByYear} xKey="band" height={300} series={YEAR_SERIES} />
         </ChartCard>
         <ChartCard
           title="Nutritional Status by Year"
-          subtitle="Children in each weight category, 2023–2025"
+          subtitle="Count of children in each weight category · 2023, 2024 and 2025"
           footnote={`Weight categories recorded: ${weighedText}. The 2023 and 2024 summaries count more weight records than registered children; figures are shown as reported.`}
         >
-          <ComparisonBars data={dsNutritionByYear} xKey="label" height={320} series={YEAR_SERIES} />
+          <ComparisonBars data={dsNutritionByYear} xKey="label" height={300} series={YEAR_SERIES} />
         </ChartCard>
       </div>
 
       <ChartCard
         title="Associated Comorbidities by Year"
-        subtitle="Children with each condition, all health centres — 2023, 2024 and 2025"
-        footnote={`Most common condition — ${topByYear}.`}
+        subtitle="Count of children with each condition, all health centres · 2023, 2024 and 2025"
+        footnote={`Most common condition — ${topByYear}. Growth issues = underweight, the same definition as 2023 (23) and 2024 (32).`}
       >
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-[3fr_2fr]">
           <ComparisonBars
             data={dsConditionsByYear}
             xKey="label"
             layout="vertical"
-            height={560}
+            height={Math.max(260, 44 * dsConditionsByYear.length)}
             categoryWidth={124}
             series={YEAR_SERIES}
           />
@@ -182,10 +185,10 @@ export default function DownSyndrome() {
         </div>
         <div className="mt-3 space-y-3">
           <Note title="Categories differ by year:">
-            The 2023 and 2024 summaries record growth issues and asthma; the 2025 workbook does not, and
-            instead records diabetes and haematological conditions. A category missing from a year is shown
-            as “{NOT_RECORDED}”, not zero. Thyroid for 2025 is hypothyroidism plus hyperthyroidism (recorded
-            separately in 2025), shown against the earlier “Thyroid problems” count.
+            The 2023 and 2024 summaries record asthma; the 2025 workbook does not, and instead records diabetes
+            and haematological conditions. A category missing from a year is shown as “{NOT_REPORTED}”, not zero.
+            Thyroid for 2025 is hypothyroidism plus hyperthyroidism (recorded separately in 2025), shown against
+            the earlier “Thyroid problems” count. Growth issues for 2025 is the 2025 underweight total.
           </Note>
           <Note tone="warn" title="Shown as reported:">
             Developmental delay is {int(dsConditionsByYear.find((r) => r.label === 'Developmental delay')?.y2025 ?? 0)} in
@@ -197,14 +200,14 @@ export default function DownSyndrome() {
 
       <ChartCard
         title={`Monthly ${monthlyMetric === 'newCases' ? 'New Cases' : 'Assessments'} by Year`}
-        subtitle="Registry activity through the year — 2023, 2024 and 2025"
+        subtitle="Count · 2023, 2024 and 2025"
         action={
           <Segmented label="Figure" options={DS_MONTHLY_OPTIONS} value={monthlyMetric} onChange={setMonthlyMetric} />
         }
       >
-        <TrendChart data={dsMonthlyByYear(monthlyMetric)} xKey="month" unit="" series={MONTHLY_SERIES} />
+        <TrendChart data={dsMonthlyByYear(monthlyMetric)} xKey="month" unit="" height={300} series={MONTHLY_SERIES} />
         <div className="mt-3">
-          <Note title="Not reported:">
+          <Note title="No data supplied:">
             Monthly registry activity is available for 2024 only. The source provides no monthly figures for 2023
             or 2025, so those years appear in the legend without a line; annual new diagnoses for all three years are
             in the chart “Registry Size & New Diagnoses by Year”.
@@ -216,7 +219,7 @@ export default function DownSyndrome() {
         <SectionTitle icon={Table2} title="Registry by Health Centre" subtitle="Registered children, new cases, gender and age group — choose a year" />
         <ChartCard
           title={`Registered Cases by Health Centre (${year})`}
-          subtitle="Six health-centre clinics"
+          subtitle={`Count · six health-centre clinics · ${year}`}
           action={<Segmented label="Year" options={YEAR_OPTIONS} value={year} onChange={setYear} />}
         >
           <DataTable
@@ -237,7 +240,7 @@ export default function DownSyndrome() {
         </ChartCard>
       </div>
 
-      <ChartCard title="Associated Comorbidities by Health Centre (2025 only)" subtitle="Number of registered children with each condition">
+      <ChartCard title="Associated Comorbidities by Health Centre (2025 Only)" subtitle="Count of registered children with each condition · 2025">
         <DataTable
           dense
           columns={[
@@ -257,7 +260,7 @@ export default function DownSyndrome() {
         <div className="mt-3 space-y-3">
           <Note title="Source:">
             {ds2025.source.filename} — annual report of children with Down syndrome, January–December 2025.
-            A child can have more than one condition. Comorbidities by health centre are not reported for 2023 or
+            A child can have more than one condition. No comorbidities by health centre were supplied for 2023 or
             2024; those years are available as governorate totals only (chart above).
           </Note>
           {ds2025.flags.length > 0 && (
@@ -285,11 +288,12 @@ export default function DownSyndrome() {
           <>
             <DataTable
               dense
-              columns={[{ label: 'Health centres (5-year plan)' }, ...YEARS.map((y) => ({ label: y, align: 'right' as const }))]}
+              columns={[{ label: 'Health centres' }, ...YEARS.map((y) => ({ label: y, align: 'right' as const }))]}
               rows={dsCapacityByYear.map((r) => [r.label, ...YEARS.map((y) => yearCell(r, y, NOT_REPORTED))])}
             />
             <p className="mt-2 text-caption text-ink/60">
-              The 5-year plan gives 2023 and 2024 only; 2025 is shown as “{NOT_REPORTED}”.
+              2023 and 2024 are from the 5-year plan. 2025: the 6 clinics in the 2025 Down syndrome report, all with
+              trained staff (confirmed by the department).
             </p>
           </>
         }

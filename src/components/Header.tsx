@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Map, Menu, Printer } from 'lucide-react'
 import { NAV_BY_ID, NAV_GROUPS, type ViewId } from '../lib/dashboards'
 import { meta } from '../data/nbg'
-import { C, YEAR_COLORS } from '../lib/theme'
+import { YEAR_COLORS, YEAR_COLORS_DARK } from '../lib/theme'
 import { useThemeMode } from '../lib/theme-mode'
 import { attachScrollProgress, fadeIn } from '../lib/motion'
 import ThemeToggle from './ThemeToggle'
@@ -111,7 +111,7 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
             <div
               className="order-last hidden w-full cursor-default select-none items-center justify-end gap-3 md:flex 2xl:order-none 2xl:w-auto"
               role="note"
-              aria-label="Chart colours by year: 2023 teal, 2024 blue, 2025 navy"
+              aria-label="Chart colours by year: 2023 light blue, 2024 blue, 2025 navy"
             >
               <span className="text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-ink/50">
                 Chart key
@@ -120,7 +120,7 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
                 <span key={year} className="flex items-center gap-1.5 text-xs font-medium text-ink/70">
                   <span
                     className="inline-block h-2.5 w-2.5 rounded-full"
-                    style={{ backgroundColor: isDark && color === C.navy ? '#9bbfe8' : color }}
+                    style={{ backgroundColor: isDark ? YEAR_COLORS_DARK[year] : color }}
                   />
                   {year}
                 </span>

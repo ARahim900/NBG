@@ -5,7 +5,7 @@ import { MONTHS, ds2025, dsTotals, type VisitCentre, type VisitSheet } from '../
  * Year-by-year shapes for the Children A views (ASD early screening, Down
  * syndrome registry, Extra Child Health Register). Every figure comes from
  * nbg.json or the 2025 workbooks as reported; a year the source does not
- * provide is `null` ("Not reported"), never 0. Nothing here estimates a value.
+ * provide is `null` ("No data supplied"), never 0. Nothing here estimates a value.
  */
 
 export type Year = '2023' | '2024' | '2025'
@@ -19,7 +19,7 @@ export interface YearValues {
   y2025: number | null
 }
 
-export const NOT_REPORTED = 'Not reported'
+export const NOT_REPORTED = 'No data supplied'
 
 /**
  * Display spelling only: align the source workbooks' place names with the
@@ -135,9 +135,11 @@ export interface DsYearRow extends YearValues {
 /**
  * Associated conditions, 2023–2025. The 2023/2024 summary and the 2025
  * workbook use different category lists: a category missing from a year is
- * null ("Not recorded"). The only combination is Thyroid: 2025 records
- * hypothyroidism and hyperthyroidism separately; their sum is shown against
- * the earlier "Thyroid problems" count.
+ * null ("No data supplied"). Two 2025 figures are mapped onto the earlier
+ * categories: Thyroid is hypothyroidism plus hyperthyroidism (recorded
+ * separately in 2025), and Growth issues is the 2025 underweight total — the
+ * same definition as 2023 (23) and 2024 (32), where Growth Issues equals the
+ * Underweight count.
  */
 export const dsConditionsByYear: DsYearRow[] = (
   [
@@ -145,7 +147,7 @@ export const dsConditionsByYear: DsYearRow[] = (
     ['Ophthalmic', 'Ophthalmic', c25.ophthalmic],
     ['Ears & hearing', 'Ears & Hearing', c25.earsHearing],
     ['Thyroid', 'Thyroid Problems', c25.hypothyroidism + c25.hyperthyroidism],
-    ['Growth issues', 'Growth Issues', null],
+    ['Growth issues', 'Growth Issues', c25.underweight],
     ['Developmental delay', 'Developmental Delay', c25.developmentalDelay],
     ['Gastrointestinal', 'Gastrointestinal', c25.gastrointestinal],
     ['Asthma', 'Asthma', null],
@@ -212,7 +214,7 @@ export const asdMonthlyCoverage = (age: AsdAge) =>
     y2025: (age === 'm18' ? month25(month)?.cov18 : month25(month)?.cov24) ?? null,
   }))
 
-/** Monthly children screened, one bar per year. No monthly data exists for 2023. */
+/** Monthly children screened, one line per year. No monthly data exists for 2023. */
 export const asdMonthlyScreened = (age: AsdAge) =>
   MONTHS.map((month) => ({
     month,
@@ -369,7 +371,7 @@ export const asdIndicatorsByYear: AsdIndicatorRow[] = [
  * All children screened (18 + 24 months) by risk band. 2024 is the source's
  * own distribution; 2025 is the 18-month plus 24-month figures from the 2025
  * governorate summary (the same basis: 2024's medium 30 = 18 + 12). 2023 has
- * no 24-month or low-risk figures, so it is not reported.
+ * no 24-month or low-risk figures, so it is null ("No data supplied").
  */
 export const asdRiskBandsByYear: { band: string; y2023: null; y2024: number | null; y2025: number | null }[] = (
   [
@@ -436,26 +438,49 @@ const fpChildValue = (indicator: string, key: 'y2023' | 'y2024'): number | null 
   return typeof v === 'number' ? v : null
 }
 
-/** Safe Transport of the Critically Ill Child workshops, 2023 and 2024. */
-export const safeTransportWorkshops = {
+/**
+ * Safe Transport of the Critically Ill Child workshops. 2023 and 2024 come
+ * from the 5-year plan; 2025 = 1 was confirmed by the department (Rahim,
+ * 2026-10-27). The department update's "3 workshops" is the 2023–2025 total.
+ */
+export const SAFE_TRANSPORT_WORKSHOPS_2025 = 1
+export const SAFE_TRANSPORT_2025_LABEL = String(SAFE_TRANSPORT_WORKSHOPS_2025)
+export const safeTransportWorkshops: YearValues = {
   y2023: fpChildValue('Safe Transport for Children Workshops', 'y2023'),
   y2024: fpChildValue('Safe Transport for Children Workshops', 'y2024'),
+  y2025: SAFE_TRANSPORT_WORKSHOPS_2025,
 }
 
-/** Programme capacity rows: 2023 and 2024 from the 5-year plan; 2025 not reported. */
-const capacityRows = (rows: [label: string, indicator: string][]): DsYearRow[] =>
-  rows.map(([label, indicator]) => ({
+/** Workshops 2023–2025 (1 + 1 + 1 = 3, the department update's figure). */
+export const SAFE_TRANSPORT_WORKSHOPS_TOTAL =
+  (safeTransportWorkshops.y2023 ?? 0) + (safeTransportWorkshops.y2024 ?? 0) + SAFE_TRANSPORT_WORKSHOPS_2025
+
+/**
+ * Health centres providing Down syndrome follow-up in 2025: the number of
+ * clinics in the 2025 Down syndrome report (6). Reuse on the Newborn
+ * Screening 5-year-plan table so both pages show the same figure.
+ */
+export const DS_FOLLOW_UP_CENTRES_2025 = ds2025.centres.length
+/** Confirmed by the department (Rahim, 2026-10-27): all 6 clinics have trained staff in 2025. */
+export const DS_TRAINED_STAFF_CENTRES_2025 = 6
+
+/**
+ * Programme capacity rows: 2023 and 2024 from the 5-year plan; 2025 only
+ * where a 2025 source gives it, otherwise null ("No data supplied").
+ */
+const capacityRows = (rows: [label: string, indicator: string, y2025: number | null][]): DsYearRow[] =>
+  rows.map(([label, indicator, y2025]) => ({
     label,
     y2023: fpChildValue(indicator, 'y2023'),
     y2024: fpChildValue(indicator, 'y2024'),
-    y2025: null,
+    y2025,
   }))
 
 export const asdCapacityByYear = capacityRows([
-  ['Health centres with staff trained in autism screening', 'Health Centers with Trained Staff for Autism Screening'],
+  ['Health centres with staff trained in autism screening', 'Health Centers with Trained Staff for Autism Screening', null],
 ])
 
 export const dsCapacityByYear = capacityRows([
-  ['Health centres providing Down syndrome follow-up', 'Health Centers for Down Syndrome Follow-up'],
-  ['Health centres with staff trained for Down syndrome', 'Health Centers with Trained Staff for Down Syndrome'],
+  ['Health centres providing Down syndrome follow-up', 'Health Centers for Down Syndrome Follow-up', DS_FOLLOW_UP_CENTRES_2025],
+  ['Health centres with staff trained for Down syndrome', 'Health Centers with Trained Staff for Down Syndrome', DS_TRAINED_STAFF_CENTRES_2025],
 ])

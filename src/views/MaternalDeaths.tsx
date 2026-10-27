@@ -4,10 +4,10 @@ import ChartCard from '../components/ui/ChartCard'
 import SectionTitle from '../components/ui/SectionTitle'
 import DataTable from '../components/ui/DataTable'
 import Note from '../components/ui/Note'
-import { ComparisonBars, DonutChart } from '../components/charts/Charts'
+import { ComparisonBars, TrendChart } from '../components/charts/Charts'
 import { md, sumBy } from '../data/nbg'
 import { mdByYear, mdCause, mdDeaths, ukLabel, type Year } from '../data/years/women'
-import { C, SERIES } from '../lib/theme'
+import { METRIC } from '../lib/theme'
 import { int } from '../lib/format'
 
 const firstYear = md.byYear[0]?.year ?? ''
@@ -16,11 +16,17 @@ const total10yr = sumBy(md.byYear, (r) => r.deaths)
 const causesTotal = sumBy(md.causesCount, (r) => r.deaths)
 const peak = md.byYear.reduce((a, b) => (b.deaths > a.deaths ? b : a))
 
-const causeSlices = md.causesCount.map((r, i) => ({
-  name: ukLabel(r.cause),
-  value: r.deaths,
-  color: SERIES[i % SERIES.length],
-}))
+/** Causes, largest first; "Other" is kept last as the remainder. */
+const causeBars = md.causesCount
+  .map((r) => ({ cause: ukLabel(r.cause), deaths: r.deaths }))
+  .sort((a, b) => {
+    if (a.cause === 'Other') return 1
+    if (b.cause === 'Other') return -1
+    return b.deaths - a.deaths
+  })
+const causeHeight = Math.max(260, 44 * causeBars.length)
+/** Shared by the trend and causes cards so the paired row lines up. */
+const rowHeight = Math.max(300, causeHeight)
 
 /** KPI card for one of the three reporting years; a missing year says so. */
 const yearCard = (year: Year, icon: typeof HeartPulse, accent: 'navy' | 'azure' | 'teal') => {
@@ -35,8 +41,8 @@ const yearCard = (year: Year, icon: typeof HeartPulse, accent: 'navy' | 'azure' 
       accent={accent}
       hint={
         deaths == null
-          ? 'Not reported — no count in any 2025 source'
-          : cause ?? 'Cause not recorded'
+          ? 'No data supplied — no count in any 2025 source'
+          : cause ?? 'Cause: no data supplied'
       }
     />
   )
@@ -48,7 +54,7 @@ export default function MaternalDeaths() {
       <SectionTitle
         icon={HeartPulse}
         title="Maternal Deaths — 10-Year Surveillance"
-        subtitle={`Deaths by year (${firstYear}–${lastYear}; 2025 not reported), causes and recent records`}
+        subtitle={`Deaths by year (${firstYear}–${lastYear}; no data supplied for 2025), causes and recent records`}
       />
 
       <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
@@ -67,23 +73,32 @@ export default function MaternalDeaths() {
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ChartCard
           title="Maternal Deaths by Year"
-          subtitle={`${firstYear}–2025 · 2025 not reported`}
-          footnote="The 2020–2021 spike coincides with the COVID-19 pandemic; 2023 and 2024 recorded 1 death each. 2025 has no bar because no count was reported."
+          subtitle={`Count · ${firstYear}–2025 · no data supplied for 2025`}
+          footnote="The 2020–2021 spike coincides with the COVID-19 pandemic; 2023 and 2024 recorded 1 death each. 2025 has no point because no data was supplied."
         >
-          <ComparisonBars
+          <TrendChart
             data={mdByYear}
             xKey="year"
-            height={300}
-            series={[{ key: 'deaths', name: 'Deaths', color: C.navy }]}
+            height={rowHeight}
+            unit=""
+            series={[{ key: 'deaths', name: 'Deaths', color: METRIC[0] }]}
             showLegend={false}
           />
         </ChartCard>
         <ChartCard
           title="Causes of Death"
-          subtitle="Cumulative count · period not stated in the source · 2025 not reported"
+          subtitle="Count · cumulative, period not stated in the source · no data supplied for 2025"
           footnote={`Brought-dead and postpartum haemorrhage together account for ~43% of the ${causesTotal} recorded deaths.`}
         >
-          <DonutChart data={causeSlices} height={300} />
+          <ComparisonBars
+            data={causeBars}
+            xKey="cause"
+            layout="vertical"
+            height={rowHeight}
+            categoryWidth={150}
+            series={[{ key: 'deaths', name: 'Deaths', color: METRIC[0] }]}
+            showLegend={false}
+          />
         </ChartCard>
       </div>
 
@@ -93,7 +108,7 @@ export default function MaternalDeaths() {
           title="Records"
           subtitle="Causes and recent cases"
         />
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           <ChartCard title="Causes of Death" subtitle="Count by cause · period not stated">
             <DataTable
               columns={[
@@ -104,7 +119,7 @@ export default function MaternalDeaths() {
               total={['TOTAL', int(causesTotal)]}
             />
           </ChartCard>
-          <ChartCard title="Recent Death Records" subtitle="Most recent cases · none reported for 2025">
+          <ChartCard title="Recent Death Records" subtitle="Most recent cases · no data supplied for 2025">
             <DataTable
               columns={[
                 { label: 'Year' },
@@ -118,7 +133,7 @@ export default function MaternalDeaths() {
         </div>
       </div>
 
-      <Note title="Not reported:">
+      <Note title="No data supplied:">
         {md.note2025} The causes table totals {int(causesTotal)} deaths while the
         by-year series sums to {int(total10yr)}; the source does not state the
         period the causes cover, so both are shown as reported.

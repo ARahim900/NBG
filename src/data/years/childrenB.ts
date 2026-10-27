@@ -1,18 +1,19 @@
 import mpdsr from '../mpdsr2025.json'
 import { ca, fp, sn, type Cell } from '../nbg'
+import { ds2025 } from '../wch2025'
 
 /**
  * 2023 / 2024 / 2025 views for the Children B dashboards (Newborn Screening,
  * Congenital Anomalies, Stillbirth & Neonatal). Every figure is read from
  * nbg.json or mpdsr2025.json; a year the sources do not provide stays `null`
- * ("Not reported"), never 0. Views use these named rows and never index tuples.
+ * ("No data supplied"), never 0. Views use these named rows and never index tuples.
  */
 
 export type Year = '2023' | '2024' | '2025'
 export const YEARS: Year[] = ['2023', '2024', '2025']
 export const YEAR_OPTIONS = YEARS.map((y) => ({ value: y, label: y }))
 
-/** One figure per year; null = not reported in any repo source. */
+/** One figure per year; null = no data supplied in any repo source. */
 export interface ThreeYear {
   y2023: number | null
   y2024: number | null
@@ -121,12 +122,21 @@ export const screeningByYear: ScreeningRow[] = [
 ]
 
 /**
- * 2025 values for the child 5-year-plan indicators. Only the two screening
- * counts map exactly onto a 2025 source row; the rest are not reported.
+ * 2025 values for the child 5-year-plan indicators. The two screening counts
+ * map onto the 2025 newborn-screening rows; Down syndrome follow-up centres =
+ * the clinics in the 2025 Down syndrome report; Safe Transport workshops = 1,
+ * confirmed by the department (the update's 3 is the 2023–2025 total). Trained staff for Down syndrome = 6, confirmed by the department.
  */
 const CHILD_INDICATOR_2025: Record<string, number | null> = {
   'Newborns Screened for Hearing': nb2025('Neonatal Hearing Screened'),
   'Newborns Screened for Thyroid': nb2025('Screened for Congenital'),
+  'Health Centers for Down Syndrome Follow-up': ds2025.centres.length,
+  // Confirmed by the department: all 6 clinics have trained staff in 2025.
+  'Health Centers with Trained Staff for Down Syndrome': 6,
+  'Safe Transport for Children Workshops': 1,
+}
+/** Qualifier shown after a 2025 value, e.g. "3 (department update)". */
+const CHILD_INDICATOR_2025_SOURCE: Record<string, string> = {
 }
 /** Display label in British English; the JSON indicator names are unchanged. */
 const ukIndicator = (label: string): string => label.replace(/\bCenters\b/g, 'Centres').replace(/\bCenter\b/g, 'Centre')
@@ -136,6 +146,7 @@ export const childIndicators3y = fp.childIndicators.map((r) => ({
   y2023: r.y2023,
   y2024: r.y2024,
   y2025: CHILD_INDICATOR_2025[r.indicator] ?? null,
+  y2025Source: CHILD_INDICATOR_2025_SOURCE[r.indicator] ?? null,
 }))
 
 // =========================================================================
@@ -210,7 +221,7 @@ export const perinatalMonthlyByYear: Record<Year, PerinatalMonth[] | null> = {
   '2025': mpdsrMonthly,
 }
 
-/** Monthly totals side by side (2023 not reported). */
+/** Monthly totals side by side (2023: no data supplied). */
 export const perinatalMonthly3y = sn.deckMonthly.map((r) => ({
   month: r.month,
   y2023: null as number | null,
@@ -295,7 +306,7 @@ const icd3y = (
   })
 }
 
-/** 2024 ICD-PM tables with the 2025 count of the same definition (2023 not reported). */
+/** 2024 ICD-PM tables with the 2025 count of the same definition (2023: no data supplied). */
 export const icdTables3y = [
   { title: 'Maternal Condition (M)', rows: icd3y('M', sn.icdMaternal.filter((r) => r.code !== 'Total')) },
   { title: 'Antepartum — Foetal (A)', rows: icd3y('A', sn.icdAntepartum.filter((r) => r.count > 0)) },

@@ -26,7 +26,7 @@ import {
 } from '../data/population'
 import { ancRateGov, services } from '../data/services'
 import { MAP, PINNED, SEATS, pinnedNames } from '../data/map'
-import { HOSPITALS, hospitalCatchment, hospitalsIn, wilayatName } from '../data/hospitals'
+import { HOSPITALS, REFERRAL_HOSPITALS, WILAYAT_HOSPITALS, hospitalCatchment, hospitalsIn, wilayatName } from '../data/hospitals'
 import { useThemeMode } from '../lib/theme-mode'
 import { useNarrow } from '../lib/useMediaQuery'
 import { int, pct } from '../lib/format'
@@ -120,9 +120,18 @@ const centresIn = (w: string) => institutionsIn(w).length
 const institutionCount = (w: string) => centresIn(w) + hospitalsIn(w).length
 const TOTAL_INSTITUTIONS = INSTITUTIONS.length + HOSPITALS.length
 const placesLabel = (w: string) => {
-  const h = hospitalsIn(w).length
-  return `${centresIn(w)} centres${h ? ` + ${h} hospital${h > 1 ? 's' : ''}` : ''}`
+  const hs = hospitalsIn(w)
+  const ref = hs.filter((h) => h.kind === 'referral').length
+  const wil = hs.length - ref
+  return [
+    `${centresIn(w)} centres`,
+    ref ? `${ref} referral hospital${ref > 1 ? 's' : ''}` : '',
+    wil ? `${wil} hospital${wil > 1 ? 's' : ''}` : '',
+  ]
+    .filter(Boolean)
+    .join(' + ')
 }
+const REFERRAL_COUNT = REFERRAL_HOSPITALS.length
 
 /** Map units per kilometre (1° latitude ≈ 111.32 km). */
 const UNITS_PER_KM = MAP.projection.k / 111.32
@@ -188,13 +197,14 @@ export default function HealthMap() {
   const focusW = selected ? wil(selected) : null
   const focusCentres = selected
     ? [
-        // A wilayat hospital's catchment is the whole wilayat.
+        // A wilayat hospital's catchment is the whole wilayat; a referral
+        // hospital's catchment is not set, so it shows no population.
         ...hospitalsIn(selected).map((h) => ({
           en: h.en,
           ar: h.ar,
-          total: targetGroups(hospitalCatchment(h, 'all')).total,
+          total: h.kind === 'wilayat' ? targetGroups(hospitalCatchment(h, 'all')).total : null,
           pinned: pinnedNames.has(h.en),
-          hospital: true,
+          hospital: h.kind as 'wilayat' | 'referral' | false,
         })),
         ...institutionsIn(selected)
           .map((i) => ({
@@ -202,12 +212,12 @@ export default function HealthMap() {
             ar: i.ar,
             total: targetGroups(aggregate([i], 'all')).total,
             pinned: pinnedNames.has(i.en),
-            hospital: false,
+            hospital: false as const,
           }))
           .sort((a, b) => b.total - a.total),
       ]
     : []
-  const centreMax = Math.max(1, ...focusCentres.map((c) => c.total))
+  const centreMax = Math.max(1, ...focusCentres.map((c) => c.total ?? 0))
   const ranked = [...values].sort((a, b) => b.value - a.value)
   const govTotal = byWilayat.reduce((a, w) => a + w.omani + w.expat, 0)
   const govOmani = byWilayat.reduce((a, w) => a + w.omani, 0)
@@ -225,11 +235,11 @@ export default function HealthMap() {
       <SectionTitle
         icon={MapIcon}
         title="North Batinah Health Map"
-        subtitle={`${TOTAL_INSTITUTIONS} health institutions across ${WILAYATS.length} wilayat — catchment populations from the 2025 estimates`}
+        subtitle={`${TOTAL_INSTITUTIONS} health institutions across ${WILAYATS.length} wilayat, including ${REFERRAL_COUNT} referral hospitals — catchment populations from the 2025 estimates`}
       />
 
       <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
-        <KpiCard label="Health institutions" value={int(TOTAL_INSTITUTIONS)} icon={Building2} accent="navy" hint={`${INSTITUTIONS.length} health-centre catchments + ${HOSPITALS.length} wilayat hospital`} />
+        <KpiCard label="Health institutions" value={int(TOTAL_INSTITUTIONS)} icon={Building2} accent="navy" hint={`${INSTITUTIONS.length} health centres + ${HOSPITALS.length} hospitals, including ${REFERRAL_COUNT} referral hospitals`} />
         <KpiCard label="Residents served" value={int(r0(govTotal))} icon={Users} accent="azure" hint={`${pct((govOmani / govTotal) * 100)} Omani`} />
         <KpiCard label="Omani under 5" value={int(r0(govUnder5))} icon={Baby} accent="teal" hint="Children aged 0–4 (2025 estimate)" />
         <KpiCard
@@ -477,16 +487,18 @@ export default function HealthMap() {
                         <span className="truncate font-medium text-ink">{c.en}</span>
                         {c.hospital && (
                           <span className="shrink-0 rounded-control border border-line/20 px-1.5 text-eyebrow uppercase text-heading/75">
-                            Whole wilayat
+                            {c.hospital === 'referral' ? 'Referral hospital' : 'Whole wilayat'}
                           </span>
                         )}
                       </span>
-                      <span className="shrink-0 font-semibold tabular-nums text-heading">{int(r0(c.total))}</span>
+                      {c.total !== null && (
+                        <span className="shrink-0 font-semibold tabular-nums text-heading">{int(r0(c.total))}</span>
+                      )}
                     </div>
                     <div className="mt-1 h-1.5 rounded-full bg-mist">
                       <div
                         className="h-full rounded-full bg-azure/70 transition-[width] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
-                        style={{ width: `${(c.total / centreMax) * 100}%` }}
+                        style={{ width: `${((c.total ?? 0) / centreMax) * 100}%` }}
                       />
                     </div>
                   </li>
@@ -592,7 +604,12 @@ export default function HealthMap() {
             ]}
           />
           <div className="mt-3 space-y-3">
-            {HOSPITALS.map((h) => (
+            <Note title="Referral hospitals:">
+              {REFERRAL_HOSPITALS.map((h) => `${h.en} (${h.wilayat})`).join(' and ')} are the
+              governorate&rsquo;s {REFERRAL_COUNT} referral hospitals, counted among the{' '}
+              {TOTAL_INSTITUTIONS} health institutions.
+            </Note>
+            {WILAYAT_HOSPITALS.map((h) => (
               <Note key={h.en} title="Wilayat hospital:">
                 {h.en} serves the whole wilayat of {wilayatName(h)}, so its catchment is the
                 wilayat&rsquo;s total population. It is listed alongside the wilayat&rsquo;s health
@@ -601,9 +618,8 @@ export default function HealthMap() {
             ))}
             <Note title="Years shown:">
               The map and this table use the 2025 population estimates, the only population
-              year in the source files. ANC per 1,000 uses 2025 registrations by wilayat; 2023
-              and 2024 ANC by wilayat are not reported in the source files, so no earlier rate is
-              shown. Governorate ANC totals for 2023, 2024 and 2025 are on the Overview and
+              year in the source files. ANC per 1,000 uses 2025 registrations by wilayat; no data
+              supplied for 2023 and 2024 ANC by wilayat, so no earlier rate is shown. Governorate ANC totals for 2023, 2024 and 2025 are on the Overview and
               Maternal Care dashboards.
             </Note>
             <Note tone={PINNED.length < TOTAL_INSTITUTIONS ? 'warn' : 'info'} title="Health-institution locations:">

@@ -2,7 +2,7 @@ import ExtendedNewbornScreening2026 from '../components/reports/ExtendedNewbornS
 
 export default function ExtendedNewbornScreening() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <nav aria-label="Breadcrumb" className="text-caption text-ink/75">
         <ol className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <li>Children</li>

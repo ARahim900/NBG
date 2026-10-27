@@ -20,7 +20,7 @@ import {
   yearSeries,
   type Year,
 } from '../data/years/childrenC'
-import { C } from '../lib/theme'
+import { METRIC } from '../lib/theme'
 import { pct } from '../lib/format'
 
 const ebBirth = ebRateByAge[0]
@@ -43,7 +43,7 @@ const muted = (v: string) => (v === NOT_REPORTED ? <span className="text-ink/50"
 /** Placeholder for a year the source does not provide. */
 function NotReported({ year, detail }: { year: Year; detail: string }) {
   return (
-    <div className="flex min-h-[280px] items-center justify-center rounded-xl border border-dashed border-line/20 px-6 text-center text-body text-ink/65">
+    <div className="flex min-h-[280px] items-center justify-center px-6 text-center text-body text-ink/65">
       <p>
         <span className="font-semibold text-heading">{year}: {NOT_REPORTED}.</span> {detail}
       </p>
@@ -60,7 +60,7 @@ export default function BreastFeedingBfhi() {
       <SectionTitle
         icon={Milk}
         title="Breast Feeding & BFHI"
-        subtitle="Infant-feeding indicators for 2023, 2024 & 2025 (2023 and 2024 not reported in the source) · programme capacity and training"
+        subtitle="Infant-feeding indicators for 2023, 2024 and 2025 (no data supplied for 2023 and 2024) · programme capacity and training"
       />
 
       <div className="max-w-sm">
@@ -77,47 +77,66 @@ export default function BreastFeedingBfhi() {
         <SectionTitle
           icon={Milk}
           title="Infant Feeding Pattern"
-          subtitle="Breastfeeding, formula & complementary feeding by child age · 2023, 2024 & 2025"
+          subtitle="Breastfeeding, formula and complementary feeding by child age · 2023, 2024 and 2025"
         />
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           <ChartCard
+            className="xl:col-span-2"
             title="Exclusive Breastfeeding Rate by Age"
-            subtitle="% exclusively breastfed · birth → 18 months · 2023, 2024 & 2025"
+            subtitle="% exclusively breastfed, birth to 18 months · 2023, 2024 and 2025"
             footnote={
               ebBirth?.y2025 != null && eb6?.y2025 != null
-                ? `2025 shows the classic decline: ${pct(ebBirth.y2025)} at birth, ${pct(eb6.y2025)} by 6 months as complementary foods begin. ${gap}: not reported in the source.`
+                ? `2025 shows the classic decline: ${pct(ebBirth.y2025)} at birth, ${pct(eb6.y2025)} by 6 months as complementary foods begin. ${gap}: no data supplied.`
                 : undefined
             }
           >
             <TrendChart
               data={ebRateByAge}
               xKey="milestone"
+              height={300}
               yDomain={[0, 100]}
               unit="%"
               series={yearSeries(ebRateByAge)}
             />
           </ChartCard>
+          {/* Four feeding types but only three main series colours (METRIC[3] grey is
+              reserved for "other"), so Mixed / complementary — the largest group from
+              6 months — gets its own single-series chart instead of the faint grey. */}
           <ChartCard
-            title={`Feeding Composition by Age (${feedYear})`}
-            subtitle="Children by feeding type (count)"
+            title={`Breastfeeding and Formula Feeding by Age (${feedYear})`}
+            subtitle={feeding ? `Count of children by feeding type · ${feedYear}` : 'Count of children by feeding type'}
             action={<Segmented label="Year" options={YEAR_OPTIONS} value={feedYear} onChange={setFeedYear} />}
-            footnote={
-              feeding
-                ? `Mixed = breast + formula + complementary foods. ${bottleRange(feedYear) ?? ''}`.trim()
-                : undefined
-            }
+            footnote={feeding ? (bottleRange(feedYear) ?? undefined) : undefined}
           >
             {feeding ? (
               <ComparisonBars
                 data={feeding}
                 xKey="milestone"
-                stacked
+                layout="vertical"
+                height={Math.max(260, 44 * feeding.length)}
                 series={[
-                  { key: 'eb', name: 'Exclusive BF', color: C.teal },
-                  { key: 'pb', name: 'Predominant BF', color: C.azure },
-                  { key: 'formula', name: 'Formula only', color: C.gold },
-                  { key: 'mixed', name: 'Mixed / complementary', color: C.navy },
+                  { key: 'eb', name: 'Exclusive BF', color: METRIC[0] },
+                  { key: 'pb', name: 'Predominant BF', color: METRIC[1] },
+                  { key: 'formula', name: 'Formula only', color: METRIC[2] },
                 ]}
+              />
+            ) : (
+              <NotReported year={feedYear} detail="The source gives feeding returns by child age for 2025 only." />
+            )}
+          </ChartCard>
+          <ChartCard
+            title={`Mixed / Complementary Feeding by Age (${feedYear})`}
+            subtitle={feeding ? `Count of children · ${feedYear}` : 'Count of children'}
+            action={<Segmented label="Year" options={YEAR_OPTIONS} value={feedYear} onChange={setFeedYear} />}
+            footnote={feeding ? 'Mixed = breast + formula + complementary foods.' : undefined}
+          >
+            {feeding ? (
+              <ComparisonBars
+                data={feeding}
+                xKey="milestone"
+                layout="vertical"
+                height={Math.max(260, 44 * feeding.length)}
+                series={[{ key: 'mixed', name: 'Mixed / complementary', color: METRIC[0] }]}
               />
             ) : (
               <NotReported year={feedYear} detail="The source gives feeding returns by child age for 2025 only." />
@@ -151,9 +170,9 @@ export default function BreastFeedingBfhi() {
             Figures are summed across all health-centre returns in the six wilayat. EB = exclusively
             breastfed; BF = breastfed.
           </Note>
-          <Note title="Not reported:" tone="warn">
-            The source data hold no infant-feeding figures for {gap}. Those years are shown as “Not
-            reported” rather than zero.
+          <Note title="No data supplied:" tone="warn">
+            The source data hold no infant-feeding figures for {gap}. Those years are shown as “No
+            data supplied” rather than zero.
           </Note>
         </div>
       </ChartCard>

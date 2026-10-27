@@ -15,11 +15,11 @@ import Note from '../components/ui/Note'
 import { TrendChart } from '../components/charts/Charts'
 import { fp } from '../data/nbg'
 import { childIndicators3y, screeningByYear, screeningCoverageTrend } from '../data/years/childrenB'
-import { C } from '../lib/theme'
+import { METRIC } from '../lib/theme'
 import { cell, int, pct } from '../lib/format'
 import type { ViewProps } from '../lib/dashboards'
 
-const NR = 'Not reported'
+const NR = 'No data supplied'
 
 /** 2023–2025 screening row by metric name. */
 const row = (metric: string) => screeningByYear.find((r) => r.metric === metric)
@@ -62,7 +62,7 @@ export default function NewbornScreening({ onNavigate }: ViewProps) {
         subtitle="Congenital hypothyroidism (TSH) & neonatal hearing screening — North Batinah, 2023–2025 (trends 2019–2025)"
       />
 
-      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
+      <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-3">
         <KpiCard
           label="TSH Screening Coverage (2025)"
           value={pctOr(tshCoverage?.y2025)}
@@ -89,31 +89,33 @@ export default function NewbornScreening({ onNavigate }: ViewProps) {
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ChartCard
           title="Screening Coverage"
-          subtitle="TSH & neonatal hearing coverage · 2019–2025 (%)"
+          subtitle="Coverage % · 2019–2025"
           footnote="2025 hearing coverage is 103% in the KPI-deck series shown here and 106% in the source file used for the 2025 KPI. The trend series gives coverage only, not counts."
         >
           <TrendChart
             data={screeningCoverageTrend}
             xKey="year"
             unit="%"
+            height={300}
             series={[
-              { key: 'tsh', name: 'TSH coverage', color: C.navy },
-              { key: 'hearing', name: 'Hearing coverage', color: C.teal },
+              { key: 'tsh', name: 'TSH coverage', color: METRIC[0] },
+              { key: 'hearing', name: 'Hearing coverage', color: METRIC[1] },
             ]}
           />
         </ChartCard>
         <ChartCard
           title="Newborn Screening Referrals"
-          subtitle="Hearing referrals & TSH-positive results · 2019–2025 (count)"
+          subtitle="Count · 2019–2025"
           footnote={`Hearing referrals: ${countOr(row('Hearing referrals')?.y2023)} (2023), ${countOr(row('Hearing referrals')?.y2024)} (2024), ${countOr(row('Hearing referrals')?.y2025)} (2025). Confirmed congenital hypothyroidism remains rare.`}
         >
           <TrendChart
             data={referralsTrend}
             xKey="year"
             unit=""
+            height={300}
             series={[
-              { key: 'hearing', name: 'Hearing referred', color: C.teal },
-              { key: 'tsh', name: 'TSH positive', color: C.gold },
+              { key: 'hearing', name: 'Hearing referred', color: METRIC[0] },
+              { key: 'tsh', name: 'TSH positive', color: METRIC[1] },
             ]}
           />
         </ChartCard>
@@ -125,7 +127,7 @@ export default function NewbornScreening({ onNavigate }: ViewProps) {
           title="Screening Records (2023–2025)"
           subtitle="Governorate totals by year"
         />
-        <ChartCard title="Newborn Screening (2023, 2024 & 2025)" subtitle="Governorate totals">
+        <ChartCard title="Newborn Screening (2023, 2024 & 2025)" subtitle="Governorate totals · 2023, 2024 and 2025">
           <DataTable
             columns={[
               { label: 'Metric' },
@@ -143,7 +145,7 @@ export default function NewbornScreening({ onNavigate }: ViewProps) {
           />
           <div className="mt-3 space-y-3">
             <Note title="2025:">{fp.note2025}</Note>
-            <Note tone="warn" title="Not reported:">
+            <Note tone="warn" title="No data supplied:">
               Live births, initial cord TSH ≥ 40 mIU/L and confirmed congenital hypothyroidism are
               reported for 2025 only. The 2023 and 2024 screened counts come from the 5-year-plan
               indicators; coverage, referral and TSH-positive figures come from the 2019–2025
@@ -158,8 +160,7 @@ export default function NewbornScreening({ onNavigate }: ViewProps) {
         </ChartCard>
         <div className="mt-4 flex flex-wrap gap-3">
           <button type="button" onClick={() => onNavigate('ecr')} className={linkButton}>
-            3 &amp; 4-year developmental visits are now in the Extra Child Health Register (under
-            ASD Early Screening)
+            3 &amp; 4-year developmental visits are now in the Extra Child Health Register
             <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </button>
           <button
@@ -179,7 +180,7 @@ export default function NewbornScreening({ onNavigate }: ViewProps) {
           title="Children's Health — Service Readiness"
           subtitle="Five-year-plan newborn, Down-syndrome & autism indicators · 2023, 2024 & 2025"
         />
-        <ChartCard title="Child-Health 5-Year-Plan Indicators (2023–2025)" subtitle="Count · 2023, 2024 & 2025">
+        <ChartCard title="Child-Health 5-Year-Plan Indicators (2023–2025)" subtitle="Count · 2023, 2024 and 2025">
           <DataTable
             columns={[
               { label: 'Indicator' },
@@ -191,15 +192,20 @@ export default function NewbornScreening({ onNavigate }: ViewProps) {
               r.indicator,
               cell(r.y2023),
               cell(r.y2024),
-              r.y2025 === null ? muted(NR) : int(r.y2025),
+              r.y2025 === null
+                ? muted(NR)
+                : r.y2025Source
+                  ? `${int(r.y2025)} (${r.y2025Source})`
+                  : int(r.y2025),
             ])}
             dense
           />
           <div className="mt-3">
             <Note title="2025:">
-              The 5-year-plan indicator sheet covers 2023 and 2024. For 2025 only the two
-              screening counts have a matching source row (2025 newborn-screening figures); the
-              Down-syndrome, autism and safe-transport indicators are not reported for 2025.
+              The 5-year-plan indicator sheet covers 2023 and 2024. For 2025, the two screening
+              counts come from the 2025 newborn-screening figures; the Down syndrome centres and the
+              Safe Transport workshop were confirmed by the department. Health centres with staff
+              trained for autism screening: no data supplied for 2025.
             </Note>
           </div>
         </ChartCard>

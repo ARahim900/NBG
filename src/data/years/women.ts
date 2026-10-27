@@ -5,7 +5,7 @@ import mpdsr from '../mpdsr2025.json'
  * Three-year (2023 / 2024 / 2025) views of the Women's & Reproductive Health
  * data. Every figure here is read from nbg.json or mpdsr2025.json through the
  * typed accessors; nothing is estimated. A year the source does not provide is
- * `null` ("Not reported"), never 0.
+ * `null` ("No data supplied"), never 0.
  */
 
 export const YEARS = ['2023', '2024', '2025'] as const
@@ -16,7 +16,7 @@ export const YEAR_OPTIONS: { value: Year; label: string }[] = YEARS.map((y) => (
   label: y,
 }))
 
-/** One row of a 2023/2024/2025 comparison; null = not reported that year. */
+/** One row of a 2023/2024/2025 comparison; null = no data supplied that year. */
 export interface ThreeYearRow {
   label: string
   y2023: number | null
@@ -42,7 +42,7 @@ export const priorYearsHint = (trend: YearPoint[], fmt: (v: number) => string): 
   (['2023', '2024'] as const)
     .map((y) => {
       const v = trendValue(trend, y)
-      return `${y} ${v == null ? 'not reported' : fmt(v)}`
+      return `${y} ${v == null ? 'no data supplied' : fmt(v)}`
     })
     .join(' · ')
 
@@ -93,7 +93,7 @@ const sumOrNull = <T>(rows: T[], key: (r: T) => number | null): number | null =>
 
 /**
  * Maternal care by wilayat for one year. Only 2025 is broken down by wilayat
- * in the source; 2023 and 2024 keep the wilayat rows as not reported and take
+ * in the source; 2023 and 2024 keep the wilayat rows as no data supplied and take
  * the governorate total from the indicator table where the indicator matches
  * exactly (registrations, 1st-trimester bookings, anaemia cases).
  */
@@ -132,7 +132,7 @@ export const mcByWilayat = (year: Year): { rows: McWilayatRow[]; total: McWilaya
 // =========================================================================
 // Maternal Deaths
 // =========================================================================
-/** Deaths by year with 2025 kept on the axis as not reported. */
+/** Deaths by year with 2025 kept on the axis as no data supplied. */
 export const mdByYear: { year: string; deaths: number | null }[] = [
   ...md.byYear,
   ...(md.byYear.some((r) => r.year === '2025') ? [] : [{ year: '2025', deaths: null }]),
@@ -174,7 +174,7 @@ export interface FpWilayatRow {
  * Contraceptive uptake by wilayat for one year. Only 2025 is broken down by
  * wilayat. For 2023 and 2024 the governorate birth-spacing total comes from the
  * birth-spacing trend (its 2025 value equals the 2025 wilayat sum, 2,953);
- * IUCD and Implanon counts are not reported for those years.
+ * no data is supplied for IUCD and Implanon counts in those years.
  */
 export const fpByWilayat = (year: Year): { rows: FpWilayatRow[]; total: FpWilayatRow } => {
   if (year === '2025') {

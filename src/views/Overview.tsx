@@ -30,7 +30,7 @@ import {
   YEARS,
   type HeadlineRow,
 } from '../data/years/governorate'
-import { C, YEAR_COLORS } from '../lib/theme'
+import { METRIC, YEAR_COLORS } from '../lib/theme'
 import { deltaPct, int, pct } from '../lib/format'
 
 interface ViewProps {
@@ -46,7 +46,7 @@ const yearList = (a: YearPoint[], years: readonly string[], f: (v: number) => st
   years
     .map((y) => {
       const v = a.find((p) => p.year === y)?.value
-      return `${y} ${v === undefined ? 'not reported' : f(v)}`
+      return `${y} ${v === undefined ? 'no data supplied' : f(v)}`
     })
     .join(' · ')
 /** The two years before 2025, shown under each 2025 KPI. */
@@ -57,7 +57,7 @@ const threeYears = (a: YearPoint[], f: (v: number) => string): string => yearLis
 
 /** Indicator dashboards (women's and children's health sections), sub-pages included. */
 const DASHBOARD_COUNT = NAV.filter((d) => d.group === 'women' || d.group === 'children').length
-/** Health-centre catchments plus wilayat-wide hospitals (Al Suwaiq Hospital). */
+/** Health centres plus the three hospitals (Sohar and Saham referral, Al Suwaiq). */
 const INSTITUTION_COUNT = INSTITUTIONS.length + HOSPITALS.length
 
 const fmtRow = (r: HeadlineRow, v: number): string => (r.unit === '%' ? pct(v) : int(v))
@@ -75,14 +75,14 @@ const change = (r: HeadlineRow): string => {
   return d === null ? '—' : `${d > 0 ? '+' : ''}${d.toFixed(1)}%`
 }
 
-const NOT_REPORTED = <span className="text-ink/50">Not reported</span>
+const NOT_REPORTED = <span className="text-ink/50">No data supplied</span>
 
 export default function Overview({ onNavigate }: ViewProps) {
   return (
     <div className="space-y-8">
       {/* Hero */}
       <section
-        className="relative overflow-hidden rounded-[4px] border-l-4 border-azure bg-navy p-6 text-white dark:bg-[#0b2235] sm:p-8"
+        className="relative overflow-hidden rounded-[4px] border-l-4 border-azure bg-navy p-6 text-white dark:bg-navy-900 sm:p-8"
         data-reveal
       >
         <div className="relative flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
@@ -187,7 +187,7 @@ export default function Overview({ onNavigate }: ViewProps) {
             value={int(mpdsr.summary.records)}
             icon={HeartPulse}
             accent="navy"
-            hint="Provisional MPDSR workbook · 2023 and 2024 not reported as calendar-year totals"
+            hint="Provisional MPDSR workbook · 2023 and 2024: no data supplied as calendar-year totals"
           />
           <KpiCard
             label="Premarital Screening"
@@ -200,6 +200,71 @@ export default function Overview({ onNavigate }: ViewProps) {
         </div>
       </section>
 
+      {/* Headline trends */}
+      <section>
+        <SectionTitle
+          icon={TrendingUp}
+          title="Multi-Year Trends"
+          subtitle="2019–2025 governorate series · 2023, 2024 and 2025 are the last three points"
+        />
+        {/* Two rows of pairs: the two rates side by side, then the two counts. */}
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          <ChartCard
+            title="ASD 18-Month Screening Coverage"
+            subtitle="Percentage of children screened · 2019–2025"
+            footnote={`${threeYears(asd.cov18Trend, (v) => pct(v))}. 24-month screening began in 2024.`}
+          >
+            <TrendChart
+              data={asd.cov18Trend}
+              xKey="year"
+              height={300}
+              unit="%"
+              series={[{ key: 'value', name: 'Coverage', color: METRIC[0] }]}
+            />
+          </ChartCard>
+          <ChartCard
+            title="Anaemia in Pregnancy"
+            subtitle="Percentage of antenatal women · 2019–2025"
+            footnote={`${threeYears(mc.anaemiaTrend, (v) => pct(v))}. Lower is better.`}
+          >
+            <TrendChart
+              data={mc.anaemiaTrend}
+              xKey="year"
+              height={300}
+              yDomain={[0, 40]}
+              unit="%"
+              series={[{ key: 'value', name: 'Anaemia', color: METRIC[0] }]}
+            />
+          </ChartCard>
+          <ChartCard
+            title="Birth-Spacing Registered Cases"
+            subtitle="Count of new birth-spacing users · 2019–2025"
+            footnote={`A proxy for family-planning uptake · ${threeYears(fp.birthSpacingTrend, int)}.`}
+          >
+            <TrendChart
+              data={fp.birthSpacingTrend}
+              xKey="year"
+              height={300}
+              unit=""
+              series={[{ key: 'value', name: 'Cases', color: METRIC[0] }]}
+            />
+          </ChartCard>
+          <ChartCard
+            title="Child-Maltreatment Notifications"
+            subtitle="Count of reported cases · 2019–2025"
+            footnote={`${threeYears(mt.totalTrend, int)}. Rising counts reflect both incidence and improved detection and reporting.`}
+          >
+            <TrendChart
+              data={mt.totalTrend}
+              xKey="year"
+              height={300}
+              unit=""
+              series={[{ key: 'value', name: 'Notifications', color: METRIC[0] }]}
+            />
+          </ChartCard>
+        </div>
+      </section>
+
       {/* Three-year comparison */}
       <section>
         <SectionTitle
@@ -207,28 +272,28 @@ export default function Overview({ onNavigate }: ViewProps) {
           title="2023, 2024 and 2025 Compared"
           subtitle="The same headline indicators, one column per year"
         />
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-5">
+        {/* Each alone in its row: the bars carry long indicator labels and the
+            table has five columns, so neither reads well at half width. */}
+        <div className="space-y-4">
           <ChartCard
-            className="xl:col-span-2"
             title="Rate Indicators by Year"
-            subtitle="% · 2023, 2024 and 2025 side by side"
-            footnote="ASD 24-month coverage has no 2023 bar: 24-month screening began in 2024 (not reported for 2023)."
+            subtitle="Percentage · 2023, 2024 and 2025"
+            footnote="ASD 24-month coverage has no 2023 bar: 24-month screening began in 2024 (no data supplied for 2023)."
           >
             <ComparisonBars
               data={PERCENT_BY_YEAR}
               xKey="indicator"
               layout="vertical"
               categoryWidth={150}
-              height={460}
+              height={Math.max(260, 44 * PERCENT_BY_YEAR.length)}
               unit="%"
               valueFormatter={(v) => v.toFixed(1)}
               series={YEARS.map((y) => ({ key: `y${y}`, name: y, color: YEAR_COLORS[y] }))}
             />
           </ChartCard>
           <ChartCard
-            className="xl:col-span-3"
             title="Headline Indicators, 2023–2025"
-            subtitle="Governorate totals · select an indicator to open its dashboard"
+            subtitle="Governorate totals · 2023, 2024 and 2025 · select an indicator to open its dashboard"
           >
             <DataTable
               dense
@@ -255,7 +320,7 @@ export default function Overview({ onNavigate }: ViewProps) {
             <div className="mt-3 space-y-2">
               {HEADLINE.filter((r) => r.gap).map((r) => (
                 <Note key={r.label} title={`${r.label}:`}>
-                  {r.gap}. Years marked “Not reported” are not in the source files and are
+                  {r.gap}. Years marked “No data supplied” are not in the source files and are
                   left blank rather than estimated.
                 </Note>
               ))}
@@ -268,70 +333,6 @@ export default function Overview({ onNavigate }: ViewProps) {
         </div>
       </section>
 
-      {/* Headline trends */}
-      <section>
-        <SectionTitle
-          icon={TrendingUp}
-          title="Multi-Year Trends"
-          subtitle="2019–2025 governorate series · 2023, 2024 and 2025 are the last three points"
-        />
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-          <ChartCard
-            title="ASD 18-Month Screening Coverage"
-            subtitle="% of children screened (2019–2025)"
-            footnote={`${threeYears(asd.cov18Trend, (v) => pct(v))}. 24-month screening began in 2024.`}
-          >
-            <TrendChart
-              data={asd.cov18Trend}
-              xKey="year"
-              variant="area"
-              unit="%"
-              series={[{ key: 'value', name: 'Coverage', color: C.azure }]}
-            />
-          </ChartCard>
-          <ChartCard
-            title="Anaemia in Pregnancy"
-            subtitle="% of antenatal women (2019–2025)"
-            footnote={`${threeYears(mc.anaemiaTrend, (v) => pct(v))}. Lower is better.`}
-          >
-            <TrendChart
-              data={mc.anaemiaTrend}
-              xKey="year"
-              variant="area"
-              yDomain={[0, 40]}
-              unit="%"
-              series={[{ key: 'value', name: 'Anaemia', color: C.alert }]}
-            />
-          </ChartCard>
-          <ChartCard
-            title="Birth-Spacing Registered Cases"
-            subtitle="New birth-spacing users per year (2019–2025)"
-            footnote={`A proxy for family-planning uptake · ${threeYears(fp.birthSpacingTrend, int)}.`}
-          >
-            <TrendChart
-              data={fp.birthSpacingTrend}
-              xKey="year"
-              variant="area"
-              unit=""
-              series={[{ key: 'value', name: 'Cases', color: C.teal }]}
-            />
-          </ChartCard>
-          <ChartCard
-            title="Child-Maltreatment Notifications"
-            subtitle="Reported cases per year (2019–2025)"
-            footnote={`${threeYears(mt.totalTrend, int)}. Rising counts reflect both incidence and improved detection and reporting.`}
-          >
-            <ComparisonBars
-              data={mt.totalTrend}
-              xKey="year"
-              unit=""
-              series={[{ key: 'value', name: 'Notifications', color: C.navy }]}
-              showLegend={false}
-            />
-          </ChartCard>
-        </div>
-      </section>
-
       {/* Explore dashboards */}
       <section>
         <SectionTitle
@@ -339,8 +340,8 @@ export default function Overview({ onNavigate }: ViewProps) {
           title="Explore the Dashboards"
           subtitle="Open any indicator for full detail"
         />
-        {/* Sub-pages (for example the Extra Child Health Register under ASD
-            Early Screening) are listed inside their parent's card. */}
+        {/* Sub-pages (for example ASD Early Screening under the Extra Child
+            Health Register) are listed inside their parent's card. */}
         <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
           {NAV.filter((d) => d.id !== 'overview' && !d.parentId).map((d) => {
             const children = NAV.filter((c) => c.parentId === d.id)

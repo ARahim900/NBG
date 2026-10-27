@@ -36,7 +36,7 @@ export default function ChildNutrition() {
       <SectionTitle
         icon={Apple}
         title="Child Nutrition"
-        subtitle="Malnutrition categories across North Batinah · 2023, 2024 & 2025 (2023 and 2024 not reported in the source)"
+        subtitle="Malnutrition categories across North Batinah · 2023, 2024 and 2025 (no data supplied for 2023 and 2024)"
       />
 
       <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
@@ -66,10 +66,10 @@ export default function ChildNutrition() {
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <ChartCard
           title="Malnutrition by Category"
-          subtitle="Total cases · 2023, 2024 & 2025"
+          subtitle="Count of cases · 2023, 2024 and 2025"
           footnote={
             wasting !== null && underweight !== null
-              ? `In 2025 moderate wasting and underweight together account for ${pct(ratio(wasting + underweight, total2025) ?? 0)} of cases. ${gap}: not reported in the source.`
+              ? `In 2025 moderate wasting and underweight together account for ${pct(ratio(wasting + underweight, total2025) ?? 0)} of cases. ${gap}: no data supplied.`
               : undefined
           }
         >
@@ -77,24 +77,24 @@ export default function ChildNutrition() {
             data={malByCategory}
             xKey="label"
             layout="vertical"
-            height={340}
+            height={Math.max(260, 44 * malByCategory.length)}
             categoryWidth={124}
             series={yearSeries(malByCategory)}
           />
         </ChartCard>
         <ChartCard
           title="Malnutrition Cases by Wilayat"
-          subtitle="All categories combined · 2023, 2024 & 2025"
-          footnote={`${gap}: not reported in the source.`}
+          subtitle="Count of cases, all categories combined · 2023, 2024 and 2025"
+          footnote={`${gap}: no data supplied.`}
         >
-          <ComparisonBars data={malByWilayat} xKey="wilayat" series={yearSeries(malByWilayat)} />
+          <ComparisonBars data={malByWilayat} xKey="wilayat" height={300} series={yearSeries(malByWilayat)} />
         </ChartCard>
       </div>
 
       <div>
-        <SectionTitle icon={Table2} title="Detailed Tables" subtitle="Malnutrition by category and by wilayat · 2023, 2024 & 2025" />
+        <SectionTitle icon={Table2} title="Detailed Tables" subtitle="Malnutrition by category and by wilayat · 2023, 2024 and 2025" />
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-          <ChartCard title="Malnutrition by Category (2023–2025)" subtitle="Total cases per year; new & improved for 2025">
+          <ChartCard title="Malnutrition by Category (2023–2025)" subtitle="Total cases per year; new and improved for 2025">
             <DataTable
               columns={[
                 { label: 'Category' },
@@ -155,9 +155,9 @@ export default function ChildNutrition() {
             2025 figures are summed from the per-health-centre child malnutrition returns for the
             six wilayat ({int(nutrition.malnutritionTotal)} cases in all).
           </Note>
-          <Note title="Not reported:" tone="warn">
+          <Note title="No data supplied:" tone="warn">
             The source data hold no child malnutrition figures for {gap}. Those years are shown as
-            “Not reported” rather than zero; they will fill in once the returns are supplied.
+            “No data supplied” rather than zero; they will fill in once the returns are supplied.
           </Note>
         </div>
       </div>

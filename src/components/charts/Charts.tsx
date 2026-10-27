@@ -17,7 +17,7 @@ import {
 } from 'recharts'
 import type { PieLabelRenderProps } from 'recharts'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { C, SERIES } from '../../lib/theme'
+import { C, SERIES, YEAR_COLORS, YEAR_COLORS_DARK } from '../../lib/theme'
 import { useThemeMode } from '../../lib/theme-mode'
 import { useNarrow } from '../../lib/useMediaQuery'
 
@@ -214,7 +214,13 @@ function useChartTheme(): ChartTheme {
     axisLine: isDark ? '#1d3a5c' : '#dbe5ee',
     dataLabel: isDark ? '#c7d7ea' : '#41617d',
     donutName: isDark ? '#ebf3fd' : '#144066',
-    paint: (color) => (isDark && color === C.navy ? NAVY_ON_DARK : color),
+    paint: (color) => {
+      if (!isDark) return color
+      // Year colours swap to their dark-surface ramp; navy lifts to a light blue.
+      const year = Object.keys(YEAR_COLORS).find((y) => YEAR_COLORS[y] === color)
+      if (year) return YEAR_COLORS_DARK[year]
+      return color === C.navy ? NAVY_ON_DARK : color
+    },
   }
 }
 
@@ -241,6 +247,9 @@ function formatDataLabel(
   if (Math.abs(r) >= 10000) return `${(r / 1000).toFixed(r % 1000 === 0 ? 0 : 1)}k`
   return r.toLocaleString('en-US')
 }
+
+/** Maximum bar thickness (px) for every bar chart, both orientations. */
+const BAR_THICKNESS = 20
 
 // ---- Trend (line or area) ------------------------------------------------
 interface TrendProps {
@@ -424,6 +433,11 @@ export function ComparisonBars({
   categoryWidth = 92,
 }: BarsProps) {
   const vertical = layout === 'vertical'
+  // Horizontal bars: grow the chart with the number of bars so every bar keeps
+  // the standard thickness instead of thinning out in a fixed height.
+  const barsPerCategory = stacked ? 1 : series.length
+  const bandPx = barsPerCategory * BAR_THICKNESS + (barsPerCategory - 1) * 2
+  const chartHeight = vertical ? Math.max(height, Math.round(data.length * (bandPx / 0.8)) + 56) : height
   const { axisTick, axisLine, cursorFill, dataLabel, paint } = useChartTheme()
   const narrow = useNarrow()
   // Grouped bars carry their figure at the bar tip and drop the numeric axis;
@@ -442,13 +456,13 @@ export function ComparisonBars({
   return (
     <ChartFrame summary={summary}>
       {(tooltipActive) => (
-        <ResponsiveContainer width="100%" height={height}>
+        <ResponsiveContainer width="100%" height={chartHeight}>
           <BarChart
             data={data}
             layout={layout}
             margin={{ top: 16, right: vertical ? 36 : 12, left: vertical ? 8 : -8, bottom: 0 }}
-            barGap={stacked ? 0 : 3}
-            barCategoryGap={vertical ? '22%' : '28%'}
+            barGap={stacked ? 0 : 2}
+            barCategoryGap={vertical ? '20%' : '18%'}
           >
             {vertical ? (
               <>
@@ -503,8 +517,10 @@ export function ComparisonBars({
                 name={sdef.name}
                 fill={paint(sdef.color)}
                 stackId={stacked ? 'a' : undefined}
-                radius={0}
-                maxBarSize={vertical ? 22 : 46}
+                // One bar thickness everywhere, so few-category charts do not get
+                // fat bars; crowded charts belong full width (layout rule).
+                radius={stacked ? 0 : vertical ? [0, 3, 3, 0] : [3, 3, 0, 0]}
+                maxBarSize={BAR_THICKNESS}
               >
                 {showValues && (
                   <LabelList

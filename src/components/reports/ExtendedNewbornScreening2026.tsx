@@ -1,9 +1,11 @@
 import ChartCard from '../ui/ChartCard'
+import SectionTitle from '../ui/SectionTitle'
+import Note from '../ui/Note'
 import DataTable from '../ui/DataTable'
 import { ComparisonBars } from '../charts/Charts'
 import { extendedNewborn, institutions, newbornTotals, rejectionRate } from '../../data/extendedNewborn2026'
 import { int, pct } from '../../lib/format'
-import { C } from '../../lib/theme'
+import { METRIC } from '../../lib/theme'
 
 const chartStyle = '[&_h3]:text-heading dark:[&_h3]:text-glow'
 const rateLabel = (value: number | null) => value === null ? 'Not available' : pct(value, 2)
@@ -48,63 +50,61 @@ const programmeSections = [
 
 export default function ExtendedNewbornScreening2026() {
   return (
-    <section id="extended-newborn-2026" aria-labelledby="extended-newborn-title" className="space-y-6">
-      <header>
-        <h2 id="extended-newborn-title" className="text-xl font-medium leading-tight text-heading sm:text-[1.4rem]">
-          Extended Newborn Screening 2026
-        </h2>
-        <p className="mt-2 text-caption text-ink/70">
-          North Al Batinah Governorate · reporting period: 8 February–31 August 2026
-        </p>
-      </header>
+    <section id="extended-newborn-2026" aria-label="Extended Newborn Screening 2026" className="space-y-8">
+      <SectionTitle
+        title="Extended Newborn Screening 2026"
+        subtitle="North Al Batinah Governorate · reporting period: 8 February–31 August 2026"
+      />
 
-      <section aria-label="Programme launch and activities">
-        <dl className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
-          {[
-            { label: 'Programme started', value: '8 February 2026' },
-            { label: 'Workshops conducted', value: '2' },
-            { label: 'Meetings conducted', value: '5' },
-          ].map(({ label, value }) => (
-            <div key={label} className="card p-5">
-              <dt className="text-caption font-medium text-ink/75">{label}</dt>
-              <dd className="mt-3 text-2xl font-medium tabular-nums text-heading dark:text-glow">{value}</dd>
+      <div className="space-y-3.5">
+        <section aria-label="Programme launch and activities">
+          <dl className="grid grid-cols-2 gap-3.5 lg:grid-cols-3">
+            {[
+              { label: 'Programme started', value: '8 February 2026' },
+              { label: 'Workshops conducted', value: '2' },
+              { label: 'Meetings conducted', value: '5' },
+            ].map(({ label, value }) => (
+              <div key={label} className="card p-4 sm:p-5">
+                <dt className="text-caption font-medium text-ink/75">{label}</dt>
+                <dd className="mt-3 text-2xl font-medium tabular-nums text-heading dark:text-glow">{value}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="mt-2 text-caption text-ink/60">Launch date and activity counts supplied by the programme team.</p>
+        </section>
+
+        <dl className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
+          {metrics.map(({ label, value, hint }) => (
+            <div key={label} className="card p-4 sm:p-5">
+              <dt className="text-caption font-medium text-ink/75">
+                <span className="mb-3 block h-1 w-7 bg-teal" aria-hidden="true" />{label}
+              </dt>
+              <dd className="mt-2 text-3xl font-medium tabular-nums text-heading dark:text-glow">{value}</dd>
+              <dd className="mt-2 text-caption text-ink/65">{hint}</dd>
             </div>
           ))}
         </dl>
-        <p className="mt-2 text-caption text-ink/60">Launch date and activity counts supplied by the programme team.</p>
-      </section>
+      </div>
 
-      <dl className="grid grid-cols-2 gap-3.5 xl:grid-cols-4">
-        {metrics.map(({ label, value, hint }) => (
-          <div key={label} className="card p-4 sm:p-5">
-            <dt className="text-caption font-medium text-ink/75">
-              <span className="mb-3 block h-1 w-7 bg-teal" aria-hidden="true" />{label}
-            </dt>
-            <dd className="mt-2 text-3xl font-medium tabular-nums text-heading dark:text-glow">{value}</dd>
-            <dd className="mt-2 text-caption text-ink/65">{hint}</dd>
-          </div>
-        ))}
-      </dl>
-
-      <p className="rounded-xl border border-teal/60 bg-teal/10 p-4 text-body text-ink/80">
+      <Note>
         These are reported institution totals, not a verified governorate coverage measure.
         Suwaiq reports 541 screened newborns against 537 deliveries; its Omani-only ratio is 101.50%.
         The discrepancy requires reconciliation. Laboratory samples are counted separately and must not be added to newborn counts.
-      </p>
+      </Note>
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <ChartCard className={chartStyle} title="Deliveries & screened newborns" subtitle="Reported counts · all nationalities · 8 February–31 August 2026" footnote="Five reporting institutions. PC = Polyclinic. Bar lengths show counts, not verified coverage.">
-          <ComparisonBars data={chartData} xKey="institution" layout="vertical" categoryWidth={72} height={350}
-            series={[{ key: 'deliveries', name: 'Deliveries', color: C.navy }, { key: 'screened', name: 'Screened', color: C.teal }]} />
+        <ChartCard className={chartStyle} title="Deliveries & Screened Newborns" subtitle="Count · all nationalities · 8 February–31 August 2026" footnote="Five reporting institutions. PC = Polyclinic. Bar lengths show counts, not verified coverage.">
+          <ComparisonBars data={chartData} xKey="institution" height={300}
+            series={[{ key: 'deliveries', name: 'Deliveries', color: METRIC[0] }, { key: 'screened', name: 'Screened', color: METRIC[1] }]} />
         </ChartCard>
-        <ChartCard className={chartStyle} title="Laboratory sample rejection rate" subtitle="Rejected ÷ received × 100 · same reporting period" footnote="Hibi: 1 rejected sample out of 9 received. Small sample counts can produce a high percentage; this is not a trend chart.">
-          <ComparisonBars data={chartData} xKey="institution" layout="vertical" categoryWidth={72} height={350}
+        <ChartCard className={chartStyle} title="Laboratory Sample Rejection Rate" subtitle="% of samples received · 8 February–31 August 2026" footnote="Hibi: 1 rejected sample out of 9 received. Small sample counts can produce a high percentage; this is not a trend chart.">
+          <ComparisonBars data={chartData} xKey="institution" height={300}
             valueFormatter={(value) => pct(value, 2)} showLegend={false}
-            series={[{ key: 'rejectionRate', name: 'Rejection rate', color: C.navy }]} />
+            series={[{ key: 'rejectionRate', name: 'Rejection rate', color: METRIC[0] }]} />
         </ChartCard>
       </div>
 
-      <ChartCard className={chartStyle} title="Institution screening summary" subtitle="Reported deliveries and screening counts by nationality"
+      <ChartCard className={chartStyle} title="Institution Screening Summary" subtitle="Count by nationality · 8 February–31 August 2026"
         footnote="The workbook’s ‘Coverage % of Omani’ is shown as a reported screening-to-delivery ratio. It is not capped at 100% or presented as verified coverage. No newborn-level linkage is supplied.">
         <DataTable dense columns={[
           { label: 'Institution' }, { label: 'Omani deliveries', align: 'right' },
@@ -115,7 +115,7 @@ export default function ExtendedNewbornScreening2026() {
           total={['REPORTED TOTAL', int(newbornTotals.omaniDeliveries), int(newbornTotals.nonOmaniDeliveries), int(newbornTotals.deliveries), int(newbornTotals.omaniScreened), int(newbornTotals.nonOmaniScreened), int(newbornTotals.screened), 'Not verified']} />
       </ChartCard>
 
-      <ChartCard className={chartStyle} title="Laboratory sample summary" subtitle="Samples received and rejected · not unique newborns"
+      <ChartCard className={chartStyle} title="Laboratory Sample Summary" subtitle="Count of samples received and rejected · 8 February–31 August 2026"
         footnote="The total rejection rate uses summed rejected and received samples, not an average of institution percentages. Sample receipts and newborn screening totals are not directly interchangeable.">
         <DataTable dense columns={[{ label: 'Institution' }, { label: 'Received', align: 'right' }, { label: 'Rejected', align: 'right' }, { label: 'Rejection rate', align: 'right' }]}
           rows={institutions.map((row) => [displayName(row.name), int(row.received), int(row.rejected), rateLabel(rejectionRate(row.received, row.rejected))])}

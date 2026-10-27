@@ -6,7 +6,7 @@ import raw from './nutrition.json'
  *   • child malnutrition.xlsx  • feeding pattern.xlsx  • Anemia screening.xlsx
  * Governorate anaemia totals were validated against each sheet's own TOTAL row.
  * The workbooks cover 2025 only; years/childrenC.ts lays these figures out
- * against 2023 and 2024 (shown as "Not reported") for the department pages.
+ * against 2023 and 2024 (shown as "No data supplied") for the department pages.
  */
 
 type Cell = string | number

@@ -29,7 +29,7 @@ import {
   type Year,
 } from '../data/years/childrenA'
 import type { ViewProps } from '../lib/dashboards'
-import { C, YEAR_COLORS } from '../lib/theme'
+import { METRIC, STATUS, YEAR_COLORS } from '../lib/theme'
 import { deltaPct, int, pct } from '../lib/format'
 
 /** Look up a headline indicator by its label in the year-by-year table. */
@@ -62,7 +62,7 @@ const notReported = <span className="text-ink/55">{NOT_REPORTED}</span>
 const yearSeries = (missing: Year[]) =>
   YEARS.map((y) => ({
     key: `y${y}`,
-    name: missing.includes(y) ? `${y} (not reported)` : y,
+    name: missing.includes(y) ? `${y} (${NOT_REPORTED.toLowerCase()})` : y,
     color: YEAR_COLORS[y],
   }))
 const MONTHLY_SERIES = yearSeries(['2023'])
@@ -94,7 +94,7 @@ export default function Asd({ onNavigate }: ViewProps) {
   const [monthAge, setMonthAge] = useState<AsdAge>('m18')
   const [riskAge, setRiskAge] = useState<AsdAge>('m18')
   const [tableYear, setTableYear] = useState<Year>('2025')
-  const ageLabel = monthAge === 'm18' ? '18-month' : '24-month'
+  const ageTitle = monthAge === 'm18' ? '18-Month' : '24-Month'
   const records = tableYear === '2023' ? [] : asdMonthlyRecords[tableYear]
 
   return (
@@ -146,18 +146,152 @@ export default function Asd({ onNavigate }: ViewProps) {
           value={dash(referred.y2025)}
           icon={ShieldCheck}
           accent="gold"
-          hint="18m + 24m, medium/high risk · 2023–2024 not reported"
+          hint="18m + 24m, medium/high risk · 2023–2024 no data supplied"
         />
+      </div>
+
+      <div>
+        <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
+          <div className="min-w-[16rem] flex-1">
+            <SectionTitle
+              icon={CalendarRange}
+              title="Monthly Screening by Year, 2023–2025"
+              subtitle="Choose the screening age; 2023 has no monthly figures"
+            />
+          </div>
+          <div className="mb-4">
+            <Segmented label="Screening age" options={ASD_AGE_OPTIONS} value={monthAge} onChange={setMonthAge} />
+          </div>
+        </div>
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          <ChartCard
+            title={`Monthly ${ageTitle} Coverage by Year`}
+            subtitle="% screened · 2023, 2024 and 2025"
+            footnote={`Lowest month — ${lowestMonth(monthAge)}. Figures confirmed in the source data.`}
+          >
+            <TrendChart
+              data={asdMonthlyCoverage(monthAge)}
+              xKey="month"
+              yDomain={[85, 100]}
+              unit="%"
+              height={300}
+              series={MONTHLY_SERIES}
+            />
+          </ChartCard>
+          <ChartCard title={`Monthly ${ageTitle} Children Screened by Year`} subtitle="Count · 2023, 2024 and 2025">
+            <TrendChart data={asdMonthlyScreened(monthAge)} xKey="month" unit="" height={300} series={MONTHLY_SERIES} />
+          </ChartCard>
+        </div>
+        <div className="mt-3">
+          <Note title="No data supplied:">
+            The source has no monthly screening figures for 2023, so 2023 appears in the legend without a line.
+          </Note>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+        <ChartCard
+          title="Coverage Trend — 18 & 24 Months"
+          subtitle={`% screened · ${first?.year ?? ''}–${latest?.year ?? ''}, including 2023, 2024 and 2025`}
+          footnote={`18 months: ${pct(first?.cov18 ?? 0)} (${first?.year ?? ''}) to ${pct(latest?.cov18 ?? 0)} (${latest?.year ?? ''}); ${pct(covAt('2023')?.cov18 ?? 0)} in 2023 and ${pct(covAt('2024')?.cov18 ?? 0)} in 2024. 24-month coverage starts in 2024; no data supplied for 2023.`}
+        >
+          <TrendChart
+            data={asdCoverageTrend}
+            xKey="year"
+            yDomain={[80, 100]}
+            unit="%"
+            height={300}
+            series={[
+              { key: 'cov18', name: '18-Month', color: METRIC[0] },
+              { key: 'cov24', name: '24-Month', color: METRIC[1] },
+            ]}
+          />
+        </ChartCard>
+        <ChartCard
+          title={`${riskAge === 'm18' ? '18' : '24'}-Month Risk Detection by Year`}
+          subtitle={`Children at medium (3–7) and high (8–20) risk · ${riskAge === 'm18' ? '2020–2025' : '2023, 2024 and 2025'}`}
+          action={<Segmented label="Risk age" options={ASD_AGE_OPTIONS} value={riskAge} onChange={setRiskAge} />}
+          footnote={
+            riskAge === 'm18'
+              ? 'The 18-month series covers 2020–2025, including 2023, 2024 and 2025.'
+              : '24-month risk figures start in 2024; no data supplied for 2023.'
+          }
+        >
+          <TrendChart
+            data={asdRiskByYear[riskAge]}
+            xKey="year"
+            unit=""
+            height={300}
+            series={[
+              { key: 'medium', name: 'Medium risk', color: STATUS.medium },
+              { key: 'high', name: 'High risk', color: STATUS.high },
+            ]}
+          />
+        </ChartCard>
+      </div>
+
+      <div>
+        <SectionTitle
+          icon={MapPin}
+          title="By Wilayat & Health Centre (2024 only)"
+          subtitle="Screening reach across North Batinah"
+        />
+        <div className="grid grid-cols-1 gap-4">
+          <ChartCard title="Children Screened by Wilayat (2024 Only)" subtitle="Count · 18 and 24 months · 2024">
+            <ComparisonBars
+              data={asdByWilayat2024}
+              xKey="wilayat"
+              layout="vertical"
+              height={Math.max(260, 44 * asdByWilayat2024.length)}
+              categoryWidth={104}
+              series={[
+                { key: 'screened18', name: '18-Month', color: METRIC[0] },
+                { key: 'screened24', name: '24-Month', color: METRIC[1] },
+              ]}
+            />
+          </ChartCard>
+          <ChartCard
+            title="Screening by Health Centre (2024 Only)"
+            subtitle="Count · children screened and medium / high-risk detections · 2024"
+          >
+            <DataTable
+              columns={[
+                { label: 'Health Centre' },
+                { label: 'Wilayat' },
+                { label: '18m', align: 'right' },
+                { label: '24m', align: 'right' },
+                { label: 'Med', align: 'right' },
+                { label: 'High', align: 'right' },
+              ]}
+              rows={asdByCenter2024.map((r) => [
+                r.center,
+                r.wilayat,
+                int(r.screened18),
+                int(r.screened24),
+                r.medium,
+                r.high,
+              ])}
+              dense
+            />
+          </ChartCard>
+        </div>
+        <div className="mt-3 space-y-3">
+          <Note title="No data supplied:">
+            The source gives wilayat and health-centre breakdowns for 2024 only. No 2023 or 2025 figures exist at
+            this level, so these charts are not year comparisons.
+          </Note>
+          <Note tone="warn" title="To verify with the source:">
+            Wilayat counts add to {int(sumBy(asdByWilayat2024, (r) => r.screened18))} (18 months) and{' '}
+            {int(sumBy(asdByWilayat2024, (r) => r.screened24))} (24 months), below the 2024 monthly totals of{' '}
+            {int(sumBy(asd.monthly2024, (r) => r.screened18))} and {int(sumBy(asd.monthly2024, (r) => r.screened24))}.
+            Confirm the period these breakdowns cover.
+          </Note>
+        </div>
       </div>
 
       <ChartCard
         title="Screening Indicators, 2023–2025"
-        subtitle="Governorate figures side by side, as reported"
-        action={
-          <span className="chip bg-azure/10 text-azure">
-            <CalendarRange className="h-3 w-3" /> 2023 · 2024 · 2025
-          </span>
-        }
+        subtitle="Governorate figures · 2023, 2024 and 2025"
       >
         <DataTable
           dense
@@ -189,139 +323,6 @@ export default function Asd({ onNavigate }: ViewProps) {
       </ChartCard>
 
       <div>
-        <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
-          <SectionTitle
-            icon={CalendarRange}
-            title="Monthly Screening by Year, 2023–2025"
-            subtitle="Choose the screening age; 2023 has no monthly figures"
-          />
-          <div className="mb-4">
-            <Segmented label="Screening age" options={ASD_AGE_OPTIONS} value={monthAge} onChange={setMonthAge} />
-          </div>
-        </div>
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-          <ChartCard
-            title={`Monthly ${ageLabel} Coverage by Year`}
-            subtitle="% screened each month — 2023, 2024 and 2025"
-            footnote={`Lowest month — ${lowestMonth(monthAge)}. Figures confirmed in the source data.`}
-          >
-            <TrendChart
-              data={asdMonthlyCoverage(monthAge)}
-              xKey="month"
-              yDomain={[85, 100]}
-              unit="%"
-              series={MONTHLY_SERIES}
-            />
-          </ChartCard>
-          <ChartCard title={`Monthly ${ageLabel} Children Screened by Year`} subtitle="Count completing M-CHAT/R — 2023, 2024 and 2025">
-            <ComparisonBars data={asdMonthlyScreened(monthAge)} xKey="month" series={MONTHLY_SERIES} />
-          </ChartCard>
-        </div>
-        <div className="mt-3">
-          <Note title="Not reported:">
-            The source has no monthly screening figures for 2023, so 2023 appears in the legend without a line or bars.
-          </Note>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        <ChartCard
-          title="Coverage Trend — 18 & 24 Months"
-          subtitle={`${first?.year ?? ''}–${latest?.year ?? ''}, including 2023, 2024 and 2025`}
-          footnote={`18 months: ${pct(first?.cov18 ?? 0)} (${first?.year ?? ''}) to ${pct(latest?.cov18 ?? 0)} (${latest?.year ?? ''}); ${pct(covAt('2023')?.cov18 ?? 0)} in 2023 and ${pct(covAt('2024')?.cov18 ?? 0)} in 2024. 24-month coverage is reported from 2024 only; 2023 is not reported.`}
-        >
-          <TrendChart
-            data={asdCoverageTrend}
-            xKey="year"
-            yDomain={[80, 100]}
-            unit="%"
-            series={[
-              { key: 'cov18', name: '18-Month', color: C.azure },
-              { key: 'cov24', name: '24-Month', color: C.teal },
-            ]}
-          />
-        </ChartCard>
-        <ChartCard
-          title={`${riskAge === 'm18' ? '18' : '24'}-Month Risk Detection by Year`}
-          subtitle="Medium (3–7) & high (8–20) risk cases"
-          action={<Segmented label="Risk age" options={ASD_AGE_OPTIONS} value={riskAge} onChange={setRiskAge} />}
-          footnote={
-            riskAge === 'm18'
-              ? 'The 18-month series covers 2020–2025, including 2023, 2024 and 2025.'
-              : '24-month risk figures start in 2024; 2023 is not reported.'
-          }
-        >
-          <ComparisonBars
-            data={asdRiskByYear[riskAge]}
-            xKey="year"
-            series={[
-              { key: 'medium', name: 'Medium risk', color: C.gold },
-              { key: 'high', name: 'High risk', color: C.alert },
-            ]}
-          />
-        </ChartCard>
-      </div>
-
-      <div>
-        <SectionTitle
-          icon={MapPin}
-          title="By Wilayat & Health Centre (2024 only)"
-          subtitle="Screening reach across North Batinah"
-        />
-        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-          <ChartCard title="Screened by Wilayat (2024 only)" subtitle="18m vs 24m counts">
-            <ComparisonBars
-              data={asdByWilayat2024}
-              xKey="wilayat"
-              layout="vertical"
-              height={300}
-              categoryWidth={104}
-              series={[
-                { key: 'screened18', name: '18-Month', color: C.azure },
-                { key: 'screened24', name: '24-Month', color: C.teal },
-              ]}
-            />
-          </ChartCard>
-          <ChartCard
-            title="Screening by Health Centre (2024 only)"
-            subtitle="With medium / high-risk detections"
-          >
-            <DataTable
-              columns={[
-                { label: 'Health Centre' },
-                { label: 'Wilayat' },
-                { label: '18m', align: 'right' },
-                { label: '24m', align: 'right' },
-                { label: 'Med', align: 'right' },
-                { label: 'High', align: 'right' },
-              ]}
-              rows={asdByCenter2024.map((r) => [
-                r.center,
-                r.wilayat,
-                int(r.screened18),
-                int(r.screened24),
-                r.medium,
-                r.high,
-              ])}
-              dense
-            />
-          </ChartCard>
-        </div>
-        <div className="mt-3 space-y-3">
-          <Note title="Not reported:">
-            The source gives wilayat and health-centre breakdowns for 2024 only. No 2023 or 2025 figures exist at
-            this level, so these charts are not year comparisons.
-          </Note>
-          <Note tone="warn" title="To verify with the source:">
-            Wilayat counts add to {int(sumBy(asdByWilayat2024, (r) => r.screened18))} (18 months) and{' '}
-            {int(sumBy(asdByWilayat2024, (r) => r.screened24))} (24 months), below the 2024 monthly totals of{' '}
-            {int(sumBy(asd.monthly2024, (r) => r.screened18))} and {int(sumBy(asd.monthly2024, (r) => r.screened24))}.
-            Confirm the period these breakdowns cover.
-          </Note>
-        </div>
-      </div>
-
-      <div>
         <SectionTitle
           icon={Table2}
           title="Detailed Tables"
@@ -330,11 +331,11 @@ export default function Asd({ onNavigate }: ViewProps) {
         <div className="grid grid-cols-1 gap-4">
           <ChartCard
             title={`Monthly Screening ${tableYear} — 18m & 24m`}
-            subtitle="Visits, screened, coverage and risk detections"
+            subtitle={`Visits, screened, coverage and risk detections · ${tableYear}`}
             action={<Segmented label="Year" options={YEAR_OPTIONS} value={tableYear} onChange={setTableYear} />}
           >
             {tableYear === '2023' ? (
-              <Note title="Not reported:">
+              <Note title="No data supplied:">
                 The source has no monthly screening figures for 2023. The 2023 annual 18-month coverage and risk
                 figures are in “Screening Indicators, 2023–2025” above.
               </Note>
@@ -399,7 +400,7 @@ export default function Asd({ onNavigate }: ViewProps) {
                     </Note>
                   ) : (
                     <Note title="2025:">
-                      Monthly risk counts are not reported for 2025 (“—”); the 2025 totals are in the governorate
+                      No monthly risk counts were supplied for 2025 (“—”); the 2025 totals are in the governorate
                       summary below.
                     </Note>
                   )}
@@ -408,10 +409,10 @@ export default function Asd({ onNavigate }: ViewProps) {
             )}
           </ChartCard>
 
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
             <ChartCard
-              title="Governorate Summary (2025 only)"
-              subtitle="18 vs 24-month outcomes"
+              title="Governorate Summary (2025 Only)"
+              subtitle="18 vs 24-month outcomes · 2025"
             >
               <DataTable
                 columns={[
@@ -430,7 +431,7 @@ export default function Asd({ onNavigate }: ViewProps) {
                 dense
               />
               <div className="mt-3">
-                <Note title="Not reported:">
+                <Note title="No data supplied:">
                   This outcome summary (diagnoses, other developmental disorders, referrals) exists for 2025 only;
                   the 2023 and 2024 figures that do exist are in “Screening Indicators, 2023–2025”.
                 </Note>
@@ -438,7 +439,7 @@ export default function Asd({ onNavigate }: ViewProps) {
             </ChartCard>
             <ChartCard
               title="Risk Distribution, 2023–2025"
-              subtitle="All children screened at 18 and 24 months"
+              subtitle="Count · all children screened at 18 and 24 months · 2023, 2024 and 2025"
             >
               <DataTable
                 columns={[
@@ -461,7 +462,7 @@ export default function Asd({ onNavigate }: ViewProps) {
                 <Note title="Basis:">
                   2024 is the source&apos;s own distribution; 2025 adds the 18-month and 24-month figures of the 2025
                   governorate summary (the same basis — the 2024 medium-risk 30 is 18 + 12). 2023 has no low-risk or
-                  24-month figures, so it is not reported.
+                  24-month figures, so it shows “{NOT_REPORTED}”.
                 </Note>
                 <Note title="2025:">{asd.note2025}</Note>
               </div>
