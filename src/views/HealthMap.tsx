@@ -197,12 +197,11 @@ export default function HealthMap() {
   const focusW = selected ? wil(selected) : null
   const focusCentres = selected
     ? [
-        // A wilayat hospital's catchment is the whole wilayat; a referral
-        // hospital's catchment is not set, so it shows no population.
+        // Every hospital's catchment is the whole wilayat.
         ...hospitalsIn(selected).map((h) => ({
           en: h.en,
           ar: h.ar,
-          total: h.kind === 'wilayat' ? targetGroups(hospitalCatchment(h, 'all')).total : null,
+          total: targetGroups(hospitalCatchment(h, 'all')).total as number | null,
           pinned: pinnedNames.has(h.en),
           hospital: h.kind as 'wilayat' | 'referral' | false,
         })),
@@ -607,7 +606,8 @@ export default function HealthMap() {
             <Note title="Referral hospitals:">
               {REFERRAL_HOSPITALS.map((h) => `${h.en} (${h.wilayat})`).join(' and ')} are the
               governorate&rsquo;s {REFERRAL_COUNT} referral hospitals, counted among the{' '}
-              {TOTAL_INSTITUTIONS} health institutions.
+              {TOTAL_INSTITUTIONS} health institutions. Each one&rsquo;s catchment is its
+              wilayat&rsquo;s total population, not added again to the population totals.
             </Note>
             {WILAYAT_HOSPITALS.map((h) => (
               <Note key={h.en} title="Wilayat hospital:">

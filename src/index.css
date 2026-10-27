@@ -233,12 +233,17 @@
   .map-layout {
     --map-size: min(40rem, max(22rem, calc(100svh - 17rem)));
   }
+  /* The card always spans its column, like every other card; the square map
+     inside it is centred and capped at --map-size so the whole map fits on
+     screen. From 1024px the map and the wilayat list sit side by side. */
   .map-card {
     width: 100%;
+  }
+  .map-card svg {
     max-width: var(--map-size);
     margin-inline: auto;
   }
-  @media (min-width: 1280px) {
+  @media (min-width: 1024px) {
     .map-layout {
       grid-template-columns: var(--map-size) minmax(0, 1fr);
     }

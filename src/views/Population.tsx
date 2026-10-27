@@ -24,7 +24,7 @@ import {
   type Nationality,
 } from '../data/population'
 import { anaemia } from '../data/nutrition'
-import { WILAYAT_HOSPITALS, hospitalCatchment, wilayatHospitalsIn, wilayatName } from '../data/hospitals'
+import { HOSPITALS, hospitalCatchment, hospitalsIn, wilayatName } from '../data/hospitals'
 import {
   FLAG_BELOW,
   ancGov,
@@ -79,7 +79,7 @@ export default function Population() {
 
   // Wilayat-wide hospitals (Al Suwaiq Hospital): catchment = the whole wilayat.
   // Listed beside the health centres, never added to any total.
-  const hospitals = wilayat === 'all' ? WILAYAT_HOSPITALS : wilayatHospitalsIn(wilayat)
+  const hospitals = wilayat === 'all' ? HOSPITALS : hospitalsIn(wilayat)
   const hospitalRows = hospitals.map((h) => {
     const o = targetGroups(hospitalCatchment(h, 'omani'))
     const e = targetGroups(hospitalCatchment(h, 'expat'))
@@ -87,7 +87,7 @@ export default function Population() {
     return { h, omani: o.total, expat: e.total, total: o.total + e.total, t }
   })
   const catchmentCount = `${list.length} health-centre catchments${
-    hospitals.length ? ` + ${hospitals.length} wilayat hospital${hospitals.length > 1 ? 's' : ''}` : ''
+    hospitals.length ? ` + ${hospitals.length} hospital${hospitals.length > 1 ? 's' : ''}` : ''
   }`
 
   // Pyramid: stack Omani + expatriate on each side when showing everyone.
@@ -192,7 +192,7 @@ export default function Population() {
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-ink/80">
             End-year 2025 · {INSTITUTIONS.length} health-centre catchments across North Batinah, plus{' '}
-            {WILAYAT_HOSPITALS.map((h) => `${h.en} (catchment: all of ${wilayatName(h)})`).join(', ')}.
+            {HOSPITALS.map((h) => `${h.en} (catchment: all of ${wilayatName(h)})`).join(', ')}.
           </p>
           <p lang="ar" dir="rtl" className="mt-1 text-left font-ar text-sm text-ink/80">
             {popMeta.titleAr}
@@ -442,7 +442,7 @@ export default function Population() {
         />
         <ChartCard
           title="Population by Health Institution (2025)"
-          subtitle={hospitalRows.length > 0 ? 'Residents · 2025 · wilayat hospital first (not added to the total), then health centres by size' : 'Residents · 2025 · largest catchment first'}
+          subtitle={hospitalRows.length > 0 ? 'Residents · 2025 · hospital first (not added to the total), then health centres by size' : 'Residents · 2025 · largest catchment first'}
           action={
             <button
               type="button"
@@ -531,8 +531,8 @@ export default function Population() {
             use 2025 volumes by wilayat; no data supplied for 2023 and 2024 volumes by wilayat.
             Governorate totals for 2023, 2024 and 2025 are on the Overview and each dashboard.
           </Note>
-          {WILAYAT_HOSPITALS.map((h) => (
-            <Note key={h.en} title="Wilayat hospital:">
+          {HOSPITALS.map((h) => (
+            <Note key={h.en} title={h.kind === 'referral' ? 'Referral hospital:' : 'Wilayat hospital:'}>
               {h.en} serves the whole wilayat of {wilayatName(h)}, so its catchment is the
               wilayat&rsquo;s total population. It is listed alongside {h.wilayat} EHC and the
               other health centres but never added again to the totals.
