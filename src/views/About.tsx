@@ -1,4 +1,5 @@
 import {
+  ArrowRight,
   Award,
   Baby,
   CheckCircle2,
@@ -6,6 +7,7 @@ import {
   Eye,
   FlaskConical,
   Flower2,
+  GraduationCap,
   Handshake,
   MapPin,
   Scale,
@@ -15,12 +17,13 @@ import {
   Users,
   type LucideIcon,
 } from 'lucide-react'
-import type { ViewId } from '../lib/dashboards'
+import { NAV_BY_ID, type ViewId } from '../lib/dashboards'
 import {
   demographics,
   department,
   mission,
   sections,
+  trainingPlan2027,
   values,
   vision,
   wilayats,
@@ -317,6 +320,59 @@ export default function About({ onNavigate }: ViewProps) {
             )
           })}
         </div>
+      </section>
+
+      {/* ===== Child Health training plan 2027 / الخطة التدريبية 2027 ===== */}
+      <section aria-labelledby="training-2027-title">
+        <div dir="rtl" className="mb-5 text-center font-ar" data-reveal>
+          <h2 id="training-2027-title" className="text-2xl font-extrabold text-heading">
+            {trainingPlan2027.titleAr}
+          </h2>
+          <p className="text-sm text-ink/70">{trainingPlan2027.ownerAr}</p>
+          <p dir="ltr" className="mt-1 font-sans text-sm text-ink/70">
+            {trainingPlan2027.titleEn} · {trainingPlan2027.ownerEn}
+          </p>
+        </div>
+        <p className="sr-only">
+          {trainingPlan2027.introAr} {trainingPlan2027.introEn}
+        </p>
+        <ol dir="rtl" className="grid grid-cols-1 gap-3.5 md:grid-cols-2">
+          {trainingPlan2027.items.map((item, i) => (
+            <li key={item.en} className="card flex flex-col p-5">
+              <div dir="rtl" className="flex items-start gap-3 font-ar">
+                <span
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-control bg-navy text-sm font-semibold tabular-nums text-glow"
+                  aria-hidden="true"
+                >
+                  {i + 1}
+                </span>
+                <div>
+                  <h3 className="text-base font-bold leading-snug text-heading">{item.ar}</h3>
+                  <p className="mt-1.5 text-[0.88rem] leading-relaxed text-ink/80">{item.descAr}</p>
+                </div>
+              </div>
+              <div dir="ltr" className="mt-3 border-t border-line/10 pt-3 text-left">
+                <p className="text-sm font-semibold text-heading">{item.en}</p>
+                <p className="mt-1 text-sm leading-relaxed text-ink/70">{item.descEn}</p>
+              </div>
+              {item.view && (
+                <button
+                  type="button"
+                  onClick={() => item.view && onNavigate(item.view)}
+                  dir="ltr"
+                  className="mt-auto inline-flex items-center gap-1.5 self-end pt-4 text-label text-azure-700 hover:underline dark:text-glow"
+                >
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  {NAV_BY_ID[item.view].name}
+                </button>
+              )}
+            </li>
+          ))}
+        </ol>
+        <p className="mt-3 flex items-center justify-center gap-2 text-caption text-ink/60">
+          <GraduationCap className="h-4 w-4" aria-hidden="true" />
+          {trainingPlan2027.items.length} programmes and workshops · Child Health Section
+        </p>
       </section>
 
       {/* ===== Wilayats ===== */}

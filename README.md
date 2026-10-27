@@ -30,7 +30,7 @@ bookmarked, shared, refreshed or reached with the Back button.
 
 | Link | Page | What it shows |
 |------|------|---------------|
-| `#/about` | **Home (الرئيسية)** | Vision, mission, values, department sections and 2026–2030 objectives |
+| `#/about` | **Home (الرئيسية)** | Vision, mission, values, department sections, 2026–2030 objectives and the Child Health Section training plan for 2027 |
 | `#/overview` | **Overview** | Governorate headline KPIs and multi-year trends |
 | `#/map` | **Health Centre Map** | North Batinah map: wilayat circles sized and coloured by the chosen metric, a ranked list and table linked to the map on hover, every health centre's catchment, plus Al Suwaiq Hospital (catchment = whole wilayat) |
 | `#/pop` | **Population 2025** | Age–sex pyramid, catchment populations, target groups (under-5, women 15–49, 60+), service-to-population ratios, CSV export |

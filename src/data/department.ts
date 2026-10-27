@@ -1,3 +1,5 @@
+import type { ViewId } from '../lib/dashboards'
+
 /**
  * Department identity content — extracted verbatim from the official source
  * documents in the "fwd" folder:
@@ -178,3 +180,79 @@ export const wilayats: Wilayat[] = [
   { ar: 'شناص', en: 'Shinas', dataKey: 'Shinas', note: 'أقصى الشمال' },
   { ar: 'لِوى', en: 'Liwa', dataKey: 'Liwa', note: 'حدودية شمالية' },
 ]
+
+export interface TrainingItem {
+  ar: string
+  descAr: string
+  en: string
+  descEn: string
+  /** Dashboard covering the same programme, when there is one. */
+  view?: ViewId
+}
+
+/** Child Health Section training plan for 2027 (supplied by the section, October 2026). */
+export const trainingPlan2027 = {
+  titleAr: 'الخطة التدريبية لعام 2027م',
+  titleEn: 'Training Plan 2027',
+  ownerAr: 'دائرة صحة المرأة والطفل – قسم صحة الطفل',
+  ownerEn: 'Women & Child Health Department – Child Health Section',
+  introAr: 'تتضمن الخطة التدريبية البرامج وورش العمل الآتية:',
+  introEn: 'The training plan includes the following programmes and workshops:',
+  items: [
+    {
+      ar: 'التعرّف المبكر على اضطراب طيف التوحد',
+      descAr: 'التدريب على آليات الكشف المبكر، وإدارة مسارات التقييم والإحالة.',
+      en: 'Early identification of autism spectrum disorder',
+      descEn: 'Training in early detection and in managing assessment and referral pathways.',
+      view: 'asd',
+    },
+    {
+      ar: 'التدريب على دليل الرعاية الشمولية للطفل',
+      descAr: 'تأهيل الكوادر الصحية لتطبيق مفاهيم الرعاية الشمولية والمتكاملة للأطفال وممارساتها.',
+      en: 'Comprehensive child care guide training',
+      descEn: 'Preparing health staff to apply the concepts and practices of comprehensive, integrated child care.',
+    },
+    {
+      ar: 'التدريب على دليل وفيات الإملاص ووفيات حديثي الولادة',
+      descAr: 'تعزيز كفاءة الكوادر الصحية في تطبيق الدليل، وآليات مراجعة الحالات وتحليلها، والتعامل معها.',
+      en: 'Stillbirth and neonatal death guideline training',
+      descEn: 'Strengthening staff competence in applying the guideline, in reviewing and analysing cases, and in case management.',
+      view: 'sn',
+    },
+    {
+      ar: 'النقل الآمن للأطفال ذوي الحالات الحرجة',
+      descAr: 'رفع كفاءة الكوادر الصحية في إجراءات التقييم والتجهيز والنقل الآمن للأطفال ذوي الحالات الحرجة.',
+      en: 'Safe transport of critically ill children',
+      descEn: 'Improving staff competence in the assessment, preparation and safe transport of critically ill children.',
+      view: 'ecr',
+    },
+    {
+      ar: 'برنامج سوء التغذية لدى الأطفال',
+      descAr: 'تعزيز مهارات الكوادر الصحية في الكشف المبكر عن حالات سوء التغذية، وتقييمها، والتدخل فيها، ومتابعتها.',
+      en: 'Child malnutrition programme',
+      descEn: 'Strengthening staff skills in the early detection, assessment, management and follow-up of malnutrition.',
+      view: 'cn',
+    },
+    {
+      ar: 'برنامج حماية الأطفال من الإساءة',
+      descAr: 'تطوير مهارات الكوادر الصحية في الكشف المبكر عن حالات الإساءة، والإبلاغ عنها، والتعامل معها وفق الإجراءات المعتمدة.',
+      en: 'Child protection from abuse programme',
+      descEn: 'Developing staff skills in the early detection and reporting of abuse, and in managing cases according to approved procedures.',
+      view: 'mt',
+    },
+    {
+      ar: 'اليوم العالمي لمتلازمة داون',
+      descAr: 'تنظيم فعالية توعوية مصحوبة بورشة تدريبية لنقاط الارتكاز؛ لتعزيز المعرفة، وتطوير خدمات متابعة الأطفال ذوي متلازمة داون ورعايتهم.',
+      en: 'World Down Syndrome Day',
+      descEn: 'An awareness event with a training workshop for focal points, to build knowledge and develop follow-up and care services for children with Down syndrome.',
+      view: 'ds',
+    },
+    {
+      ar: 'ورشة عمل في الرضاعة الطبيعية',
+      descAr: 'تعزيز معارف الكوادر الصحية ومهاراتها في تقديم المشورة والدعم للأمهات، وتشجيع ممارسات الرضاعة الطبيعية.',
+      en: 'Breastfeeding workshop',
+      descEn: 'Strengthening staff knowledge and skills in counselling and supporting mothers, and in promoting breastfeeding.',
+      view: 'bfhi',
+    },
+  ] satisfies TrainingItem[],
+}
