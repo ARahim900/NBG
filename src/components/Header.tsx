@@ -18,9 +18,8 @@ const wilayatCount = meta.wilayats.length
  * Pages whose charts do not use the 2023 / 2024 / 2025 year colours: 2025
  * population estimates (with the map), the team chart, the gallery, the Extra
  * Child Health Register (2025 only; its series are the 3- and 4-year visits)
- * and the 2026 extended-screening report. Breastfeeding and Stillbirth &
- * Neonatal now compare years in YEAR_COLORS, so they show the key. Listed by
- * id, so a sub-page's key does not depend on its parent page.
+ * and the 2026 extended-screening report. Listed by id, so a sub-page's key
+ * does not depend on its parent page.
  */
 const NO_YEAR_KEY = new Set<ViewId>([
   'pop',
@@ -30,6 +29,14 @@ const NO_YEAR_KEY = new Set<ViewId>([
   'ecr',
   'children/newborn-screening/extended-newborn-screening-2026',
 ])
+
+/**
+ * Pages that use the same light → dark ramp for a later run of years. Stillbirth
+ * & Neonatal paints 2024, 2025 and 2026 in the 2023, 2024 and 2025 colours.
+ */
+const KEY_YEARS: Partial<Record<ViewId, string[]>> = {
+  sn: ['2024', '2025', '2026'],
+}
 
 export default function Header({ active, onOpenMenu }: HeaderProps) {
   const item = NAV_BY_ID[active]
@@ -44,6 +51,12 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
     if (!progressRef.current) return
     return attachScrollProgress(progressRef.current)
   }, [])
+
+  const keyEntries = Object.entries(YEAR_COLORS).map(([year, color], i) => ({
+    year,
+    label: KEY_YEARS[active]?.[i] ?? year,
+    color: isDark ? YEAR_COLORS_DARK[year] : color,
+  }))
 
   const group = NAV_GROUPS.find((g) => g.id === item.group)
   const parent = item.parentId ? NAV_BY_ID[item.parentId] : null
@@ -111,18 +124,15 @@ export default function Header({ active, onOpenMenu }: HeaderProps) {
             <div
               className="order-last hidden w-full cursor-default select-none items-center justify-end gap-3 md:flex 2xl:order-none 2xl:w-auto"
               role="note"
-              aria-label="Chart colours by year: 2023 light blue, 2024 blue, 2025 navy"
+              aria-label={`Chart colours by year: ${keyEntries.map((k) => k.label).join(', ')}, light to dark`}
             >
               <span className="text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-ink/50">
                 Chart key
               </span>
-              {Object.entries(YEAR_COLORS).map(([year, color]) => (
+              {keyEntries.map(({ year, label, color }) => (
                 <span key={year} className="flex items-center gap-1.5 text-xs font-medium text-ink/70">
-                  <span
-                    className="inline-block h-2.5 w-2.5 rounded-full"
-                    style={{ backgroundColor: isDark ? YEAR_COLORS_DARK[year] : color }}
-                  />
-                  {year}
+                  <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: color }} />
+                  {label}
                 </span>
               ))}
             </div>

@@ -260,62 +260,12 @@ export const perinatalByCategoryYears = [
 export const perinatalHeadline2025: number | null =
   sn.summary2025.find((r) => r.metric.startsWith('Total perinatal'))?.value ?? null
 
-// -------------------------------------------------------------------------
-// ICD-PM: 2024 codes matched to 2025 codes by DEFINITION, not by code.
-// The 2025 workbook numbers some codes differently (2024 M1 = placenta, cord
-// and membranes = 2025 M2; 2024 N6 = respiratory & cardiovascular = 2025 N7).
-// A 2024 code with no definition, or "(none)", is not matched.
-// -------------------------------------------------------------------------
-
-/** Same loose comparison as the 2025 review: "&" = "and", case, punctuation, trailing digits. */
-const normIcd = (d: string): string =>
-  d
-    .toLowerCase()
-    .replace(/&/g, 'and')
-    .replace(/\s*\d+\s*$/, '')
-    .replace(/[^a-z]+/g, ' ')
-    .trim()
-
-export interface IcdRowYears {
-  code2024: string
-  description: string
-  y2024: number
-  /** 2025 final-code count for the code with the same definition; null = no matching definition. */
-  y2025: number | null
-  /** The 2025 code carrying that definition (may differ from the 2024 code). */
-  code2025: string | null
-}
-
-const icdYears = (
-  prefix: 'M' | 'A' | 'I' | 'N',
-  rows2024: { code: string; count: number; description: string }[],
-): IcdRowYears[] => {
-  const table2025 = mpdsr.codeTables.find((t) => t.prefix === prefix)?.rows ?? []
-  return rows2024.map((r) => {
-    const def = normIcd(r.description)
-    const usable = def !== '' && def !== 'none'
-    const m = usable
-      ? table2025.find((t) => {
-          const d25 = normIcd(t.description)
-          return d25 === def || d25.startsWith(`${def} `)
-        })
-      : undefined
-    return {
-      code2024: r.code,
-      description: r.description,
-      y2024: r.count,
-      y2025: m ? m.finalCount : null,
-      code2025: m ? m.code : null,
-    }
-  })
-}
-
-/** 2024 ICD-PM tables with the 2025 count of the same definition. */
-export const icdTablesYears = [
-  { title: 'Maternal Condition (M)', rows: icdYears('M', sn.icdMaternal.filter((r) => r.code !== 'Total')) },
-  { title: 'Antepartum — Foetal (A)', rows: icdYears('A', sn.icdAntepartum.filter((r) => r.count > 0)) },
-  { title: 'Intrapartum — Foetal (I)', rows: icdYears('I', sn.icdIntrapartum.filter((r) => r.count > 0)) },
-  { title: 'Neonatal Death (N)', rows: icdYears('N', sn.icdNeonatal.filter((r) => r.count > 0)) },
+/** 2024 ICD-PM tables as classified in 2024 (historical reference; not matched to later years). */
+export const icdTables2024 = [
+  { title: 'Maternal Condition (M)', rows: sn.icdMaternal.filter((r) => r.code !== 'Total') },
+  { title: 'Antepartum — Foetal (A)', rows: sn.icdAntepartum.filter((r) => r.count > 0) },
+  { title: 'Intrapartum — Foetal (I)', rows: sn.icdIntrapartum.filter((r) => r.count > 0) },
+  { title: 'Neonatal Death (N)', rows: sn.icdNeonatal.filter((r) => r.count > 0) },
 ]
 
 /** "Cohort B" of year_totals, for the decision note (year not confirmed). */

@@ -56,7 +56,7 @@ export default function Mpdsr2026Analysis() {
       />
       <Note title={`${int(mpdsr26.summary.records)} recorded cases in ${period} 2026:`}>
         {int(coded)} have a final ICD-PM code; {int(highlighted.length)} highlighted cases are not yet coded.
-        Highlighted cases and empty fields are listed as pending items below. Code, quality-of-care and
+        Highlighted cases and records with empty fields are listed under cases awaiting committee review below. Code, quality-of-care and
         modifiable-factor counts use coded records only. 2026 covers {periodMonths} reporting months, so no
         year-on-year change is calculated.
       </Note>
@@ -178,8 +178,8 @@ export default function Mpdsr2026Analysis() {
       <div>
         <SectionTitle
           icon={ListChecks}
-          title="Pending Items — Next Committee Meeting"
-          subtitle={`${int(mpdsr26.pending.length)} records · ${int(highlighted.length)} highlighted (not yet coded) · ${int(mpdsr26.pending.length - highlighted.length)} with empty fields`}
+          title="Cases Awaiting Committee Review"
+          subtitle={`${int(mpdsr26.pending.length)} records · ${int(highlighted.length)} highlighted, not yet coded · ${int(mpdsr26.pending.length - highlighted.length)} coded with a field missing`}
         />
         <ChartCard
           title="Cases to Review and Code"

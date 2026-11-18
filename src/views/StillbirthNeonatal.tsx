@@ -1,4 +1,4 @@
-import { Activity, Baby, Table2 } from 'lucide-react'
+import { Activity, Baby, CalendarRange } from 'lucide-react'
 import KpiCard from '../components/ui/KpiCard'
 import ChartCard from '../components/ui/ChartCard'
 import SectionTitle from '../components/ui/SectionTitle'
@@ -11,14 +11,14 @@ import { ComparisonBars, TrendChart } from '../components/charts/Charts'
 import { sn } from '../data/nbg'
 import {
   cohortB,
-  icdTablesYears,
+  icdTables2024,
   perinatalByCategoryYears,
   perinatalHeadline2025,
   perinatalMonthlyYears,
   perinatalTotals,
 } from '../data/years/childrenB'
 import mpdsr26 from '../data/mpdsr2026.json'
-import { C, METRIC, YEAR_COLORS } from '../lib/theme'
+import { METRIC, YEAR_COLORS } from '../lib/theme'
 import { int } from '../lib/format'
 
 const NR = 'No data supplied'
@@ -36,16 +36,8 @@ const period2026 = `Jan–${mpdsr26.summary.lastMonth}`
 const YEAR_SERIES = [
   { key: 'y2024', name: '2024', color: YEAR_COLORS['2023'] },
   { key: 'y2025', name: '2025 (provisional)', color: YEAR_COLORS['2024'] },
-  { key: 'y2026', name: `2026 (provisional, ${period2026})`, color: C.navy },
+  { key: 'y2026', name: `2026 (provisional, ${period2026})`, color: YEAR_COLORS['2025'] },
 ]
-
-const muted = (text: string) => <span className="text-ink/55">{text}</span>
-
-/** 2025 cell of a definition-matched ICD-PM row: count, the 2025 code when it differs, or "—". */
-const icd2025Cell = (r: { code2024: string; y2025: number | null; code2025: string | null }) => {
-  if (r.y2025 === null || r.code2025 === null) return muted('—')
-  return r.code2025 === r.code2024 ? int(r.y2025) : `${int(r.y2025)} (${r.code2025})*`
-}
 
 export default function StillbirthNeonatal() {
   return (
@@ -115,7 +107,7 @@ export default function StillbirthNeonatal() {
       <ChartCard
         title="Perinatal Deaths by Month"
         subtitle="Monthly count · 2024, 2025 and 2026"
-        footnote={`2024: KPI-deck surveillance. 2025 and 2026: provisional workbook records by reporting month, not death date; 2026 is reported to ${mpdsr26.summary.lastMonth}. Different sources, shown side by side; no change is calculated. The 2025 review below has the monthly breakdown by category for 2024 and 2025.`}
+        footnote={`2024: KPI-deck surveillance. 2025 and 2026: provisional workbook records by reporting month, not death date; 2026 is reported to ${mpdsr26.summary.lastMonth}. Different sources, shown side by side; no change is calculated. The 2026 and 2025 reviews below have each year's monthly breakdown by category.`}
       >
         <TrendChart
           data={perinatalMonthlyYears}
@@ -141,41 +133,27 @@ export default function StillbirthNeonatal() {
 
       <div>
         <SectionTitle
-          icon={Table2}
-          title="2024 ICD-PM Codes Matched to 2025 by Definition"
-          subtitle="Perinatal-death cause coding · 2024 ICD-PM · 2025 workbook final code"
+          icon={CalendarRange}
+          title="Historical Reference — 2024"
+          subtitle="2024 ICD-PM classification as originally reported · KPI-deck final surveillance"
         />
         <div className="space-y-4">
           <Note title="Years covered:">
-            The ICD-PM table in the 2025 review above lists every 2025 code and shows a 2024 count
-            only where both years define that code the same way. These tables start from the 2024
-            codes and give the 2025 count for the same definition. The 2025 workbook numbers some
-            codes differently from the 2024 table: 2024 M1 (complications of placenta, cord and
-            membranes) is 2025 M2, and 2024 N6 (respiratory &amp; cardiovascular disorders) is 2025
-            N7 — marked *. 2024 codes with no definition in the 2024 table (for example N5, N7,
-            N10) are not matched and show —. 2024 and 2025 are different review cycles, so no change
-            is calculated. 2026 coding is compared with 2025 in the 2026 review above.
+            2024 cause coding is shown as originally classified and is not matched to 2025 or 2026 codes:
+            the 2024 table defines some codes differently from the 2025 and 2026 workbooks (for example
+            2024 M1 is placenta, cord and membranes; in 2025 and 2026 that is M2). Cause coding is compared
+            between 2025 and 2026 only, in the 2026 review above.
           </Note>
-          {icdTablesYears.map((t) => (
-            <ChartCard
-              key={t.title}
-              title={t.title}
-              subtitle="Count by 2024 code · 2024 and 2025 · * = 2025 code differs"
-            >
+          {icdTables2024.map((t) => (
+            <ChartCard key={t.title} title={t.title} subtitle="Count · 2024 · ICD-PM code as defined in the 2024 table">
               <DataTable
-                columns={[
-                  { label: 'Code (2024)' },
-                  { label: 'Definition (2024 table)' },
-                  { label: '2024', align: 'right' },
-                  { label: '2025', align: 'right' },
-                ]}
+                columns={[{ label: 'Code' }, { label: 'Definition (2024 table)' }, { label: '2024', align: 'right' }]}
                 rows={t.rows.map((r) => [
-                  r.code2024,
-                  <span key={r.code2024} className="text-xs text-ink/65">
+                  r.code,
+                  <span key={r.code} className="text-xs text-ink/65">
                     {r.description || '—'}
                   </span>,
-                  int(r.y2024),
-                  icd2025Cell(r),
+                  int(r.count),
                 ])}
                 dense
               />
