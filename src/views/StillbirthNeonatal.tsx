@@ -41,10 +41,10 @@ const YEAR_SERIES = [
 
 const muted = (text: string) => <span className="text-ink/55">{text}</span>
 
-/** 2025/2026 cell of a definition-matched ICD-PM row: count, the code when it differs from 2024, or "—". */
-const icdLaterCell = (code2024: string, value: number | null, code: string | null) => {
-  if (value === null || code === null) return muted('—')
-  return code === code2024 ? int(value) : `${int(value)} (${code})*`
+/** 2025 cell of a definition-matched ICD-PM row: count, the 2025 code when it differs, or "—". */
+const icd2025Cell = (r: { code2024: string; y2025: number | null; code2025: string | null }) => {
+  if (r.y2025 === null || r.code2025 === null) return muted('—')
+  return r.code2025 === r.code2024 ? int(r.y2025) : `${int(r.y2025)} (${r.code2025})*`
 }
 
 export default function StillbirthNeonatal() {
@@ -142,26 +142,25 @@ export default function StillbirthNeonatal() {
       <div>
         <SectionTitle
           icon={Table2}
-          title="2024 ICD-PM Codes Matched to 2025 and 2026 by Definition"
-          subtitle="Perinatal-death cause coding · 2024 ICD-PM · 2025 and 2026 workbook final code"
+          title="2024 ICD-PM Codes Matched to 2025 by Definition"
+          subtitle="Perinatal-death cause coding · 2024 ICD-PM · 2025 workbook final code"
         />
         <div className="space-y-4">
           <Note title="Years covered:">
             The ICD-PM table in the 2025 review above lists every 2025 code and shows a 2024 count
             only where both years define that code the same way. These tables start from the 2024
-            codes and give the 2025 and 2026 counts for the same definition (the 2026 workbook uses
-            the same code dictionary as 2025; 2026 counts are coded records only). The 2025 workbook numbers some
+            codes and give the 2025 count for the same definition. The 2025 workbook numbers some
             codes differently from the 2024 table: 2024 M1 (complications of placenta, cord and
             membranes) is 2025 M2, and 2024 N6 (respiratory &amp; cardiovascular disorders) is 2025
             N7 — marked *. 2024 codes with no definition in the 2024 table (for example N5, N7,
-            N10) are not matched and show —. 2024, 2025 and 2026 are different review cycles, so no
-            change is calculated.
+            N10) are not matched and show —. 2024 and 2025 are different review cycles, so no change
+            is calculated. 2026 coding is compared with 2025 in the 2026 review above.
           </Note>
           {icdTablesYears.map((t) => (
             <ChartCard
               key={t.title}
               title={t.title}
-              subtitle="Count by 2024 code · 2024, 2025 and 2026 · * = 2025/2026 code differs"
+              subtitle="Count by 2024 code · 2024 and 2025 · * = 2025 code differs"
             >
               <DataTable
                 columns={[
@@ -169,7 +168,6 @@ export default function StillbirthNeonatal() {
                   { label: 'Definition (2024 table)' },
                   { label: '2024', align: 'right' },
                   { label: '2025', align: 'right' },
-                  { label: '2026', align: 'right' },
                 ]}
                 rows={t.rows.map((r) => [
                   r.code2024,
@@ -177,8 +175,7 @@ export default function StillbirthNeonatal() {
                     {r.description || '—'}
                   </span>,
                   int(r.y2024),
-                  icdLaterCell(r.code2024, r.y2025, r.code2025),
-                  icdLaterCell(r.code2024, r.y2026, r.code2025),
+                  icd2025Cell(r),
                 ])}
                 dense
               />

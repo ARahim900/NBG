@@ -284,8 +284,6 @@ export interface IcdRowYears {
   y2025: number | null
   /** The 2025 code carrying that definition (may differ from the 2024 code). */
   code2025: string | null
-  /** 2026 final-code count for that 2025 code (the 2026 Sheet2 dictionary is identical to 2025's). */
-  y2026: number | null
 }
 
 const icdYears = (
@@ -293,7 +291,6 @@ const icdYears = (
   rows2024: { code: string; count: number; description: string }[],
 ): IcdRowYears[] => {
   const table2025 = mpdsr.codeTables.find((t) => t.prefix === prefix)?.rows ?? []
-  const table2026 = mpdsr26.codeTables.find((t) => t.prefix === prefix)?.rows ?? []
   return rows2024.map((r) => {
     const def = normIcd(r.description)
     const usable = def !== '' && def !== 'none'
@@ -309,12 +306,11 @@ const icdYears = (
       y2024: r.count,
       y2025: m ? m.finalCount : null,
       code2025: m ? m.code : null,
-      y2026: m ? (table2026.find((t) => t.code === m.code)?.finalCount ?? null) : null,
     }
   })
 }
 
-/** 2024 ICD-PM tables with the 2025 and 2026 counts of the same definition. */
+/** 2024 ICD-PM tables with the 2025 count of the same definition. */
 export const icdTablesYears = [
   { title: 'Maternal Condition (M)', rows: icdYears('M', sn.icdMaternal.filter((r) => r.code !== 'Total')) },
   { title: 'Antepartum — Foetal (A)', rows: icdYears('A', sn.icdAntepartum.filter((r) => r.count > 0)) },

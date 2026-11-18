@@ -1,23 +1,17 @@
 {
   "source": {
-    "filename": "MPDSR Review Form Sheet 2026 (1) (1).xlsx",
-    "sha256": "b24f3566f41907bc9b70025e7f1cd558294f47df9406571736735bc988750432",
+    "filename": "MPDSR Review Form Sheet 2026 (1).xlsx",
+    "sha256": "09cc347971c7bb586372b939d8471d9f9c4e4f09caf7969611181c3caa1eb8c6",
     "caseSheet": "Sheet1",
     "codeSheet": "Sheet2",
-    "caseRange": "A5:BC104"
+    "caseRange": "A5:AZ104"
   },
   "summary": {
     "records": 100,
-    "stillbirth": 45,
-    "earlyNeonatal": 33,
+    "stillbirth": 43,
+    "earlyNeonatal": 35,
     "lateNeonatal": 22,
-    "reviewed": 35,
-    "reviewedByCategory": {
-      "stillbirth": 20,
-      "earlyNeonatal": 11,
-      "lateNeonatal": 4
-    },
-    "pending": 65,
+    "pending": 20,
     "highlighted": 18,
     "coded": 82,
     "lastMonth": "Oct"
@@ -60,8 +54,8 @@
     },
     {
       "month": "Jun",
-      "stillbirth": 3,
-      "earlyNeonatal": 7,
+      "stillbirth": 2,
+      "earlyNeonatal": 8,
       "lateNeonatal": 5,
       "total": 15
     },
@@ -74,8 +68,8 @@
     },
     {
       "month": "Aug",
-      "stillbirth": 4,
-      "earlyNeonatal": 3,
+      "stillbirth": 3,
+      "earlyNeonatal": 4,
       "lateNeonatal": 3,
       "total": 10
     },
@@ -111,171 +105,205 @@
   "codeTables": [
     {
       "prefix": "M",
+      "title": "Maternal conditions",
       "rows": [
         {
           "code": "M1",
           "description": "Maternal complications of pregnancy",
-          "finalCount": 9
+          "finalCount": 9,
+          "selectedCount": 9
         },
         {
           "code": "M2",
           "description": "Complications of placenta, cord and membranes",
-          "finalCount": 14
+          "finalCount": 14,
+          "selectedCount": 15
         },
         {
           "code": "M3",
           "description": "Other complications of labour and delivery 1",
-          "finalCount": 0
+          "finalCount": 0,
+          "selectedCount": 0
         },
         {
           "code": "M4",
           "description": "Maternal medical and surgical conditions; noxious influences",
-          "finalCount": 32
+          "finalCount": 32,
+          "selectedCount": 31
         },
         {
           "code": "M5",
           "description": "No maternal condition",
-          "finalCount": 26
+          "finalCount": 26,
+          "selectedCount": 26
         },
         {
           "code": "M6",
           "description": "Other conditions not included in the list",
-          "finalCount": 1
+          "finalCount": 1,
+          "selectedCount": 1
         }
       ]
     },
     {
       "prefix": "A",
+      "title": "Antepartum causes",
       "rows": [
         {
           "code": "A1",
           "description": "Congenital malformations, deformations, and chromosomal abnormalities",
-          "finalCount": 5
+          "finalCount": 5,
+          "selectedCount": 5
         },
         {
           "code": "A2",
           "description": "Infection",
-          "finalCount": 0
+          "finalCount": 0,
+          "selectedCount": 0
         },
         {
           "code": "A3",
           "description": "Antepartum hypoxia",
-          "finalCount": 5
+          "finalCount": 5,
+          "selectedCount": 5
         },
         {
           "code": "A4",
           "description": "Other specified antepartum disorder",
-          "finalCount": 7
+          "finalCount": 8,
+          "selectedCount": 8
         },
         {
           "code": "A5",
           "description": "Disorders related to foetal growth",
-          "finalCount": 5
+          "finalCount": 5,
+          "selectedCount": 5
         },
         {
           "code": "A6",
           "description": "Foetal death of unspecified cause",
-          "finalCount": 9
+          "finalCount": 9,
+          "selectedCount": 9
         }
       ]
     },
     {
       "prefix": "I",
+      "title": "Intrapartum causes",
       "rows": [
         {
           "code": "I1",
           "description": "Congenital malformations, deformations and chromosomal abnormalities",
-          "finalCount": 0
+          "finalCount": 0,
+          "selectedCount": 0
         },
         {
           "code": "I2",
           "description": "Birth trauma",
-          "finalCount": 0
+          "finalCount": 0,
+          "selectedCount": 0
         },
         {
           "code": "I3",
           "description": "Acute intrapartum event",
-          "finalCount": 4
+          "finalCount": 4,
+          "selectedCount": 4
         },
         {
           "code": "I4",
           "description": "Infection",
-          "finalCount": 2
+          "finalCount": 2,
+          "selectedCount": 2
         },
         {
           "code": "I5",
           "description": "Other specified intrapartum disorder",
-          "finalCount": 0
+          "finalCount": 0,
+          "selectedCount": 0
         },
         {
           "code": "I6",
           "description": "Disorders related to foetal growth",
-          "finalCount": 0
+          "finalCount": 0,
+          "selectedCount": 0
         },
         {
           "code": "I7",
           "description": "Intrapartum death of unspecified cause",
-          "finalCount": 0
+          "finalCount": 0,
+          "selectedCount": 0
         }
       ]
     },
     {
       "prefix": "N",
+      "title": "Neonatal causes",
       "rows": [
         {
           "code": "N1",
           "description": "Congenital malformations, deformations and chromosomal abnormalities",
-          "finalCount": 15
+          "finalCount": 15,
+          "selectedCount": 15
         },
         {
           "code": "N2",
           "description": "Disorders related to foetal growth",
-          "finalCount": 0
+          "finalCount": 0,
+          "selectedCount": 0
         },
         {
           "code": "N3",
           "description": "Birth trauma",
-          "finalCount": 0
+          "finalCount": 0,
+          "selectedCount": 0
         },
         {
           "code": "N4",
           "description": "Complications of intrapartum events",
-          "finalCount": 3
+          "finalCount": 2,
+          "selectedCount": 2
         },
         {
           "code": "N5",
           "description": "Convulsions and disorders of cerebral status",
-          "finalCount": 0
+          "finalCount": 0,
+          "selectedCount": 0
         },
         {
           "code": "N6",
           "description": "Infection",
-          "finalCount": 5
+          "finalCount": 5,
+          "selectedCount": 5
         },
         {
           "code": "N7",
           "description": "Respiratory and cardiovascular disorders",
-          "finalCount": 8
+          "finalCount": 8,
+          "selectedCount": 8
         },
         {
           "code": "N8",
           "description": "Other neonatal conditions",
-          "finalCount": 1
+          "finalCount": 1,
+          "selectedCount": 1
         },
         {
           "code": "N9",
           "description": "Low birth weight and prematurity",
-          "finalCount": 12
+          "finalCount": 12,
+          "selectedCount": 12
         },
         {
           "code": "N10",
           "description": "Miscellaneous",
-          "finalCount": 1
+          "finalCount": 1,
+          "selectedCount": 1
         },
         {
           "code": "N11",
           "description": "Neonatal death of unspecified cause",
-          "finalCount": 0
+          "finalCount": 0,
+          "selectedCount": 0
         }
       ]
     }
@@ -285,139 +313,139 @@
       "label": "Late/no antenatal care",
       "group": "Family",
       "yes": 1,
-      "sourceColumn": "AC"
+      "sourceColumn": "Z"
     },
     {
       "label": "Cultural inhibition to seeking care",
       "group": "Family",
       "yes": 0,
-      "sourceColumn": "AD"
+      "sourceColumn": "AA"
     },
     {
       "label": "No knowledge of danger signs",
       "group": "Family",
       "yes": 0,
-      "sourceColumn": "AE"
+      "sourceColumn": "AB"
     },
     {
       "label": "Financial constraints",
       "group": "Family",
       "yes": 1,
-      "sourceColumn": "AF"
+      "sourceColumn": "AC"
     },
     {
       "label": "Partner restricts care-seeking",
       "group": "Family",
       "yes": 0,
-      "sourceColumn": "AG"
+      "sourceColumn": "AD"
     },
     {
       "label": "Use of traditional/ herbal medicine",
       "group": "Family",
       "yes": 0,
-      "sourceColumn": "AH"
+      "sourceColumn": "AE"
     },
     {
       "label": "Smoking / drug / alcohol abuse",
       "group": "Family",
       "yes": 0,
-      "sourceColumn": "AI"
+      "sourceColumn": "AF"
     },
     {
       "label": "Attempted termination",
       "group": "Family",
       "yes": 0,
-      "sourceColumn": "AJ"
+      "sourceColumn": "AG"
     },
     {
       "label": "Partogram was not used",
       "group": "Medical team",
       "yes": 0,
-      "sourceColumn": "AL"
+      "sourceColumn": "AI"
     },
     {
       "label": "Necessary action was not taken",
       "group": "Medical team",
       "yes": 0,
-      "sourceColumn": "AM"
+      "sourceColumn": "AJ"
     },
     {
       "label": "Inappropriate action was not taken",
       "group": "Medical team",
       "yes": 1,
-      "sourceColumn": "AN"
+      "sourceColumn": "AK"
     },
     {
       "label": "Iatrogenic delivery",
       "group": "Medical team",
       "yes": 0,
-      "sourceColumn": "AO"
+      "sourceColumn": "AL"
     },
     {
       "label": "Delay in referral to higher facility",
       "group": "Medical team",
       "yes": 0,
-      "sourceColumn": "AP"
+      "sourceColumn": "AM"
     },
     {
       "label": "Inadequate monitoring during labour",
       "group": "Medical team",
       "yes": 0,
-      "sourceColumn": "AQ"
+      "sourceColumn": "AN"
     },
     {
       "label": "Delay in calling for assistance",
       "group": "Medical team",
       "yes": 1,
-      "sourceColumn": "AR"
+      "sourceColumn": "AO"
     },
     {
       "label": "Inappropriate discharge",
       "group": "Medical team",
       "yes": 0,
-      "sourceColumn": "AS"
+      "sourceColumn": "AP"
     },
     {
       "label": "Lack of training",
       "group": "Medical team",
       "yes": 1,
-      "sourceColumn": "AT"
+      "sourceColumn": "AQ"
     },
     {
       "label": "Unavailability/shortage of Neonatal specialised staff",
       "group": "Health facility",
       "yes": 0,
-      "sourceColumn": "AV"
+      "sourceColumn": "AS"
     },
     {
       "label": "Unavailability of operating theatre facilities",
       "group": "Health facility",
       "yes": 0,
-      "sourceColumn": "AW"
+      "sourceColumn": "AT"
     },
     {
       "label": "Unavailability of resuscitation equipment",
       "group": "Health facility",
       "yes": 0,
-      "sourceColumn": "AX"
+      "sourceColumn": "AU"
     },
     {
       "label": "Unavailability of Blood products",
       "group": "Health facility",
       "yes": 0,
-      "sourceColumn": "AY"
+      "sourceColumn": "AV"
     },
     {
       "label": "Insufficient staff numbers",
       "group": "Health facility",
       "yes": 0,
-      "sourceColumn": "AZ"
+      "sourceColumn": "AW"
     },
     {
       "label": "Unavailability of anaesthetist",
       "group": "Health facility",
       "yes": 0,
-      "sourceColumn": "BA"
+      "sourceColumn": "AX"
     }
   ],
   "quality": [
@@ -434,150 +462,63 @@
       "count": 1
     }
   ],
+  "demographics": [
+    {
+      "title": "Sex",
+      "rows": [
+        {
+          "label": "Male",
+          "count": 53
+        },
+        {
+          "label": "Female",
+          "count": 44
+        },
+        {
+          "label": "Not recorded",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "title": "Place of delivery",
+      "rows": [
+        {
+          "label": "Health Facility",
+          "count": 100
+        }
+      ]
+    },
+    {
+      "title": "Mode of delivery",
+      "rows": [
+        {
+          "label": "SVD",
+          "count": 45
+        },
+        {
+          "label": "Assisted - Forceps",
+          "count": 1
+        },
+        {
+          "label": "LSCS Emergency",
+          "count": 42
+        },
+        {
+          "label": "LSCS Elective",
+          "count": 12
+        }
+      ]
+    }
+  ],
   "pending": [
-    {
-      "row": 30,
-      "month": "Apr",
-      "category": "stillbirth",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 31,
-      "month": "Apr",
-      "category": "earlyNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 36,
-      "month": "Apr",
-      "category": "earlyNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 37,
-      "month": "Apr",
-      "category": "earlyNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 38,
-      "month": "May",
-      "category": "earlyNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 40,
-      "month": "May",
-      "category": "lateNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 42,
-      "month": "Jun",
-      "category": "stillbirth",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 43,
-      "month": "Jun",
-      "category": "stillbirth",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 44,
-      "month": "Jun",
-      "category": "lateNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 48,
-      "month": "Jun",
-      "category": "earlyNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 49,
-      "month": "Jun",
-      "category": "lateNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 50,
-      "month": "Jun",
-      "category": "earlyNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 51,
-      "month": "Jun",
-      "category": "lateNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 52,
-      "month": "Jun",
-      "category": "lateNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 53,
-      "month": "Jun",
-      "category": "earlyNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
     {
       "row": 54,
       "month": "Jun",
       "category": "earlyNeonatal",
       "highlighted": false,
       "emptyFields": [
-        "Sex",
-        "Time spent in labour in the hospital"
+        "Sex"
       ]
     },
     {
@@ -586,171 +527,8 @@
       "category": "earlyNeonatal",
       "highlighted": true,
       "emptyFields": [
-        "Time spent in labour in the hospital",
         "Final ICD10 after review",
         "Quality of Care (Select from the drop list)"
-      ]
-    },
-    {
-      "row": 56,
-      "month": "Jul",
-      "category": "stillbirth",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 57,
-      "month": "Jul",
-      "category": "stillbirth",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 58,
-      "month": "Jul",
-      "category": "stillbirth",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 59,
-      "month": "Jul",
-      "category": "stillbirth",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 60,
-      "month": "Jul",
-      "category": "stillbirth",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 61,
-      "month": "Jul",
-      "category": "stillbirth",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 62,
-      "month": "Jul",
-      "category": "lateNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 63,
-      "month": "Jul",
-      "category": "earlyNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 64,
-      "month": "Jul",
-      "category": "lateNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 65,
-      "month": "Jul",
-      "category": "lateNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 66,
-      "month": "Jul",
-      "category": "earlyNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 67,
-      "month": "Jul",
-      "category": "earlyNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 68,
-      "month": "Jul",
-      "category": "lateNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 69,
-      "month": "Jul",
-      "category": "earlyNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 70,
-      "month": "Jul",
-      "category": "lateNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 71,
-      "month": "Jul",
-      "category": "earlyNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 72,
-      "month": "Jul",
-      "category": "stillbirth",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 74,
-      "month": "Jul",
-      "category": "stillbirth",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
       ]
     },
     {
@@ -759,63 +537,8 @@
       "category": "earlyNeonatal",
       "highlighted": true,
       "emptyFields": [
-        "Time spent in labour in the hospital",
         "Final ICD10 after review",
         "Quality of Care (Select from the drop list)"
-      ]
-    },
-    {
-      "row": 76,
-      "month": "Aug",
-      "category": "stillbirth",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 77,
-      "month": "Aug",
-      "category": "stillbirth",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 78,
-      "month": "Aug",
-      "category": "stillbirth",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 79,
-      "month": "Aug",
-      "category": "stillbirth",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 80,
-      "month": "Aug",
-      "category": "lateNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 81,
-      "month": "Aug",
-      "category": "earlyNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
       ]
     },
     {
@@ -825,24 +548,6 @@
       "highlighted": false,
       "emptyFields": [
         "Sex"
-      ]
-    },
-    {
-      "row": 83,
-      "month": "Aug",
-      "category": "lateNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 84,
-      "month": "Aug",
-      "category": "lateNeonatal",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
       ]
     },
     {
@@ -856,48 +561,11 @@
       ]
     },
     {
-      "row": 86,
-      "month": "Sep",
-      "category": "stillbirth",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 87,
-      "month": "Sep",
-      "category": "stillbirth",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 88,
-      "month": "Sep",
-      "category": "stillbirth",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
-      "row": 89,
-      "month": "Sep",
-      "category": "stillbirth",
-      "highlighted": false,
-      "emptyFields": [
-        "Time spent in labour in the hospital"
-      ]
-    },
-    {
       "row": 90,
       "month": "Sep",
       "category": "earlyNeonatal",
       "highlighted": true,
       "emptyFields": [
-        "Time spent in labour in the hospital",
         "Final ICD10 after review",
         "Quality of Care (Select from the drop list)"
       ]
@@ -908,7 +576,6 @@
       "category": "lateNeonatal",
       "highlighted": true,
       "emptyFields": [
-        "Time spent in labour in the hospital",
         "Final ICD10 after review",
         "Quality of Care (Select from the drop list)"
       ]
@@ -919,7 +586,6 @@
       "category": "lateNeonatal",
       "highlighted": true,
       "emptyFields": [
-        "Time spent in labour in the hospital",
         "Final ICD10 after review",
         "Quality of Care (Select from the drop list)"
       ]
@@ -930,7 +596,6 @@
       "category": "earlyNeonatal",
       "highlighted": true,
       "emptyFields": [
-        "Time spent in labour in the hospital",
         "Final ICD10 after review",
         "Quality of Care (Select from the drop list)"
       ]
@@ -941,7 +606,6 @@
       "category": "lateNeonatal",
       "highlighted": true,
       "emptyFields": [
-        "Time spent in labour in the hospital",
         "Final ICD10 after review",
         "Quality of Care (Select from the drop list)"
       ]
@@ -952,7 +616,6 @@
       "category": "lateNeonatal",
       "highlighted": true,
       "emptyFields": [
-        "Time spent in labour in the hospital",
         "Final ICD10 after review",
         "Quality of Care (Select from the drop list)"
       ]
@@ -963,8 +626,6 @@
       "category": "earlyNeonatal",
       "highlighted": true,
       "emptyFields": [
-        "Wt (kg)",
-        "Time spent in labour in the hospital",
         "Final ICD10 after review",
         "Quality of Care (Select from the drop list)"
       ]
@@ -975,7 +636,6 @@
       "category": "earlyNeonatal",
       "highlighted": true,
       "emptyFields": [
-        "Time spent in labour in the hospital",
         "Final ICD10 after review",
         "Quality of Care (Select from the drop list)"
       ]
@@ -986,7 +646,6 @@
       "category": "lateNeonatal",
       "highlighted": true,
       "emptyFields": [
-        "Time spent in labour in the hospital",
         "Final ICD10 after review",
         "Quality of Care (Select from the drop list)"
       ]
@@ -997,7 +656,6 @@
       "category": "stillbirth",
       "highlighted": true,
       "emptyFields": [
-        "Time spent in labour in the hospital",
         "Final ICD10 after review",
         "Quality of Care (Select from the drop list)"
       ]
@@ -1008,7 +666,6 @@
       "category": "stillbirth",
       "highlighted": true,
       "emptyFields": [
-        "Time spent in labour in the hospital",
         "Final ICD10 after review",
         "Quality of Care (Select from the drop list)"
       ]
@@ -1020,7 +677,6 @@
       "highlighted": true,
       "emptyFields": [
         "Sex",
-        "Time spent in labour in the hospital",
         "Final ICD10 after review",
         "Quality of Care (Select from the drop list)"
       ]
@@ -1031,7 +687,6 @@
       "category": "stillbirth",
       "highlighted": true,
       "emptyFields": [
-        "Time spent in labour in the hospital",
         "Final ICD10 after review",
         "Quality of Care (Select from the drop list)"
       ]
@@ -1042,7 +697,6 @@
       "category": "stillbirth",
       "highlighted": true,
       "emptyFields": [
-        "Time spent in labour in the hospital",
         "Final ICD10 after review",
         "Quality of Care (Select from the drop list)"
       ]
@@ -1053,7 +707,6 @@
       "category": "stillbirth",
       "highlighted": true,
       "emptyFields": [
-        "Time spent in labour in the hospital",
         "Final ICD10 after review",
         "Quality of Care (Select from the drop list)"
       ]
