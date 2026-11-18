@@ -1,4 +1,5 @@
 import mpdsr from '../mpdsr2025.json'
+import mpdsr26 from '../mpdsr2026.json'
 import { ca, fp, sn, type Cell } from '../nbg'
 import { ds2025 } from '../wch2025'
 
@@ -214,20 +215,19 @@ const mpdsrMonthly: PerinatalMonth[] = mpdsr.monthly.map((r) => ({
   total: r.total,
 }))
 
-/** Monthly perinatal deaths per year; null = no monthly source for that year. */
-export const perinatalMonthlyByYear: Record<Year, PerinatalMonth[] | null> = {
-  '2023': null,
-  '2024': sn.deckMonthly,
-  '2025': mpdsrMonthly,
-}
+/** 2026 months after the last reporting month are not yet reported (null, not zero). */
+const lastMonth2026 = mpdsr26.monthly.findIndex((r) => r.month === mpdsr26.summary.lastMonth)
 
-/** Monthly totals side by side (2023: no data supplied). */
-export const perinatalMonthly3y = sn.deckMonthly.map((r) => ({
-  month: r.month,
-  y2023: null as number | null,
-  y2024: r.total,
-  y2025: mpdsrMonthly.find((m) => m.month === r.month)?.total ?? null,
-}))
+/** Monthly totals side by side, 2024–2026 (2026: provisional, reporting month). */
+export const perinatalMonthlyYears = sn.deckMonthly.map((r) => {
+  const i = mpdsr26.monthly.findIndex((m) => m.month === r.month)
+  return {
+    month: r.month,
+    y2024: r.total,
+    y2025: mpdsrMonthly.find((m) => m.month === r.month)?.total ?? null,
+    y2026: i >= 0 && i <= lastMonth2026 ? mpdsr26.monthly[i].total : null,
+  }
+})
 
 /**
  * "Cohort A" of year_totals equals the KPI-deck 2024 monthly table exactly
@@ -237,18 +237,24 @@ export const perinatalMonthly3y = sn.deckMonthly.map((r) => ({
 const cohortA = (cat: string): number | null =>
   sn.yearTotals.find((r) => r.category === cat)?.cohortA ?? null
 
-export const perinatalTotals: ThreeYear = {
-  y2023: null,
-  y2024: cohortA('TOTAL'),
-  y2025: mpdsr.summary.records,
+export interface PerinatalYears {
+  y2024: number | null
+  y2025: number | null
+  y2026: number | null
 }
 
-/** Deaths by category, 2023–2025 (2025 = provisional workbook records). */
-export const perinatalByCategory3y = [
-  { category: 'Stillbirth', y2023: null, y2024: cohortA('Stillbirth'), y2025: mpdsr.summary.stillbirth },
-  { category: 'Early neonatal', y2023: null, y2024: cohortA('Early Neonatal Death'), y2025: mpdsr.summary.earlyNeonatal },
-  { category: 'Late neonatal', y2023: null, y2024: cohortA('Late Neonatal Death'), y2025: mpdsr.summary.lateNeonatal },
-] satisfies ({ category: string } & ThreeYear)[]
+export const perinatalTotals: PerinatalYears = {
+  y2024: cohortA('TOTAL'),
+  y2025: mpdsr.summary.records,
+  y2026: mpdsr26.summary.records,
+}
+
+/** Deaths by category, 2024–2026 (2025 and 2026 = provisional workbook records). */
+export const perinatalByCategoryYears = [
+  { category: 'Stillbirth', y2024: cohortA('Stillbirth'), y2025: mpdsr.summary.stillbirth, y2026: mpdsr26.summary.stillbirth },
+  { category: 'Early neonatal', y2024: cohortA('Early Neonatal Death'), y2025: mpdsr.summary.earlyNeonatal, y2026: mpdsr26.summary.earlyNeonatal },
+  { category: 'Late neonatal', y2024: cohortA('Late Neonatal Death'), y2025: mpdsr.summary.lateNeonatal, y2026: mpdsr26.summary.lateNeonatal },
+] satisfies ({ category: string } & PerinatalYears)[]
 
 /** 2025 headline from the WCH KPI presentation (differs from the 119 workbook rows). */
 export const perinatalHeadline2025: number | null =
@@ -270,22 +276,24 @@ const normIcd = (d: string): string =>
     .replace(/[^a-z]+/g, ' ')
     .trim()
 
-export interface IcdRow3y {
+export interface IcdRowYears {
   code2024: string
   description: string
-  y2023: null
   y2024: number
   /** 2025 final-code count for the code with the same definition; null = no matching definition. */
   y2025: number | null
   /** The 2025 code carrying that definition (may differ from the 2024 code). */
   code2025: string | null
+  /** 2026 final-code count for that 2025 code (the 2026 Sheet2 dictionary is identical to 2025's). */
+  y2026: number | null
 }
 
-const icd3y = (
+const icdYears = (
   prefix: 'M' | 'A' | 'I' | 'N',
   rows2024: { code: string; count: number; description: string }[],
-): IcdRow3y[] => {
+): IcdRowYears[] => {
   const table2025 = mpdsr.codeTables.find((t) => t.prefix === prefix)?.rows ?? []
+  const table2026 = mpdsr26.codeTables.find((t) => t.prefix === prefix)?.rows ?? []
   return rows2024.map((r) => {
     const def = normIcd(r.description)
     const usable = def !== '' && def !== 'none'
@@ -298,20 +306,20 @@ const icd3y = (
     return {
       code2024: r.code,
       description: r.description,
-      y2023: null,
       y2024: r.count,
       y2025: m ? m.finalCount : null,
       code2025: m ? m.code : null,
+      y2026: m ? (table2026.find((t) => t.code === m.code)?.finalCount ?? null) : null,
     }
   })
 }
 
-/** 2024 ICD-PM tables with the 2025 count of the same definition (2023: no data supplied). */
-export const icdTables3y = [
-  { title: 'Maternal Condition (M)', rows: icd3y('M', sn.icdMaternal.filter((r) => r.code !== 'Total')) },
-  { title: 'Antepartum — Foetal (A)', rows: icd3y('A', sn.icdAntepartum.filter((r) => r.count > 0)) },
-  { title: 'Intrapartum — Foetal (I)', rows: icd3y('I', sn.icdIntrapartum.filter((r) => r.count > 0)) },
-  { title: 'Neonatal Death (N)', rows: icd3y('N', sn.icdNeonatal.filter((r) => r.count > 0)) },
+/** 2024 ICD-PM tables with the 2025 and 2026 counts of the same definition. */
+export const icdTablesYears = [
+  { title: 'Maternal Condition (M)', rows: icdYears('M', sn.icdMaternal.filter((r) => r.code !== 'Total')) },
+  { title: 'Antepartum — Foetal (A)', rows: icdYears('A', sn.icdAntepartum.filter((r) => r.count > 0)) },
+  { title: 'Intrapartum — Foetal (I)', rows: icdYears('I', sn.icdIntrapartum.filter((r) => r.count > 0)) },
+  { title: 'Neonatal Death (N)', rows: icdYears('N', sn.icdNeonatal.filter((r) => r.count > 0)) },
 ]
 
 /** "Cohort B" of year_totals, for the decision note (year not confirmed). */

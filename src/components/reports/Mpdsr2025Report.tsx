@@ -27,9 +27,11 @@ const metrics = [
   { label: 'Late neonatal — as recorded', value: mpdsr.summary.lateNeonatal, prior: perinatal2024Totals.late },
 ]
 
+type ReportYear = Exclude<Year, '2023'>
+const REPORT_YEARS = YEAR_OPTIONS.filter((o): o is { value: ReportYear; label: string } => o.value !== '2023')
+
 /** What each year's monthly series is, so the switch never mixes sources silently. */
-const MONTHLY_SOURCE: Record<Year, string> = {
-  '2023': 'No data supplied',
+const MONTHLY_SOURCE: Record<ReportYear, string> = {
   '2024': 'KPI-deck final surveillance series',
   '2025': 'Provisional MPDSR workbook · month label in column A, not the death date',
 }
@@ -64,10 +66,10 @@ const icd2024TotalCell = (prefix: string): ReactNode => {
 }
 
 export default function Mpdsr2025Report() {
-  const [year, setYear] = useState<Year>('2025')
-  const monthly = perinatalMonthly(year)
+  const [year, setYear] = useState<ReportYear>('2025')
+  const monthly = perinatalMonthly(year) ?? []
   const sum = (key: 'stillbirth' | 'early' | 'late' | 'total'): number =>
-    (monthly ?? []).reduce((acc, r) => acc + r[key], 0)
+    monthly.reduce((acc, r) => acc + r[key], 0)
   return (
     <section aria-label="2025 MPDSR workbook analysis" className="space-y-8">
       <SectionTitle icon={ClipboardList} title="2025 Stillbirth & Neonatal Review" subtitle="Provisional workbook records · January–December reporting months" />
@@ -78,7 +80,7 @@ export default function Mpdsr2025Report() {
       <div className="space-y-3">
         <div className="grid grid-cols-2 gap-3.5 lg:grid-cols-4">
           {metrics.map(({ label, value, prior }) => (
-            <KpiCard key={label} label={label} value={value} accent="navy" hint={`Provisional workbook records · 2024 final: ${int(prior)} · 2023 no data supplied`} />
+            <KpiCard key={label} label={label} value={value} accent="navy" hint={`Provisional workbook records · 2024 final: ${int(prior)}`} />
           ))}
         </div>
         <p className="text-sm text-ink/75">The 2024 tile figures are the KPI-deck final surveillance totals, given for context only; they are a different source and method, so no change is calculated. The page’s “Perinatal Deaths by Month” chart holds the same 2024 series.</p>
@@ -88,10 +90,9 @@ export default function Mpdsr2025Report() {
         <ChartCard
           title={year === '2025' ? 'Recorded Cases by Reporting Month (2025)' : `Perinatal Deaths by Month (${year})`}
           subtitle={`Count · ${year} · ${MONTHLY_SOURCE[year]}`}
-          action={<Segmented label="Monthly series year" options={YEAR_OPTIONS} value={year} onChange={setYear} />}
+          action={<Segmented label="Monthly series year" options={REPORT_YEARS} value={year} onChange={setYear} />}
         >
-          {monthly ? (
-            <TrendChart
+          <TrendChart
               data={monthly}
               xKey="month"
               height={300}
@@ -99,9 +100,6 @@ export default function Mpdsr2025Report() {
               series={[{ key: 'total', name: year === '2025' ? 'Recorded cases' : 'Perinatal deaths', color: METRIC[0] }]}
               showLegend={false}
             />
-          ) : (
-            <Note title="No data supplied for 2023.">No 2023 monthly stillbirth or neonatal series is held in the dashboard sources. 2024 and 2025 are available from the switch.</Note>
-          )}
           {year === '2025' && (
             <>
               <p className="mt-3 text-sm text-ink/75">Five records have different reporting and death months. One death date is invalid and another states 2024. All remain in their source reporting-month groups pending review.</p>
@@ -113,37 +111,33 @@ export default function Mpdsr2025Report() {
           )}
         </ChartCard>
         <ChartCard title={year === '2025' ? 'Monthly Records (2025)' : `Monthly Perinatal Deaths (${year})`} subtitle={year === '2025' ? 'Count · 2025 · source categories from column G · counts, not rates' : `Count · ${year} · ${MONTHLY_SOURCE[year]} · counts, not rates`}>
-          {monthly ? (
-            <DataTable
+          <DataTable
               columns={[{ label: 'Month' }, { label: year === '2025' ? 'Foetal deaths' : 'Stillbirth', align: 'right' }, { label: 'Early neonatal', align: 'right' }, { label: 'Late neonatal', align: 'right' }, { label: 'Total', align: 'right' }]}
               rows={monthly.map(r => [r.month, r.stillbirth, r.early, r.late, r.total])}
               total={['TOTAL', sum('stillbirth'), sum('early'), sum('late'), sum('total')]}
               dense
             />
-          ) : (
-            <Note title="No data supplied for 2023.">The dashboard sources hold no 2023 monthly breakdown.</Note>
-          )}
         </ChartCard>
       </div>
       <div>
-        <SectionTitle icon={Table2} title="ICD-PM Coding — 2023, 2024 and 2025" subtitle="2025 final code in column Y compared with selected fields in columns P–X; 2024 ICD-PM counts alongside; no data supplied for 2023" />
+        <SectionTitle icon={Table2} title="ICD-PM Coding — 2024 and 2025" subtitle="2025 final code in column Y compared with selected fields in columns P–X; 2024 ICD-PM counts alongside" />
         <div className="space-y-4">
           <p className="text-sm leading-relaxed text-ink/80">117 records have final codes defined in the workbook dictionary. One final code is missing and one contains undefined cause code A7. Code descriptions below come from Sheet2. Nine records differ between final and selected codes; 13 final cause codes conflict with the recorded death category. These are source entries, not clinically validated classifications.</p>
           {/* Six-column tables: one per row so no column is squeezed. */}
           <div className="grid grid-cols-1 gap-4">
             {mpdsr.codeTables.map(table => (
-              <ChartCard key={table.prefix} title={table.title} subtitle="Count · 2023, 2024 and 2025 · 2025 Final = column Y · 2025 Selected = columns P–X · — = no data supplied · — * = 2024 definition differs · ‡ = 2024 definition not stated">
+              <ChartCard key={table.prefix} title={table.title} subtitle="Count · 2024 and 2025 · 2025 Final = column Y · 2025 Selected = columns P–X · — = no data supplied · — * = 2024 definition differs · ‡ = 2024 definition not stated">
                 <DataTable
-                  columns={[{ label: 'Code' }, { label: 'Definition' }, { label: '2023', align: 'right' }, { label: '2024', align: 'right' }, { label: '2025 final', align: 'right' }, { label: '2025 selected', align: 'right' }]}
-                  rows={table.rows.map(r => [r.code, r.description, dash, icd2024Cell(table.prefix, r.code, r.description), r.finalCount, r.selectedCount])}
-                  total={['TOTAL', '', dash, icd2024TotalCell(table.prefix), table.rows.reduce((acc, r) => acc + r.finalCount, 0), table.rows.reduce((acc, r) => acc + r.selectedCount, 0)]}
+                  columns={[{ label: 'Code' }, { label: 'Definition' }, { label: '2024', align: 'right' }, { label: '2025 final', align: 'right' }, { label: '2025 selected', align: 'right' }]}
+                  rows={table.rows.map(r => [r.code, r.description, icd2024Cell(table.prefix, r.code, r.description), r.finalCount, r.selectedCount])}
+                  total={['TOTAL', '', icd2024TotalCell(table.prefix), table.rows.reduce((acc, r) => acc + r.finalCount, 0), table.rows.reduce((acc, r) => acc + r.selectedCount, 0)]}
                   dense
                 />
               </ChartCard>
             ))}
           </div>
           <p className="text-sm text-ink/75">Unmapped final cause: A7 — 1 record (row 95). Missing final code — 1 record (row 79). No replacement is inferred. Maternal and cause groups describe the same records and must not be added together.</p>
-          <Note title="Year coverage:">2024 counts are the original 2024 ICD-PM classification (final surveillance), shown only where the 2024 and 2025 dictionaries define the code the same way; a code absent from the 2024 table shows —. The 2024 and 2025 dictionaries define M1, M2 and N6 differently (2024: M1 placenta, cord and membranes, M2 “(none)”, N6 respiratory &amp; cardiovascular; 2025: M1 maternal complications of pregnancy, M2 placenta, cord and membranes, N6 infection, N7 respiratory and cardiovascular), so those 2024 counts are withheld (— *; hover for the 2024 entry) — see the 2024 ICD-PM tables below. Codes marked ‡ have no definition in the 2024 table and are matched by code only. † The 2024 TOTAL is the 2024 table’s own total (all 2024 codes, including withheld rows), so it can exceed the visible 2024 column. 2024 and 2025 are different review cycles and no change between them is calculated. No 2023 ICD-PM coding is held in the dashboard sources. The quality-of-care, modifiable-factor and demographic tables below exist only in the 2025 workbook; no data supplied for 2023 and 2024.</Note>
+          <Note title="Year coverage:">2024 counts are the original 2024 ICD-PM classification (final surveillance), shown only where the 2024 and 2025 dictionaries define the code the same way; a code absent from the 2024 table shows —. The 2024 and 2025 dictionaries define M1, M2 and N6 differently (2024: M1 placenta, cord and membranes, M2 “(none)”, N6 respiratory &amp; cardiovascular; 2025: M1 maternal complications of pregnancy, M2 placenta, cord and membranes, N6 infection, N7 respiratory and cardiovascular), so those 2024 counts are withheld (— *; hover for the 2024 entry) — see the 2024 ICD-PM tables below. Codes marked ‡ have no definition in the 2024 table and are matched by code only. † The 2024 TOTAL is the 2024 table’s own total (all 2024 codes, including withheld rows), so it can exceed the visible 2024 column. 2024 and 2025 are different review cycles and no change between them is calculated. The quality-of-care, modifiable-factor and demographic tables below exist only in the 2025 workbook; no data supplied for 2024.</Note>
         </div>
       </div>
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
